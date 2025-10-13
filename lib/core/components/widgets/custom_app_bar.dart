@@ -23,6 +23,7 @@ class CustomAppBar extends StatelessWidget {
           ? Padding(
               padding: const EdgeInsetsDirectional.only(start: 16),
               child: InkWell(
+                onTap: () => context.pop(),
                 child: CustomSvgBuilder(
                   path: AppAssets.svgsArrowBtnIcon,
                   width: 44,

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
+import '../../../../../core/routes/routes.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -42,9 +43,11 @@ class LoginForm extends StatelessWidget {
           MainButton(title: context.login, onTap: () {}),
           24.verticalSpace,
           InkWell(
-            onTap: () {},
+            onTap: () {
+              context.pushNamed(Routes.signUpView);
+            },
             child: Text(
-              context.createAccount,
+              context.createNewAccount,
               style: context.textStyles.font16RegularSecondaryColor.copyWith(
                 decoration: TextDecoration.underline,
                 decorationColor: context.colors.secondaryColor,

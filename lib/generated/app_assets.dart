@@ -62,6 +62,8 @@ class AppAssets {
 
   static const String svgsLogoutIcon = "assets/svgs/logout_icon.svg";
 
+  static const String svgsMail = "assets/svgs/mail.svg";
+
   static const String svgsManagerIcon = "assets/svgs/manager_icon.svg";
 
   static const String svgsMapIcon = "assets/svgs/map_icon.svg";

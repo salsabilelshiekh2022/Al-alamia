@@ -8,5 +8,13 @@
     "forgot_password" : "نسيت كلمة المرور؟",
     "login_button" : "تسجيل الدخول",
     "no_account" : "ليس لديك حساب؟",
-    "create_account" : "إنشاء حساب جديد"
+    "create_new_account" : "إنشاء حساب جديد",
+    "user_name" : "اسم المستخدم",
+    "user_name_hint" : "ادخل اسم المستخدم",
+    "confirm_password" : "تأكيد كلمة المرور",
+    "confirm_password_hint" : "ادخل كلمة المرور مرة اخري",
+    "email" : "البريد الإلكتروني",
+    "email_hint" : "ادخل البريد الإلكتروني",
+    "already_have_account" : "لدي حساب بالفعل ",
+    "sign_up" : "إنشاء حساب"
 }
