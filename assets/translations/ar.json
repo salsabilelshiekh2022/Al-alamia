@@ -16,5 +16,21 @@
     "email" : "البريد الإلكتروني",
     "email_hint" : "ادخل البريد الإلكتروني",
     "already_have_account" : "لدي حساب بالفعل ",
-    "sign_up" : "إنشاء حساب"
+    "sign_up" : "إنشاء حساب",
+    "forgot_password_without_question" : "نسيت كلمة المرور",
+    "enter_phone_to_send_code" : " أدخل رقم موبيلك لإرسال كود تغيير كلمة المرور",
+    "next" : "التالي",
+    "verification_code" : "كود التحقق",
+    "we_sent_code" : "قمنا بإرسال كود لاستعادة كلمة المرور قم بالتحقق منه",
+    "not_received_message" : "لم تتلق الرسالة؟ ",
+    "prese_here" : "أنقر هنا",
+    "create_new_password" : "إنشاء كلمة مرور جديدة",
+    "enter_new_password_without_sharing" : "أدخل كلمة مرورك الجديدة ولا تشاركها مع أحد",
+    "new_password" :"كلمة المرور الجديدة",
+    "new_password_hint" : "ادخل كلمة المرور الجديدة",
+    "confirm_new_password" : "تأكيد كلمة المرور الجديدة",
+    "confirm_new_password_hint" : "ادخل كلمة المرور مرة اخري",
+    "confirm" : "تأكيد",
+    "password_created_successfully" : "تم إنشاء كلمة مرورك بنجاح",
+   "remember_not_share" : "تذكر عدم مشاركتها مع أحد للحفاظ علي بياناتك"
 }

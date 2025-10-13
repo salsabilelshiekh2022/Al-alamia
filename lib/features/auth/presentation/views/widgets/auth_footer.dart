@@ -42,7 +42,7 @@ class AuthFooterWidget extends StatelessWidget {
               child: Text(
                 clickable,
                 style: context.textStyles.font16RegularPrimaryColor.copyWith(
-                  decoration: TextDecoration.underline,
+                  decoration: hasUnderLine ? TextDecoration.underline : null,
                   decorationColor: context.colors.primaryColor,
                 ),
                 textAlign: TextAlign.center,
