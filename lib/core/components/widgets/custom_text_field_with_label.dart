@@ -21,6 +21,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
     this.textFiledHorizontalPadding,
     this.suffixWidget,
     this.suffixIcon,
+    required this.prefixWidget,
   });
 
   final String label;
@@ -35,6 +36,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final double? widgetHorizontalPadding;
   final double? textFiledHorizontalPadding;
+  final String prefixWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
               horizontal: textFiledHorizontalPadding ?? 0,
             ),
             child: CustomTextField(
+              prefixWidget: prefixWidget,
               inputFormatters: inputFormatters,
               controller: controller,
               focusNode: focusNode,
@@ -58,7 +61,6 @@ class CustomTextFieldWithLabel extends StatelessWidget {
               suffixWidget: suffixWidget,
               suffixIcon: suffixIcon,
               hintText: hintText,
-
               validator: (value) {
                 if (validator != null) {
                   return validator!(value);

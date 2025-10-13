@@ -1,5 +1,6 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,12 +18,14 @@ class LoginForm extends StatelessWidget {
           CustomTextFieldWithLabel(
             label: context.phone,
             hintText: context.phoneHint,
+            prefixWidget: AppAssets.svgsPhone,
           ),
           20.verticalSpace,
           CustomTextFieldWithLabel(
             label: context.password,
             hintText: context.passwordHint,
             suffixIcon: true,
+            prefixWidget: AppAssets.svgsWhiteLockIcon,
           ),
           16.verticalSpace,
           Align(

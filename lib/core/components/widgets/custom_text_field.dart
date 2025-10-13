@@ -23,6 +23,7 @@ class CustomTextField extends StatefulWidget {
     this.isReadOnly,
     this.suffixWidget,
     this.suffixIcon,
+    required this.prefixWidget,
   });
 
   final String hintText;
@@ -38,6 +39,8 @@ class CustomTextField extends StatefulWidget {
   final void Function()? onTap;
   final int maxLines;
   final Widget? suffixWidget;
+  final String prefixWidget;
+
   final bool? suffixIcon;
 
   @override
@@ -73,7 +76,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         hintStyle: context.textStyles.font14MediumGrayColor,
 
         prefixIcon: CustomSvgBuilder(
-          path: AppAssets.svgsWhiteLockIcon,
+          path: widget.prefixWidget,
           width: 20,
           height: 20,
           fit: BoxFit.scaleDown,
