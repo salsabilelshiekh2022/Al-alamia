@@ -40,6 +40,17 @@ class LoginForm extends StatelessWidget {
           ),
           32.verticalSpace,
           MainButton(title: context.login, onTap: () {}),
+          24.verticalSpace,
+          InkWell(
+            onTap: () {},
+            child: Text(
+              context.createAccount,
+              style: context.textStyles.font16RegularSecondaryColor.copyWith(
+                decoration: TextDecoration.underline,
+                decorationColor: context.colors.secondaryColor,
+              ),
+            ),
+          ),
         ],
       ),
     );
