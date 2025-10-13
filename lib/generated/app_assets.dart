@@ -34,6 +34,8 @@ class AppAssets {
 
   static const String svgsArrowBtnIcon = "assets/svgs/arrow_btn_icon.svg";
 
+  static const String svgsBell = "assets/svgs/bell.svg";
+
   static const String svgsBlackLockIcon = "assets/svgs/black_lock_icon.svg";
 
   static const String svgsCalcIcon = "assets/svgs/calc_icon.svg";
@@ -53,6 +55,8 @@ class AppAssets {
   static const String svgsEyeIcon = "assets/svgs/eye_icon.svg";
 
   static const String svgsFilterIcon = "assets/svgs/filter_icon.svg";
+
+  static const String svgsHome = "assets/svgs/home.svg";
 
   static const String svgsIdIcon = "assets/svgs/id_icon.svg";
 
@@ -86,6 +90,8 @@ class AppAssets {
 
   static const String svgsSendMoneyIcon = "assets/svgs/send_money_icon.svg";
 
+  static const String svgsSettings = "assets/svgs/settings.svg";
+
   static const String svgsShareIcon = "assets/svgs/share_icon.svg";
 
   static const String svgsSupportIcon = "assets/svgs/support_icon.svg";
@@ -97,6 +103,8 @@ class AppAssets {
   static const String svgsUser = "assets/svgs/user.svg";
 
   static const String svgsUserIcon = "assets/svgs/user_icon.svg";
+
+  static const String svgsWallet = "assets/svgs/wallet.svg";
 
   static const String svgsWhiteLockIcon = "assets/svgs/white_lock_icon.svg";
 

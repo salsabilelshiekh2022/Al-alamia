@@ -38,4 +38,8 @@ extension TranslationExtension on BuildContext {
   String get confirm => tr('confirm');
   String get passwordCreatedSuccessfully => tr('password_created_successfully');
   String get rememberNotShare => tr('remember_not_share');
+  String get main => tr('main');
+  String get transactions => tr('transactions');
+  String get notifications => tr('notifications');
+  String get settings => tr('settings');
 }

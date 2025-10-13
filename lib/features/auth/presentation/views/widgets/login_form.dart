@@ -48,7 +48,11 @@ class LoginForm extends StatelessWidget {
             ),
           ),
           32.verticalSpace,
-          MainButton(title: context.login, onTap: () {}),
+          MainButton(
+            title: context.login,
+            onTap: () =>
+                context.pushNamedAndRemoveUntil(Routes.mainNavigationView),
+          ),
           24.verticalSpace,
           InkWell(
             onTap: () {

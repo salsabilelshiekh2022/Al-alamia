@@ -32,5 +32,10 @@
     "confirm_new_password_hint" : "ادخل كلمة المرور مرة اخري",
     "confirm" : "تأكيد",
     "password_created_successfully" : "تم إنشاء كلمة مرورك بنجاح",
-   "remember_not_share" : "تذكر عدم مشاركتها مع أحد للحفاظ علي بياناتك"
+   "remember_not_share" : "تذكر عدم مشاركتها مع أحد للحفاظ علي بياناتك",
+   "main" : "الرئيسية",
+   "transactions" : "المعاملات",
+   "notifications" : "الإشعارات",
+   "settings" : "الإعدادات"
+
 }

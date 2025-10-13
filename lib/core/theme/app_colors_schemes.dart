@@ -33,6 +33,11 @@ abstract class AppColorsSchemes {
         Color(0xFF6E0084), // #6E0084
       ],
     ),
+    navigationGradientColor: LinearGradient(
+      begin: Alignment(0.50, -0.00),
+      end: Alignment(0.50, 1.00),
+      colors: [const Color(0xFF6E0084), const Color(0xFF19001E)],
+    ),
   );
 
   static AppColors dark = light;
