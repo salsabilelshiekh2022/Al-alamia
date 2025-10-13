@@ -1,5 +1,6 @@
 import 'package:alalamia/core/extensions/app_extention.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/routes/routes.dart';
 import '../../../../generated/app_assets.dart';
@@ -14,23 +15,22 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        context.pushReplacementNamed(Routes.mainNavigation);
-      },
-    );
+    Future.delayed(const Duration(seconds: 3), () {
+      //context.pushReplacementNamed(Routes.mainNavigation);
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Image.asset(
-        AppAssets.imagesLogo,
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.fill,
+      body: Center(
+        child: Image.asset(
+          AppAssets.imagesLogo,
+          width: 300.w,
+          height: 100.h,
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }

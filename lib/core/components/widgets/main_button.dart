@@ -12,8 +12,9 @@ class MainButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors appColors = Theme.of(context).extension<AppColors>()!;
-    final AppTextStyles appTextStyles =
-        Theme.of(context).extension<AppTextStyles>()!;
+    final AppTextStyles appTextStyles = Theme.of(
+      context,
+    ).extension<AppTextStyles>()!;
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -24,12 +25,7 @@ class MainButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Center(
-          child: Text(
-            title,
-            style: appTextStyles.font12RegularLabelColor.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          child: Text(title, style: appTextStyles.font16SemiBoldWhiteColor),
         ),
       ),
     );

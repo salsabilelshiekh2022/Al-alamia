@@ -27,11 +27,11 @@ class EmptyWidget extends StatelessWidget {
           fit: BoxFit.cover,
         ),
         16.verticalSpace,
-        Text(title, style: appTextStyles.font12RegularLabelColor),
+        Text(title, style: appTextStyles.font16MediumSecondaryColor),
         6.verticalSpace,
         Text(
           description,
-          style: appTextStyles.font12RegularLabelColor,
+          style: appTextStyles.font14MediumSecondaryColor,
           textAlign: TextAlign.center,
         ),
       ],
