@@ -8,10 +8,8 @@ import '../core/utils/app_constatnts.dart';
 import '../core/utils/app_keys.dart';
 import '../features/splash/presentations/views/splash_view.dart';
 
-class ElmohtarefApp extends StatelessWidget {
-  const ElmohtarefApp({
-    super.key,
-  });
+class AlalamiaApp extends StatelessWidget {
+  const AlalamiaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
