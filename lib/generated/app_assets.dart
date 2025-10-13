@@ -18,6 +18,10 @@ class AppAssets {
 
   static const String fontsCairoSemiBold = "assets/fonts/Cairo-SemiBold.ttf";
 
+  static const String imagesBackBtn = "assets/images/back_btn.png";
+
+  static const String imagesBackground = "assets/images/background.png";
+
   static const String imagesCheck = "assets/images/check.png";
 
   static const String imagesLogo = "assets/images/logo.png";
@@ -43,6 +47,8 @@ class AppAssets {
   static const String svgsDoubleArrowIcon = "assets/svgs/double_arrow_icon.svg";
 
   static const String svgsEditIcon = "assets/svgs/edit_icon.svg";
+
+  static const String svgsEyeClosedIcon = "assets/svgs/eye_closed_icon.svg";
 
   static const String svgsEyeIcon = "assets/svgs/eye_icon.svg";
 

@@ -188,6 +188,11 @@ abstract class AppTextStylesSchemes {
       fontWeight: FontWeight.w600,
       color: _appLightColors.primaryColor,
     ),
+    font20MediumSecondaryColor: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      color: _appLightColors.secondaryColor,
+    ),
   );
 
   static AppTextStyles dark = light;

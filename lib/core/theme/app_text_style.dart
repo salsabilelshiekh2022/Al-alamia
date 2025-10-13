@@ -37,6 +37,7 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
   final TextStyle font17MediumPrimaryColor;
   final TextStyle font20SemiBoldPrimaryColor;
   final TextStyle font22BoldPrimaryColor;
+  final TextStyle font20MediumSecondaryColor;
 
   AppTextStyles({
     required this.font16SemiBoldWhiteColor,
@@ -75,6 +76,7 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
     required this.font17MediumPrimaryColor,
     required this.font20SemiBoldPrimaryColor,
     required this.font22BoldPrimaryColor,
+    required this.font20MediumSecondaryColor,
   });
 
   @override
@@ -270,6 +272,11 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
         font22BoldPrimaryColor: TextStyle.lerp(
           font22BoldPrimaryColor,
           other.font22BoldPrimaryColor,
+          t,
+        )!,
+        font20MediumSecondaryColor: TextStyle.lerp(
+          font20MediumSecondaryColor,
+          other.font20MediumSecondaryColor,
           t,
         )!,
       );

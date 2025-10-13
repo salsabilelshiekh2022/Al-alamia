@@ -15,6 +15,24 @@ abstract class AppColorsSchemes {
     redColor: Color(0xffD76969),
     greenColor: Color(0xff00840F),
     yellowColor: Color(0xffDAB900),
+    buttonGradientColor: const LinearGradient(
+      begin: Alignment(0.05, 0.51),
+      end: Alignment(1.00, 0.51),
+      colors: [
+        Color(0xFF800399),
+        Color(0xFF7D02AB),
+        Color(0xFF3F006A),
+        Color(0xFF380043),
+      ],
+    ),
+    backGroundGradientColor: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0x99130B83), // #130B83 with 60% opacity
+        Color(0xFF6E0084), // #6E0084
+      ],
+    ),
   );
 
   static AppColors dark = light;

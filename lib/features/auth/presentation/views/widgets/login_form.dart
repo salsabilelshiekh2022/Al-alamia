@@ -1,0 +1,44 @@
+import 'package:alalamia/core/helper/app_extention.dart';
+import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
+import '../../../../../core/components/widgets/main_button.dart';
+
+class LoginForm extends StatelessWidget {
+  const LoginForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        children: [
+          CustomTextFieldWithLabel(
+            label: context.phone,
+            hintText: context.phoneHint,
+          ),
+          20.verticalSpace,
+          CustomTextFieldWithLabel(
+            label: context.password,
+            hintText: context.passwordHint,
+            suffixIcon: true,
+          ),
+          16.verticalSpace,
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Text(
+              context.forgotPassword,
+              style: context.textStyles.font16RegularPrimaryColor.copyWith(
+                decoration: TextDecoration.underline,
+                decorationColor: context.colors.primaryColor,
+              ),
+            ),
+          ),
+          32.verticalSpace,
+          MainButton(title: context.login, onTap: () {}),
+        ],
+      ),
+    );
+  }
+}

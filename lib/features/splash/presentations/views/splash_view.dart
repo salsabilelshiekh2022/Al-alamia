@@ -1,4 +1,4 @@
-import 'package:alalamia/core/extensions/app_extention.dart';
+import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,8 +15,8 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 3), () {
-      //context.pushReplacementNamed(Routes.mainNavigation);
+    Future.delayed(const Duration(seconds: 2), () {
+      context.pushReplacementNamed(Routes.loginView);
     });
     super.initState();
   }
