@@ -14,9 +14,10 @@ class AlalamiaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      minTextAdapt: true,
+     
+     designSize: const Size(390, 840),
+     
       splitScreenMode: true,
-      designSize: const Size(375, 812),
       child: MaterialApp(
         navigatorKey: AppKeys.navigatorKey,
         localizationsDelegates: context.localizationDelegates,

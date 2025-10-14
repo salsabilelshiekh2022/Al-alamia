@@ -7,4 +7,6 @@ abstract class Routes {
   static const String transactionsView = '/transactionsView';
   static const String notificationsView = '/notificationsView';
   static const String settingsView = '/settingsView';
+  static const String changePasswordView = '/changePasswordView';
+  static const String profileSettingsView = '/profileSettingsView';
 }

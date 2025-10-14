@@ -11,13 +11,15 @@ class CustomPage extends StatelessWidget {
     required this.title,
     required this.hasActions,
     required this.isBack,
-    required this.body,
+    required this.body, this.padding, this.topMargin,
   });
 
   final String title;
   final bool hasActions;
   final bool isBack;
   final Widget body;
+  final EdgeInsetsGeometry? padding;
+  final double? topMargin;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class CustomPage extends StatelessWidget {
             height: double.infinity,
             fit: BoxFit.cover,
           ),
+         
           SingleChildScrollView(
             child: Column(
               children: [
@@ -38,9 +41,10 @@ class CustomPage extends StatelessWidget {
                   hasActions: hasActions,
                   isBack: isBack,
                 ).onlyPadding(bottomPadding: 24),
+             
                 Container(
-                  // margin: EdgeInsets.only(top: 130.h),
-                  padding: const EdgeInsets.all(24),
+                  margin: EdgeInsets.only(top: topMargin ?? 0),
+                  padding:padding ?? const EdgeInsets.all(24),
                   width: double.infinity,
                   constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height - 130.h,

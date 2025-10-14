@@ -42,4 +42,35 @@ extension TranslationExtension on BuildContext {
   String get transactions => tr('transactions');
   String get notifications => tr('notifications');
   String get settings => tr('settings');
+  String get accountSettings => tr('account_settings');
+  String get egyptBranch => tr('egypt_branch');
+  String get english => tr('english');
+  String get arabic => tr('arabic');
+  String get profileAccount => tr('profile_account');
+  String get updateProfile => tr('update_profile');
+  String get changePassword => tr('change_password');
+  String get updateSecurity => tr('update_security');
+  String get appSettings => tr('app_settings');
+  String get language => tr('language');
+  String get other => tr('other');
+  String get support => tr('support');
+  String get aboutApp => tr('about_app');
+  String get logout => tr('logout');
+  String get currentPassword => tr('current_password');
+  String get currentPasswordHint => tr('current_password_hint');
+  String get save => tr('save');
+  String get profileSettings => tr('profile_settings');
+  String get fullName => tr('full_name');
+  String get fullNameHint => tr('full_name_hint');
+  String get saveChanges => tr('save_changes');
+  String get chooseLanguage => tr('choose_language');
+  String get public => tr('public');
+  String get success => tr('success');
+  String get pending => tr('pending');
+  String get failed => tr('failed');
+  String get sureLogout => tr('sure_logout');
+  String get sureExit => tr('sure_exit');
+
+
+
 }

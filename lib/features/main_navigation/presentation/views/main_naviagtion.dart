@@ -1,6 +1,7 @@
 import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/features/settings/presentation/views/settings_view.dart';
 import 'package:alalamia/generated/app_assets.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _MainNavigationViewState extends State<MainNavigationView> {
 
   /// 👇 Your navigation pages (replace with your real views)
   final List<Widget> bottomBarPages = const [
-    Center(child: Text("Settings View")),
+    SettingsView(),
     Center(child: Text("Notifications View")),
     Center(child: Text("Transactions View")),
     Center(child: Text("Home View")),
