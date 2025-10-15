@@ -97,7 +97,17 @@
   "search" : "بحث",
   "dollar" : "دولار امريكي",
   "phone_2" : "جوال 2",
-  "received_done" : "تم التسليم"
+  "received_done" : "تم التسليم",
+  "hello" : "مرحبا",
+  "send_money" : "ارسال النقود",
+  "currency_transfer" :"تحويل عملة",
+  "wallets" : "المحافظ",
+  "currency_calculator" : "حاسبة العملات",
+  "transfer_amount" : "المبلغ المحوَّل",
+  "total_balance" : "اجمالي الرصيد",
+  "cash_category" : "الفئة النقدية",
+  "number" : "العدد"
+  
 
 
     

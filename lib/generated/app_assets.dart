@@ -24,6 +24,8 @@ class AppAssets {
 
   static const String imagesCheck = "assets/images/check.png";
 
+  static const String imagesFlag = "assets/images/flag.png";
+
   static const String imagesLogo = "assets/images/logo.png";
 
   static const String imagesSuccess = "assets/images/success.png";
@@ -76,8 +78,6 @@ class AppAssets {
 
   static const String svgsPhone = "assets/svgs/phone.svg";
 
-  static const String svgsPindingIcon = "assets/svgs/pinding_icon.svg";
-
   static const String svgsPurpleDollarIcon = "assets/svgs/purple_dollar_icon.svg";
 
   static const String svgsPurpleStarIcon = "assets/svgs/purple_star_icon.svg";
@@ -95,6 +95,8 @@ class AppAssets {
   static const String svgsSettings = "assets/svgs/settings.svg";
 
   static const String svgsShareIcon = "assets/svgs/share_icon.svg";
+
+  static const String svgsSupportBtn = "assets/svgs/support_btn.svg";
 
   static const String svgsSupportIcon = "assets/svgs/support_icon.svg";
 

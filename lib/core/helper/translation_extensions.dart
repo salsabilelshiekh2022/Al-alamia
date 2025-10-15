@@ -103,5 +103,14 @@ extension TranslationExtension on BuildContext {
   String get dollar => tr('dollar');
   String get phone2 => tr('phone_2');
   String get receivedDone => tr('received_done');
+  String get hello => tr('hello');
+  String get sendMoney => tr('send_money');
+  String get currencyTransfer => tr('currency_transfer');
+  String get wallets => tr('wallets');
+  String get currencyCalculator => tr('currency_calculator');
+  String get transferAmount => tr('transfer_amount');
+  String get totalBalance => tr('total_balance');
+  String get cashCategory => tr('cash_category');
+  String get number => tr('number');
 
 }
