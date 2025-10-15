@@ -1,6 +1,7 @@
 import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/features/notifications/presentation/views/notifications_view.dart';
 import 'package:alalamia/features/settings/presentation/views/settings_view.dart';
 import 'package:alalamia/features/transactions/presentation/views/transactions_view.dart';
 import 'package:alalamia/generated/app_assets.dart';
@@ -28,7 +29,7 @@ class _MainNavigationViewState extends State<MainNavigationView> {
   /// 👇 Your navigation pages (replace with your real views)
   final List<Widget> bottomBarPages = const [
     SettingsView(),
-    Center(child: Text("Notifications View")),
+    NotificationsView(),
     TransactionsView(),
     Center(child: Text("Home View")),
   ];
