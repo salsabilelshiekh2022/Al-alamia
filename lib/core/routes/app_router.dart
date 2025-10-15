@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../features/auth/presentation/views/login_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
+import '../../features/transactions/presentation/views/transactions_view.dart';
 import 'routes.dart';
 
 abstract class AppRouter {
@@ -25,6 +26,8 @@ abstract class AppRouter {
         return MaterialPageRoute(builder: (_) => const ChangePasswordView());
         case Routes.profileSettingsView:
         return MaterialPageRoute(builder: (_) => const ProfileSettingView());
+        case Routes.transactionsView:
+        return MaterialPageRoute(builder: (_) => const TransactionsView());
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());
     }

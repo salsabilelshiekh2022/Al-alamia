@@ -64,7 +64,39 @@
   "pending" : "قيد الانتظار",
   "failed" : "فشلت",
   "sure_logout" :"هل انت متأكد من تسجيل الخروج",
-  "sure_exit" : "انت الأن علي وشك مغادرة التطبيق"
+  "sure_exit" : "انت الأن علي وشك مغادرة التطبيق",
+  "recived" : "المستلمة",
+  "sent" : "المرسلة",
+  "from" : "من",
+  "to" : "الى",
+  "amount" : "المبلغ",
+  "date" : "التاريخ",
+  "transefered_amount" : "المبلغ المحول",
+  "info_contact" : "بيانات الراسل",
+  "id" : "رقم بطاقة الهوية",
+  "address" : "العنوان",
+  "transaction_info" : "بيانات المعاملة",
+  "transaction_code" : "كود المعاملة",
+  "commission" : "العموله",
+  "exchange_rate" : "سعر الصرف",
+  "total" : "الاجمالي",
+  "currency_type" : "نوع العملة",
+  "print_receipt" : "طباعة الايصال",
+  "add_amount" : "اضف المبلغ",
+  "money_sent_succeffully" : "تم ارسال النقود بنجاح",
+  "can_see_details" : "يمكنك متابعة تفاصيل هذه المعاملة في قسم المعاملات",
+  "success_transaction" : "معاملة ناجحة",
+  "transaction_details" : "تفاصيل المعاملة",
+  "transaction_number" : "رقم المعاملة",
+  "resource" : "المصدر",
+  "destination" : "الوجهة",
+  "sender" : "المرسل",
+  "beneficiary" : "المستفيد",
+  "client_name" : "اسم العميل",
+  "currency_exchange" : "تحويل العملات",
+  "search" : "بحث"
+
+
     
 
 }

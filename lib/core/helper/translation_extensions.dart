@@ -70,7 +70,35 @@ extension TranslationExtension on BuildContext {
   String get failed => tr('failed');
   String get sureLogout => tr('sure_logout');
   String get sureExit => tr('sure_exit');
-
-
+  String get recived => tr('recived');
+  String get sent => tr('sent');
+  String get from => tr('from');
+  String get to => tr('to');
+  String get amount => tr('amount');
+  String get date => tr('date');
+  String get transeferedAmount => tr('transefered_amount');
+  String get infoContact => tr('info_contact');
+  String get id => tr('id');
+  String get address => tr('address');
+  String get transactionInfo => tr('transaction_info');
+  String get transactionCode => tr('transaction_code');
+  String get commission => tr('commission');
+  String get exchangeRate => tr('exchange_rate');
+  String get total => tr('total');
+  String get currencyType => tr('currency_type');
+  String get printReceipt => tr('print_receipt');
+  String get addAmount => tr('add_amount');
+  String get moneySentSuccessfully => tr('money_sent_succeffully');
+  String get canSeeDetails => tr('can_see_details');
+  String get successTransaction => tr('success_transaction');
+  String get transactionDetails => tr('transaction_details');
+  String get transactionNumber => tr('transaction_number');
+  String get resource => tr('resource');
+  String get destination => tr('destination');
+  String get sender => tr('sender');
+  String get beneficiary => tr('beneficiary');
+  String get clientName => tr('client_name');
+  String get currencyExchange => tr('currency_exchange');
+  String get search => tr('search');
 
 }
