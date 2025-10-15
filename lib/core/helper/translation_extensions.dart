@@ -100,5 +100,8 @@ extension TranslationExtension on BuildContext {
   String get clientName => tr('client_name');
   String get currencyExchange => tr('currency_exchange');
   String get search => tr('search');
+  String get dollar => tr('dollar');
+  String get phone2 => tr('phone_2');
+  String get receivedDone => tr('received_done');
 
 }

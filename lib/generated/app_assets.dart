@@ -72,6 +72,8 @@ class AppAssets {
 
   static const String svgsMapIcon = "assets/svgs/map_icon.svg";
 
+  static const String svgsPending = "assets/svgs/pending.svg";
+
   static const String svgsPhone = "assets/svgs/phone.svg";
 
   static const String svgsPindingIcon = "assets/svgs/pinding_icon.svg";

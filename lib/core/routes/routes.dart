@@ -10,4 +10,5 @@ abstract class Routes {
   static const String changePasswordView = '/changePasswordView';
   static const String profileSettingsView = '/profileSettingsView';
   static const String transcationsView = '/transcationsView';
+  static const String transactionDetailsView = '/transactionDetailsView';
 }

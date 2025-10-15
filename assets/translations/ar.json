@@ -91,10 +91,13 @@
   "resource" : "المصدر",
   "destination" : "الوجهة",
   "sender" : "المرسل",
-  "beneficiary" : "المستفيد",
+  "beneficiary" : "بيانات المستفيد",
   "client_name" : "اسم العميل",
   "currency_exchange" : "تحويل العملات",
-  "search" : "بحث"
+  "search" : "بحث",
+  "dollar" : "دولار امريكي",
+  "phone_2" : "جوال 2",
+  "received_done" : "تم التسليم"
 
 
     
