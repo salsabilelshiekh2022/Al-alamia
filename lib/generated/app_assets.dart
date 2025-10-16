@@ -80,6 +80,8 @@ class AppAssets {
 
   static const String svgsPurpleDollarIcon = "assets/svgs/purple_dollar_icon.svg";
 
+  static const String svgsPurpleDoller = "assets/svgs/purple_doller.svg";
+
   static const String svgsPurpleStarIcon = "assets/svgs/purple_star_icon.svg";
 
   static const String svgsPurpleTransfarIcon = "assets/svgs/purple_transfar_icon.svg";

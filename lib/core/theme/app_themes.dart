@@ -31,12 +31,10 @@ class AppThemes {
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Colors.transparent,
       ),
-      iconTheme: IconThemeData(
-        color: appLightColors.secondaryColor,
-      ),
+      iconTheme: IconThemeData(color: appLightColors.secondaryColor),
       textTheme: ThemeData().textTheme.apply(
-            fontFamily: GoogleFonts.getFont(AppConstants.fontName).fontFamily,
-          ),
+        fontFamily: GoogleFonts.getFont(AppConstants.fontName).fontFamily,
+      ),
       extensions: <ThemeExtension<dynamic>>[
         appLightColors,
         AppTextStylesSchemes.light,
