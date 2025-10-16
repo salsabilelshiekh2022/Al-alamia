@@ -112,5 +112,13 @@ extension TranslationExtension on BuildContext {
   String get totalBalance => tr('total_balance');
   String get cashCategory => tr('cash_category');
   String get number => tr('number');
-
+  String get fromCurrency => tr('from_currency');
+  String get toCurrency => tr('to_currency');
+  String get amountHint => tr('amount_hint');
+  String get clientNameHint => tr('client_name_hint');
+  String get idHint => tr('id_hint');
+  String get addressHint => tr('address_hint');
+  String get phone1Hint => tr('phone_1_hint');
+  String get phone2Hint => tr('phone_2_hint');
+  String get commissionType => tr('commission_type');
 }

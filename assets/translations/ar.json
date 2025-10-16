@@ -106,7 +106,19 @@
   "transfer_amount" : "المبلغ المحوَّل",
   "total_balance" : "اجمالي الرصيد",
   "cash_category" : "الفئة النقدية",
-  "number" : "العدد"
+  "number" : "العدد",
+  "from_currency" : "من عملة",
+  "to_currency" : "الى عملة",
+  "amount_hint" : "ادخل المبلغ",
+  "client_name_hint" : "ادخل اسم العميل",
+  "id_hint" : "ادخل رقم بطاقة الهوية",
+  "address_hint" : "ادخل العنوان",
+  "phone_1_hint" : "ادخل رقم الجوال",
+  "phone_2_hint" : "ادخل رقم الجوال",
+  "commission_type" : "نوع العمولة"
+ 
+  
+  
   
 
 

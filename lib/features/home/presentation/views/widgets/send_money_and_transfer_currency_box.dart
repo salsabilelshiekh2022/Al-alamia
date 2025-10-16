@@ -4,6 +4,7 @@ import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/components/widgets/custom_svg_builder.dart';
+import '../../../../../core/routes/routes.dart';
 import '../../../../../generated/app_assets.dart';
 
 class SendMoneyAndTransferCurrencyBox extends StatelessWidget {
@@ -78,7 +79,9 @@ class SendMoneyAndTransferCurrencyBox extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                context.pushNamed(Routes.transferCurrencyView);
+              },
               child: Column(
                 children: [
                   CustomSvgBuilder(

@@ -17,13 +17,15 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.controller,
     this.inputFormatters,
-    this.enabled = true,
+    this.enabled,
     this.onTap,
     this.maxLines = 1,
     this.isReadOnly,
     this.suffixWidget,
     this.suffixIcon,
-    required this.prefixWidget,
+    this.prefixWidget,
+    this.textAlign,
+    this.initialValue,
   });
 
   final String hintText;
@@ -34,14 +36,15 @@ class CustomTextField extends StatefulWidget {
   final Function(String?)? validator;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
-  final bool enabled;
+  final bool? enabled;
   final bool? isReadOnly;
   final void Function()? onTap;
   final int maxLines;
   final Widget? suffixWidget;
-  final String prefixWidget;
-
+  final String? prefixWidget;
+  final String? initialValue;
   final bool? suffixIcon;
+  final TextAlign? textAlign;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -52,6 +55,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialValue,
+      textAlign: widget.textAlign ?? TextAlign.start,
       maxLines: widget.maxLines,
       enabled: widget.enabled,
       readOnly: widget.isReadOnly ?? false,
@@ -75,12 +80,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
         hintText: widget.hintText,
         hintStyle: context.textStyles.font14MediumGrayColor,
 
-        prefixIcon: CustomSvgBuilder(
-          path: widget.prefixWidget,
-          width: 20,
-          height: 20,
-          fit: BoxFit.scaleDown,
-        ),
+        prefixIcon: widget.prefixWidget == null
+            ? null
+            : CustomSvgBuilder(
+                path: widget.prefixWidget!,
+                width: 20,
+                height: 20,
+                fit: BoxFit.scaleDown,
+              ),
         suffixIcon: widget.suffixIcon == true && widget.suffixWidget == null
             ? IconButton(
                 padding: const EdgeInsets.all(0),

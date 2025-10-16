@@ -11,4 +11,5 @@ abstract class Routes {
   static const String profileSettingsView = '/profileSettingsView';
   static const String transcationsView = '/transcationsView';
   static const String transactionDetailsView = '/transactionDetailsView';
+  static const transferCurrencyView = '/transferCurrencyView';
 }
