@@ -123,4 +123,5 @@ extension TranslationExtension on BuildContext {
   String get commissionType => tr('commission_type');
   String get beneficiaryName => tr('beneficiary_name');
   String get back => tr('back');
+  String get cancle => tr('cancle');
 }

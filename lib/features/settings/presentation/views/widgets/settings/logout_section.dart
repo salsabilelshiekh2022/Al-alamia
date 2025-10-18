@@ -1,9 +1,12 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/core/utils/global_ui_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/components/widgets/custom_svg_builder.dart';
+import '../../../../../../core/components/widgets/main_button.dart';
+import '../../../../../../core/routes/routes.dart';
 import '../../../../../../generated/app_assets.dart';
 
 class LogoutSection extends StatelessWidget {
@@ -12,9 +15,11 @@ class LogoutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){},
+      onTap: () {
+        _buildLogoutDialog(context);
+      },
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: context.colors.whiteColor,
           borderRadius: BorderRadius.circular(12.r),
@@ -29,18 +34,76 @@ class LogoutSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-           
-            Text(context.logout,style: context.textStyles.font16RegularSecondaryColor.copyWith(color: context.colors.redColor),),
+            Text(
+              context.logout,
+              style: context.textStyles.font16RegularSecondaryColor.copyWith(
+                color: context.colors.redColor,
+              ),
+            ),
             10.horizontalSpace,
-             CustomSvgBuilder(
+            CustomSvgBuilder(
               path: AppAssets.svgsLogoutIcon,
               width: 24,
-              height: 24
+              height: 24,
             ),
           ],
         ),
       ),
     );
   }
-}
 
+  void _buildLogoutDialog(BuildContext context) {
+    GlobalUiUtils.showCustomDialog(
+      context,
+      child: Column(
+        children: [
+          Text(
+            context.sureLogout,
+            style: context.textStyles.font18SemiBoldSecondaryColor,
+          ),
+          12.verticalSpace,
+          Text(
+            context.sureLogout,
+            style: context.textStyles.font15RegularGrayColor,
+          ),
+          30.verticalSpace,
+          Row(
+            children: [
+              Expanded(
+                child: MainButton(
+                  title: context.confirm,
+                  onTap: () {
+                    context.pushNamedAndRemoveUntil(Routes.loginView);
+                  },
+                ),
+              ),
+              10.horizontalSpace,
+              Expanded(
+                child: InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12.w),
+                    decoration: BoxDecoration(
+                      color: context.colors.whiteColor,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: context.colors.primaryColor,
+                        width: 1,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        context.cancle,
+                        style: context.textStyles.font16RegularSecondaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
