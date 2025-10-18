@@ -9,6 +9,7 @@ import '../../features/auth/presentation/views/login_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
 import '../../features/transactions/presentation/views/transactions_view.dart';
+import '../../features/transfer_currency/presentation/views/transaction_recipt_view.dart';
 import 'routes.dart';
 
 abstract class AppRouter {
@@ -36,6 +37,8 @@ abstract class AppRouter {
         );
       case Routes.transferCurrencyView:
         return MaterialPageRoute(builder: (_) => const TransferCurrencyView());
+      case Routes.transactionReciptView:
+        return MaterialPageRoute(builder: (_) => const TransactionReciptView());
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());
     }

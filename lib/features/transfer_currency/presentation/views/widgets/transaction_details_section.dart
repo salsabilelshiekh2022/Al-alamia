@@ -2,6 +2,7 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/core/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/components/widgets/custom_drop_down.dart';
@@ -41,7 +42,12 @@ class TransactionDetailsSection extends StatelessWidget {
         ),
         20.verticalSizedBox,
         CustomDropDown(title: context.commissionType, text: "قيمة مضافة"),
-        MainButton(title: context.confirm, onTap: () {}).verticalPadding(32),
+        MainButton(
+          title: context.confirm,
+          onTap: () {
+            context.pushReplacementNamed(Routes.transactionReciptView);
+          },
+        ).verticalPadding(32),
       ],
     );
   }

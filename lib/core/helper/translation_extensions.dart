@@ -121,4 +121,6 @@ extension TranslationExtension on BuildContext {
   String get phone1Hint => tr('phone_1_hint');
   String get phone2Hint => tr('phone_2_hint');
   String get commissionType => tr('commission_type');
+  String get beneficiaryName => tr('beneficiary_name');
+  String get back => tr('back');
 }

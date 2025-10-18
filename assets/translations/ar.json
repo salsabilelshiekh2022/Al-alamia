@@ -92,6 +92,7 @@
   "destination" : "الوجهة",
   "sender" : "المرسل",
   "beneficiary" : "بيانات المستفيد",
+  "beneficiary_name" : "المستفيد",
   "client_name" : "اسم العميل",
   "currency_exchange" : "تحويل العملات",
   "search" : "بحث",
@@ -115,7 +116,8 @@
   "address_hint" : "ادخل العنوان",
   "phone_1_hint" : "ادخل رقم الجوال",
   "phone_2_hint" : "ادخل رقم الجوال",
-  "commission_type" : "نوع العمولة"
+  "commission_type" : "نوع العمولة",
+  "back" : "رجوع"
  
   
   
