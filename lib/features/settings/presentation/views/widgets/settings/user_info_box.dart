@@ -25,10 +25,22 @@ class UserInfoBox extends StatelessWidget {
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          ClipRRect(
+            borderRadius: 25.allBorderRadius,
+            child: CustomCachedImageWidget(
+              path:
+                  "https://i.pinimg.com/736x/5f/94/15/5f9415114f1e9bf75b48d52221e15414.jpg",
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+            ),
+          ),
+          8.horizontalSpace,
+
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "احمد محمد",
@@ -39,24 +51,14 @@ class UserInfoBox extends StatelessWidget {
               5.verticalSpace,
               Text(
                 context.egyptBranch,
-                style: context.textStyles.font14RegularGrayColor
+                style: context.textStyles.font14RegularGrayColor,
               ),
-                5.verticalSpace,
+              5.verticalSpace,
               Text(
                 "+20123456789",
-                style: context.textStyles.font14RegularGrayColor
+                style: context.textStyles.font14RegularGrayColor,
               ),
             ],
-          ),
-          8.horizontalSpace,
-          ClipRRect(
-            borderRadius: 25.allBorderRadius,
-            child: CustomCachedImageWidget(
-              path:
-                  "https://i.pinimg.com/736x/5f/94/15/5f9415114f1e9bf75b48d52221e15414.jpg",
-              width: 50,
-              height: 50,
-            ),
           ),
         ],
       ),

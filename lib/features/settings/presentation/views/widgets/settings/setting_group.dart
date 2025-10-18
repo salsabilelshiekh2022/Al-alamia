@@ -31,12 +31,9 @@ class SettingGroup extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: context.textStyles.font15SemiBoldSecondaryColor,
-          ),
+          Text(title, style: context.textStyles.font15SemiBoldSecondaryColor),
           20.verticalSpace,
           ListView.separated(
             padding: EdgeInsets.zero,
@@ -65,37 +62,40 @@ class SettingItemWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: context.colors.grayColor,
-            size: 20,
+          CustomSvgBuilder(
+            path: settingItem.iconPath,
+            width: 24,
+            height: 24,
+            color: context.colors.secondaryColor,
           ),
-           Expanded(
+          15.horizontalSpace,
+          Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   settingItem.title,
                   style: context.textStyles.font14RegularSecondaryColor,
                 ),
-                if (settingItem.subtitle != null && settingItem.subtitle!.isNotEmpty) ...[
+                if (settingItem.subtitle != null &&
+                    settingItem.subtitle!.isNotEmpty) ...[
                   5.verticalSpace,
                   Text(
                     settingItem.subtitle!,
-                    style: context.textStyles.font13RegularPrimaryColor.copyWith(
-                      color: context.colors.grayColor,
-                    ),
+                    style: context.textStyles.font13RegularPrimaryColor
+                        .copyWith(color: context.colors.grayColor),
                   ),
                 ],
               ],
             ),
           ),
-          15.horizontalSpace,
-      
-          CustomSvgBuilder(path: settingItem.iconPath, width: 24, height: 24,color: context.colors.secondaryColor,),
-          
-        
+
+          Icon(
+            Icons.arrow_forward_ios_sharp,
+            color: context.colors.grayColor,
+            size: 20,
+          ),
         ],
       ),
     );
