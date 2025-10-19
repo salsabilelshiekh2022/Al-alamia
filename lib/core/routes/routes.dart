@@ -13,4 +13,6 @@ abstract class Routes {
   static const String transactionDetailsView = '/transactionDetailsView';
   static const transferCurrencyView = '/transferCurrencyView';
   static const String transactionReciptView = '/TransactionReciptView';
+  static const String sendMoneyFristStepView = '/sendMoneyFristStepView';
+  static const String sendMoneySecondStepView = '/sendMoneySecondStepView';
 }

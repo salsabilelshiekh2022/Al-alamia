@@ -25,6 +25,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
     this.textAlign,
     this.enabled,
     this.initialValue,
+    this.maxLines,
   });
 
   final String label;
@@ -43,6 +44,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
   final TextAlign? textAlign;
   final bool? enabled;
   final String? initialValue;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
             child: CustomTextField(
               textAlign: textAlign,
               initialValue: initialValue,
-
+              maxLines: maxLines ?? 1,
               prefixWidget: prefixWidget,
               inputFormatters: inputFormatters,
               controller: controller,

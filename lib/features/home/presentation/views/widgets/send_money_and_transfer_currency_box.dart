@@ -61,7 +61,9 @@ class SendMoneyAndTransferCurrencyBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                context.pushNamed(Routes.sendMoneyFristStepView);
+              },
               child: Column(
                 children: [
                   CustomSvgBuilder(

@@ -124,4 +124,16 @@ extension TranslationExtension on BuildContext {
   String get beneficiaryName => tr('beneficiary_name');
   String get back => tr('back');
   String get cancle => tr('cancle');
+  String get currency => tr('currency');
+  String get currenyHint => tr('curreny_hint');
+  String get amountByChar => tr('amount_by_char');
+  String get senderInfo => tr('sender_info');
+  String get additionalNumber => tr('additional_number');
+  String get additionalNumberHint => tr('additional_number_hint');
+  String get conversionData => tr('conversion_data');
+  String get addNotes => tr('add_notes');
+  String get notesHint => tr('notes_hint');
+  String get chargeDetails => tr('charge_details');
+  String get recourseHint => tr('recourese_hint');
+  String get distinctionHint => tr('distinction_hint');
 }
