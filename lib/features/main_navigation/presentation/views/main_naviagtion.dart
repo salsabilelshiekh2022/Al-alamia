@@ -53,85 +53,82 @@ class _MainNavigationViewState extends State<MainNavigationView> {
         children: bottomBarPages,
       ),
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: AnimatedNotchBottomBar(
-          color: Colors.white,
-          showLabel: true,
-          itemLabelStyle: context.textStyles.font13RegularPrimaryColor.copyWith(
-            color: context.colors.grayColor,
-          ),
-          notchGradient: context.colors.navigationGradientColor,
-          bottomBarHeight: 81.0,
-          textOverflow: TextOverflow.visible,
-          maxLine: 1,
-          topMargin: 10,
-          circleMargin: 10,
-          shadowElevation: 10,
-          showShadow: true,
-          elevation: 5,
-          kBottomRadius: 16.0,
-          kIconSize: 24,
-          removeMargins: true,
-          notchBottomBarController: _controller,
-
-          /// 👇 When a tab is tapped, animate PageView to that page
-          onTap: (index) {
-            _controller.index = index;
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          },
-
-          bottomBarItems: [
-            BottomBarItem(
-              inActiveItem: CustomSvgBuilder(
-                path: AppAssets.svgsSettings,
-                color: context.colors.grayColor,
-              ),
-              activeItem: CustomSvgBuilder(
-                path: AppAssets.svgsSettings,
-                color: context.colors.whiteColor,
-              ),
-              itemLabel: context.settings,
-            ),
-            BottomBarItem(
-              inActiveItem: CustomSvgBuilder(
-                path: AppAssets.svgsBell,
-                color: context.colors.grayColor,
-              ),
-              activeItem: CustomSvgBuilder(
-                path: AppAssets.svgsBell,
-                color: context.colors.whiteColor,
-              ),
-              itemLabel: context.notifications,
-            ),
-            BottomBarItem(
-              inActiveItem: CustomSvgBuilder(
-                path: AppAssets.svgsWallet,
-                color: context.colors.grayColor,
-              ),
-              activeItem: CustomSvgBuilder(
-                path: AppAssets.svgsWallet,
-                color: context.colors.whiteColor,
-              ),
-              itemLabel: context.transactions,
-            ),
-            BottomBarItem(
-              inActiveItem: CustomSvgBuilder(
-                path: AppAssets.svgsHome,
-                color: context.colors.grayColor,
-              ),
-              activeItem: CustomSvgBuilder(
-                path: AppAssets.svgsHome,
-                color: context.colors.whiteColor,
-              ),
-              itemLabel: context.main,
-            ),
-          ],
+      bottomNavigationBar: AnimatedNotchBottomBar(
+        color: Colors.white,
+        showLabel: true,
+        itemLabelStyle: context.textStyles.font13RegularPrimaryColor.copyWith(
+          color: context.colors.grayColor,
         ),
+        notchGradient: context.colors.navigationGradientColor,
+        bottomBarHeight: 81.0,
+        textOverflow: TextOverflow.visible,
+        maxLine: 1,
+        topMargin: 10,
+        circleMargin: 10,
+        shadowElevation: 10,
+        showShadow: true,
+        elevation: 5,
+        kBottomRadius: 16.0,
+        kIconSize: 24,
+        removeMargins: true,
+        notchBottomBarController: _controller,
+
+        /// 👇 When a tab is tapped, animate PageView to that page
+        onTap: (index) {
+          _controller.index = index;
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
+
+        bottomBarItems: [
+          BottomBarItem(
+            inActiveItem: CustomSvgBuilder(
+              path: AppAssets.svgsSettings,
+              color: context.colors.grayColor,
+            ),
+            activeItem: CustomSvgBuilder(
+              path: AppAssets.svgsSettings,
+              color: context.colors.whiteColor,
+            ),
+            itemLabel: context.settings,
+          ),
+          BottomBarItem(
+            inActiveItem: CustomSvgBuilder(
+              path: AppAssets.svgsBell,
+              color: context.colors.grayColor,
+            ),
+            activeItem: CustomSvgBuilder(
+              path: AppAssets.svgsBell,
+              color: context.colors.whiteColor,
+            ),
+            itemLabel: context.notifications,
+          ),
+          BottomBarItem(
+            inActiveItem: CustomSvgBuilder(
+              path: AppAssets.svgsWallet,
+              color: context.colors.grayColor,
+            ),
+            activeItem: CustomSvgBuilder(
+              path: AppAssets.svgsWallet,
+              color: context.colors.whiteColor,
+            ),
+            itemLabel: context.transactions,
+          ),
+          BottomBarItem(
+            inActiveItem: CustomSvgBuilder(
+              path: AppAssets.svgsHome,
+              color: context.colors.grayColor,
+            ),
+            activeItem: CustomSvgBuilder(
+              path: AppAssets.svgsHome,
+              color: context.colors.whiteColor,
+            ),
+            itemLabel: context.main,
+          ),
+        ],
       ),
     );
   }
