@@ -130,5 +130,9 @@
   "notes_hint": "اضف ملاحظتك ",
   "charge_details": "تفاصيل الرسوم",
   "recourese_hint" : "ادخل المصدر",
-  "distinction_hint" : "ادخل الوجهة"
+  "distinction_hint" : "ادخل الوجهة",
+  "choose_account_type" : "من فضلك اختر نوع حسابك للانتقال إلى صفحة تسجيل الدخول.",
+  "employee" : "موظف",
+  "accountant" : "محاسب",
+  "admin" : "مدير"
 }

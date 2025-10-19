@@ -136,4 +136,8 @@ extension TranslationExtension on BuildContext {
   String get chargeDetails => tr('charge_details');
   String get recourseHint => tr('recourese_hint');
   String get distinctionHint => tr('distinction_hint');
+  String get chooseAccountType => tr('choose_account_type');
+  String get employee => tr('employee');
+  String get accountant => tr('accountant');
+  String get admin => tr('admin');
 }

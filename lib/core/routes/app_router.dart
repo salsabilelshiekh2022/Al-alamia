@@ -1,3 +1,4 @@
+import 'package:alalamia/features/auth/presentation/views/registuration_method_view.dart';
 import 'package:alalamia/features/auth/presentation/views/sign_up_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
 import 'package:alalamia/features/send_money/presentation/views/send_money_second_step_view.dart';
@@ -48,6 +49,10 @@ abstract class AppRouter {
       case Routes.sendMoneySecondStepView:
         return MaterialPageRoute(
           builder: (_) => const SendMoneySecondStepView(),
+        );
+      case Routes.registerationMethodView:
+        return MaterialPageRoute(
+          builder: (_) => const RegisturationMethodView(),
         );
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());

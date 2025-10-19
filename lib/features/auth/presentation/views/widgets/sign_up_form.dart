@@ -49,7 +49,12 @@ class SignUpForm extends StatelessWidget {
             prefixWidget: AppAssets.svgsWhiteLockIcon,
           ),
           32.verticalSpace,
-          MainButton(title: context.signUp, onTap: () {}),
+          MainButton(
+            title: context.signUp,
+            onTap: () {
+              context.pushNamedAndRemoveUntil(Routes.mainNavigationView);
+            },
+          ),
           24.verticalSpace,
           AuthFooterWidget(
             clickable: context.login,
