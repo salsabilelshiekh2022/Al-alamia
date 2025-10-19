@@ -1,10 +1,11 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/routes/routes.dart';
+import 'package:alalamia/core/utils/global_ui_utils.dart';
 import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
 
-
+import '../../presentation/views/widgets/settings/change_language_bottom_sheet.dart';
 
 class SettingItemModel {
   final String title;
@@ -28,7 +29,7 @@ List<SettingItemModel> fristSettingGroup(BuildContext context) => [
     iconPath: AppAssets.svgsUser,
     subtitle: context.updateProfile,
     onTap: () {
-     context.pushNamed(Routes.profileSettingsView);
+      context.pushNamed(Routes.profileSettingsView);
     },
   ),
   SettingItemModel(
@@ -39,7 +40,6 @@ List<SettingItemModel> fristSettingGroup(BuildContext context) => [
       context.pushNamed(Routes.changePasswordView);
     },
   ),
-
 ];
 
 List<SettingItemModel> secoundSettingGroup(BuildContext context) => [
@@ -47,16 +47,17 @@ List<SettingItemModel> secoundSettingGroup(BuildContext context) => [
     title: context.notifications,
     iconPath: AppAssets.svgsBell,
     isNotification: true,
-    onTap: () {
-      
-    },
+    onTap: () {},
   ),
- SettingItemModel(
+  SettingItemModel(
     title: context.language,
     iconPath: AppAssets.svgsWorldIcon,
-   subtitle: context.arabic,
+    subtitle: context.arabic,
     onTap: () {
-      
+      GlobalUiUtils.showBottomSheet(
+        context,
+        child: ChangeLanguageBottomSheet(),
+      );
     },
   ),
 ];
@@ -64,17 +65,13 @@ List<SettingItemModel> thirdSettingGroup(BuildContext context) => [
   SettingItemModel(
     title: context.support,
     iconPath: AppAssets.svgsSupportIcon,
-   
-    onTap: () {
-      
-    },
+
+    onTap: () {},
   ),
- SettingItemModel(
+  SettingItemModel(
     title: context.aboutApp,
     iconPath: AppAssets.svgsInfoIcon,
-  
-    onTap: () {
-      
-    },
+
+    onTap: () {},
   ),
 ];

@@ -31,7 +31,7 @@ class SettingsView extends StatelessWidget {
                 CustomAppBar(
                   title: context.settings,
                   hasActions: false,
-                  isBack: true,
+                  isBack: false,
                 ).onlyPadding(bottomPadding: 24),
 
                 Stack(

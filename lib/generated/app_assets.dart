@@ -32,6 +32,8 @@ class AppAssets {
 
   static const String svgsAdditionalPhoneIcon = "assets/svgs/additional_phone_icon.svg";
 
+  static const String svgsArabicFlag = "assets/svgs/arabic_flag.svg";
+
   static const String svgsArrowBackIcon = "assets/svgs/arrow_back_icon.svg";
 
   static const String svgsArrowBtnIcon = "assets/svgs/arrow_btn_icon.svg";
@@ -53,6 +55,8 @@ class AppAssets {
   static const String svgsDoubleArrowIcon = "assets/svgs/double_arrow_icon.svg";
 
   static const String svgsEditIcon = "assets/svgs/edit_icon.svg";
+
+  static const String svgsEnglishFlag = "assets/svgs/english_flag.svg";
 
   static const String svgsEyeClosedIcon = "assets/svgs/eye_closed_icon.svg";
 
