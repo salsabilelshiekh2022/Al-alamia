@@ -18,4 +18,5 @@ abstract class Routes {
   static const String registerationMethodView = '/registerationMethodView';
   static const String requestDeptView = '/requestDeptView';
   static const String paymentDeptView = '/paymentDeptView';
+  static const String expensesView = '/expensesView';
 }

@@ -139,5 +139,11 @@
   "expenses" : "المصاريف",
   "request_debt" : "طلب دين",
   "payment_debt" : "سداد دين",
-  "request_payment_debt" : "طلب / سداد دين"
+  "request_payment_debt" : "طلب / سداد دين",
+  "purpose" : "الغرض",
+  "purpose_hint" : "ادخل الغرض",
+  "enter_required_amount" : "ادخل المبلغ المطلوب",
+  "send" : "ارسال",
+  "enter_amount_expenses" : "ادخل المبلغ المصروف",
+  "enter_amount_you_want_to_pay" : "ادخل المبلغ المراد سداده"
 }

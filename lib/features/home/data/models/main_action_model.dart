@@ -37,7 +37,9 @@ List<MainActionModel> mainActionsList({required BuildContext context}) => [
   MainActionModel(
     title: context.expenses,
     iconPath: AppAssets.svgsCash,
-    onTap: () {},
+    onTap: () {
+      context.pushNamed(Routes.expensesView);
+    },
   ),
   MainActionModel(
     title: context.debts,

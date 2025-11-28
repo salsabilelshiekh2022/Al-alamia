@@ -139,5 +139,11 @@
   "expenses" : "Expenses",
   "request_debt" : "Request Debt",
   "payment_debt" : "Payment Debt",
-  "request_payment_debt" : "Request / Payment Debt"
+  "request_payment_debt" : "Request / Payment Debt",
+  "purpose" : "Purpose",
+  "purpose_hint" : "Enter purpose",
+  "enter_required_amount" : "Enter required amount",
+  "send" : "Send",
+    "enter_amount_expenses" : "Enter expenses amount",
+  "enter_amount_you_want_to_pay" : "Enter amount you want to pay"
 }

@@ -145,4 +145,10 @@ extension TranslationExtension on BuildContext {
   String get requestDebt => tr('request_debt');
   String get paymentDebt => tr('payment_debt');
   String get requestPaymentDebt => tr('request_payment_debt');
+  String get purpose => tr('purpose');
+  String get purposeHint => tr('purpose_hint');
+  String get enterRequiredAmount => tr('enter_required_amount');
+  String get send => tr('send');
+  String get enterAmountExpenses => tr('enter_amount_expenses');
+  String get enterAmountYouWantToPay => tr('enter_amount_you_want_to_pay');
 }

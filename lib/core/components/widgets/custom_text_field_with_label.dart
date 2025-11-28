@@ -26,6 +26,8 @@ class CustomTextFieldWithLabel extends StatelessWidget {
     this.enabled,
     this.initialValue,
     this.maxLines,
+    this.isRequired = false,
+    this.isReadOnly,
   });
 
   final String label;
@@ -43,8 +45,10 @@ class CustomTextFieldWithLabel extends StatelessWidget {
   final String? prefixWidget;
   final TextAlign? textAlign;
   final bool? enabled;
+  final bool? isReadOnly;
   final String? initialValue;
   final int? maxLines;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +57,18 @@ class CustomTextFieldWithLabel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: context.textStyles.font16MediumSecondaryColor),
+          Row(
+            children: [
+              Text(label, style: context.textStyles.font16MediumSecondaryColor),
+              if (isRequired)
+                Text(
+                  '  *',
+                  style: context.textStyles.font16MediumSecondaryColor.copyWith(
+                    color: Colors.red,
+                  ),
+                ),
+            ],
+          ),
           10.verticalSpace,
           Padding(
             padding: REdgeInsets.symmetric(
@@ -72,6 +87,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
               suffixWidget: suffixWidget,
               suffixIcon: suffixIcon,
               hintText: hintText,
+              isReadOnly: isReadOnly,
               enabled: enabled ?? true,
               validator: (value) {
                 if (validator != null) {
