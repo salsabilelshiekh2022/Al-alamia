@@ -13,6 +13,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Gradient buttonGradientColor;
   final Gradient backGroundGradientColor;
   final Gradient navigationGradientColor;
+  final List<BoxShadow> whiteShadowsBox;
 
   const AppColors({
     required this.whiteColor,
@@ -27,6 +28,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.buttonGradientColor,
     required this.backGroundGradientColor,
     required this.navigationGradientColor,
+    required this.whiteShadowsBox,
   });
 
   @override
@@ -79,6 +81,7 @@ class AppColors extends ThemeExtension<AppColors> {
           other.navigationGradientColor,
           t,
         )!,
+        whiteShadowsBox: whiteShadowsBox,
       );
     }
   }

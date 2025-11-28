@@ -140,4 +140,6 @@ extension TranslationExtension on BuildContext {
   String get employee => tr('employee');
   String get accountant => tr('accountant');
   String get admin => tr('admin');
+  String get debts => tr('debts');
+  String get expenses => tr('expenses');
 }

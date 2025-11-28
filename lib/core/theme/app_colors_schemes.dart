@@ -38,6 +38,38 @@ abstract class AppColorsSchemes {
       end: Alignment(0.50, 1.00),
       colors: [const Color(0xFF6E0084), const Color(0xFF19001E)],
     ),
+    whiteShadowsBox: [
+      BoxShadow(
+        color: Color(0x07000000),
+        blurRadius: 25,
+        offset: Offset(0, 11),
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x07000000),
+        blurRadius: 45,
+        offset: Offset(0, 45),
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x05000000),
+        blurRadius: 61,
+        offset: Offset(0, 101),
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x00000000),
+        blurRadius: 72,
+        offset: Offset(0, 180),
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x00000000),
+        blurRadius: 79,
+        offset: Offset(0, 280),
+        spreadRadius: 0,
+      ),
+    ],
   );
 
   static AppColors dark = light;

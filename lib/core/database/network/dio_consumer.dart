@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
- import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -58,12 +58,13 @@ class DioConsumer extends ApiConsumer {
     //   boxName: CacheBoxes.userModelBox,
     //   key: 'user',
     // );
-    final token = 
-    // user?.meta?.token ?? 
-    '';
-    final locale = EasyLocalization.of(AppKeys.navigatorKey.currentContext!)
-            ?.locale
-            .languageCode ??
+    final token =
+        // user?.meta?.token ??
+        '';
+    final locale =
+        EasyLocalization.of(
+          AppKeys.navigatorKey.currentContext!,
+        )?.locale.languageCode ??
         'ar';
     final deviceId = await _getDeviceToken() ?? '';
 
@@ -109,11 +110,7 @@ class DioConsumer extends ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
   }) {
-    return dio.get(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-    );
+    return dio.get(path, data: data, queryParameters: queryParameters);
   }
 
   @override

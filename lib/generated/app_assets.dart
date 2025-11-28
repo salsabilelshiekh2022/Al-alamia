@@ -46,6 +46,8 @@ class AppAssets {
 
   static const String svgsCalcIcon = "assets/svgs/calc_icon.svg";
 
+  static const String svgsCash = "assets/svgs/cash.svg";
+
   static const String svgsCheckUserIcon = "assets/svgs/check_user_icon.svg";
 
   static const String svgsCoinsIcon = "assets/svgs/coins_icon.svg";

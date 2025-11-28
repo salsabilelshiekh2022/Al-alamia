@@ -1,4 +1,3 @@
-import 'package:alalamia/core/components/widgets/custom_cache_network_image.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -8,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../generated/app_assets.dart';
 import 'widgets/currency_calculator_section.dart';
-import 'widgets/send_money_and_transfer_currency_box.dart';
+import 'widgets/main_actions_box.dart';
 import 'widgets/wallets_section.dart';
 
 class HomeView extends StatelessWidget {
@@ -63,7 +62,7 @@ class HomeView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SendMoneyAndTransferCurrencyBox(),
+                    MainActionsBox(),
                   ],
                 ),
               ],
@@ -76,17 +75,34 @@ class HomeView extends StatelessWidget {
 
   AppBar _buildHomeAppBar(BuildContext context) {
     return AppBar(
-      title: Text(
-        "${context.hello}, أحمد محمد",
-        style: context.textStyles.font16SemiBoldWhiteColor,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "${context.hello}, أحمد محمد",
+            style: context.textStyles.font14SemiBoldPrimaryColor.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          4.verticalSizedBox,
+          Row(
+            children: [
+              CustomSvgBuilder(
+                path: AppAssets.svgsMapIcon,
+                width: 16,
+                height: 16,
+                fit: BoxFit.contain,
+                color: Colors.white,
+              ),
+              4.horizontalSizedBox,
+              Text(
+                "فرع طنطا",
+                style: context.textStyles.font16SemiBoldWhiteColor,
+              ),
+            ],
+          ),
+        ],
       ),
-      leading: CustomCachedImageWidget(
-        path:
-            "https://i.pinimg.com/736x/ce/d4/4a/ced44a15c6f187b76d6479a03bdd773f.jpg",
-        width: 44,
-        height: 44,
-        fit: BoxFit.scaleDown,
-      ).clipRRect(borderRadius: BorderRadius.circular(1000.r)),
       actions: [
         InkWell(
           onTap: () {},

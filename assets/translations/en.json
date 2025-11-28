@@ -134,5 +134,7 @@
   "choose_account_type": "Please choose your account type to proceed to the login page.",
   "employee": "Employee",
   "accountant": "Accountant",
-  "admin": "Admin"
+  "admin": "Admin",
+   "debts" : "Debts",
+  "expenses" : "Expenses"
 }
