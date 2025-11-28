@@ -142,4 +142,7 @@ extension TranslationExtension on BuildContext {
   String get admin => tr('admin');
   String get debts => tr('debts');
   String get expenses => tr('expenses');
+  String get requestDebt => tr('request_debt');
+  String get paymentDebt => tr('payment_debt');
+  String get requestPaymentDebt => tr('request_payment_debt');
 }

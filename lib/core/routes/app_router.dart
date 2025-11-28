@@ -1,5 +1,7 @@
 import 'package:alalamia/features/auth/presentation/views/registuration_method_view.dart';
 import 'package:alalamia/features/auth/presentation/views/sign_up_view.dart';
+import 'package:alalamia/features/depts/presentation/views/payment_debt_view.dart';
+import 'package:alalamia/features/depts/presentation/views/request_debt_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
 import 'package:alalamia/features/send_money/presentation/views/send_money_second_step_view.dart';
 import 'package:alalamia/features/settings/presentation/views/settings_view.dart';
@@ -54,6 +56,10 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const RegisturationMethodView(),
         );
+      case Routes.requestDeptView:
+        return MaterialPageRoute(builder: (_) => const RequestDebtView());
+      case Routes.paymentDeptView:
+        return MaterialPageRoute(builder: (_) => const PaymentDebtView());
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());
     }

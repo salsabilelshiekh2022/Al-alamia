@@ -136,5 +136,8 @@
   "accountant" : "محاسب",
   "admin" : "مدير",
   "debts" : "الديون",
-  "expenses" : "المصاريف"
+  "expenses" : "المصاريف",
+  "request_debt" : "طلب دين",
+  "payment_debt" : "سداد دين",
+  "request_payment_debt" : "طلب / سداد دين"
 }

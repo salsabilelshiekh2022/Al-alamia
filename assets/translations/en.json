@@ -136,5 +136,8 @@
   "accountant": "Accountant",
   "admin": "Admin",
    "debts" : "Debts",
-  "expenses" : "Expenses"
+  "expenses" : "Expenses",
+  "request_debt" : "Request Debt",
+  "payment_debt" : "Payment Debt",
+  "request_payment_debt" : "Request / Payment Debt"
 }

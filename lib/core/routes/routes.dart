@@ -16,4 +16,6 @@ abstract class Routes {
   static const String sendMoneyFristStepView = '/sendMoneyFristStepView';
   static const String sendMoneySecondStepView = '/sendMoneySecondStepView';
   static const String registerationMethodView = '/registerationMethodView';
+  static const String requestDeptView = '/requestDeptView';
+  static const String paymentDeptView = '/paymentDeptView';
 }
