@@ -3,7 +3,7 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/routes/routes.dart';
-import 'package:alalamia/features/depts/presentation/views/widgets/debt_card_widget.dart';
+import 'package:alalamia/features/debts/presentation/views/widgets/debt_card_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/components/widgets/main_button.dart';

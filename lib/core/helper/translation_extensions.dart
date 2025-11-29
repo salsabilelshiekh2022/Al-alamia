@@ -153,4 +153,7 @@ extension TranslationExtension on BuildContext {
   String get enterAmountYouWantToPay => tr('enter_amount_you_want_to_pay');
   String get name => tr('name');
   String get enterNameHint => tr('enter_name_hint');
+  String get open => tr("open");
+  String get closed => tr("closed");
+  String get addComplaint => tr("add_complaint");
 }

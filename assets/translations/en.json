@@ -147,5 +147,8 @@
     "enter_amount_expenses" : "Enter expenses amount",
   "enter_amount_you_want_to_pay" : "Enter amount you want to pay",
   "name" : "Name",
-  "name_hint" : "Enter name"
+  "name_hint" : "Enter name",
+  "open" : "Open",
+  "closed" : "Closed",
+  "add_complaint": "Add a Complaint"
 }

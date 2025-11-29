@@ -1,6 +1,6 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/features/depts/presentation/views/debts_bottom_sheet.dart';
+import 'package:alalamia/features/debts/presentation/views/debts_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/routes/routes.dart';

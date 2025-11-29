@@ -147,5 +147,8 @@
   "enter_amount_expenses" : "ادخل المبلغ المصروف",
   "enter_amount_you_want_to_pay" : "ادخل المبلغ المراد سداده",
   "name" : "الاسم",
-  "enter_name_hint" : "ادخل الاسم"
+  "enter_name_hint" : "ادخل الاسم",
+  "open" : "مفتوحة",
+  "closed" : "مغلقة",
+  "add_complaint":"إضافة شكوي"
 }
