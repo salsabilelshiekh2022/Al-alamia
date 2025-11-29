@@ -145,5 +145,7 @@
   "enter_required_amount" : "Enter required amount",
   "send" : "Send",
     "enter_amount_expenses" : "Enter expenses amount",
-  "enter_amount_you_want_to_pay" : "Enter amount you want to pay"
+  "enter_amount_you_want_to_pay" : "Enter amount you want to pay",
+  "name" : "Name",
+  "name_hint" : "Enter name"
 }

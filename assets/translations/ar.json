@@ -123,7 +123,7 @@
   "curreny_hint": "اختر العملة",
   "amount_by_char": "المبلغ بالاحرف",
   "sender_info": "بيانات المُرسِل",
-  "additional_number": "رقم موبيل اضافي",
+  "additional_number": "رقم جوال اضافي",
   "additional_number_hint": "ادخل رقم الجوال اخر",
   "conversion_data": "بيانات التحويل",
   "add_notes": "اضافة ملاحظة",
@@ -145,5 +145,7 @@
   "enter_required_amount" : "ادخل المبلغ المطلوب",
   "send" : "ارسال",
   "enter_amount_expenses" : "ادخل المبلغ المصروف",
-  "enter_amount_you_want_to_pay" : "ادخل المبلغ المراد سداده"
+  "enter_amount_you_want_to_pay" : "ادخل المبلغ المراد سداده",
+  "name" : "الاسم",
+  "enter_name_hint" : "ادخل الاسم"
 }

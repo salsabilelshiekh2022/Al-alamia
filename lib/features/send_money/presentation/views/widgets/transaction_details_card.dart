@@ -26,17 +26,19 @@ class TransactionDetailsCard extends StatelessWidget {
             children: [
               Expanded(
                 child: CustomTextFieldWithLabel(
-                  label: context.amount,
-                  hintText: context.amountHint,
+                  label: context.currency,
+                  hintText: context.currenyHint,
                   prefixWidget: AppAssets.svgsDollarIcon,
+                  isRequired: true,
                 ),
               ),
               14.horizontalSizedBox,
               Expanded(
                 child: CustomTextFieldWithLabel(
-                  label: context.currency,
-                  hintText: context.currenyHint,
+                  label: context.amount,
+                  hintText: context.amountHint,
                   prefixWidget: AppAssets.svgsDollarIcon,
+                  isRequired: true,
                 ),
               ),
             ],
@@ -46,18 +48,22 @@ class TransactionDetailsCard extends StatelessWidget {
             label: context.amountByChar,
             hintText: context.amountHint,
             prefixWidget: AppAssets.svgsDollarIcon,
+            isRequired: true,
+            keyboardType: TextInputType.text,
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
             label: context.resource,
             hintText: context.recourseHint,
             prefixWidget: AppAssets.svgsBank,
+            isRequired: true,
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
             label: context.destination,
             hintText: context.distinctionHint,
             prefixWidget: AppAssets.svgsBank,
+            isRequired: true,
           ),
           16.verticalSizedBox,
           Row(
@@ -70,6 +76,7 @@ class TransactionDetailsCard extends StatelessWidget {
                   hintText: "\$20",
                   enabled: false,
                   prefixWidget: AppAssets.svgsCoinsIcon,
+                  isRequired: true,
                 ),
               ),
               14.horizontalSizedBox,
@@ -78,6 +85,7 @@ class TransactionDetailsCard extends StatelessWidget {
                   label: context.commissionType,
                   hintText: context.commissionType,
                   prefixWidget: AppAssets.svgsCoinsIcon,
+                  isRequired: true,
                 ),
               ),
             ],

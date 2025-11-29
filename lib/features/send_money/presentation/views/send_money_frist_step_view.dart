@@ -22,11 +22,9 @@ class SendMoneyFristStepView extends StatelessWidget {
       body: Column(
         children: [
           _stepHeader(context),
-
           12.verticalSizedBox,
           _progressBar(context),
           24.verticalSizedBox,
-
           SenderDataCard(),
           20.verticalSizedBox,
           BeneficiaryDataCard(),

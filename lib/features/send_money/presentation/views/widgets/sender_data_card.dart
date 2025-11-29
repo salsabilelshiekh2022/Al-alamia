@@ -23,27 +23,25 @@ class SenderDataCard extends StatelessWidget {
           12.verticalSizedBox,
 
           CustomTextFieldWithLabel(
-            label: context.id,
-            hintText: context.id,
-            prefixWidget: AppAssets.svgsIdIcon,
-          ),
-          16.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            label: context.userName,
-            hintText: context.userNameHint,
+            label: context.name,
+            hintText: context.enterNameHint,
             prefixWidget: AppAssets.svgsUser,
+            isRequired: true,
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
             label: context.phone,
             hintText: context.phoneHint,
             prefixWidget: AppAssets.svgsPhone,
+            keyboardType: TextInputType.phone,
+            isRequired: true,
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
             label: context.address,
             hintText: context.addressHint,
             prefixWidget: AppAssets.svgsMapIcon,
+            isRequired: true,
           ),
         ],
       ),

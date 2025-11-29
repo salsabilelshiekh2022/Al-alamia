@@ -151,4 +151,6 @@ extension TranslationExtension on BuildContext {
   String get send => tr('send');
   String get enterAmountExpenses => tr('enter_amount_expenses');
   String get enterAmountYouWantToPay => tr('enter_amount_you_want_to_pay');
+  String get name => tr('name');
+  String get enterNameHint => tr('enter_name_hint');
 }
