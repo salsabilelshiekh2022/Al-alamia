@@ -66,7 +66,8 @@ class DioConsumer extends ApiConsumer {
       boxName: CacheBoxes.userModelBox,
       key: 'user',
     );
-    final token = user?.token ?? '';
+    // final token = user?.token ?? '';
+    final token = '13|w0wUprR6CgxqJqVvanUd4cnmPbPeZvivgWDSSOiQ352848bc';
     final locale = EasyLocalization.of(AppKeys.navigatorKey.currentContext!)
             ?.locale
             .languageCode ??

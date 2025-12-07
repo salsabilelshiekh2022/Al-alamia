@@ -33,18 +33,28 @@ class WalletCard extends StatelessWidget {
               children: [
                 Image.asset(AppAssets.imagesFlag, width: 18, height: 12),
                 6.horizontalSpace,
-                Text(
-                  context.dollar,
-                  style: context.textStyles.font13SemiBoldPrimaryColor.copyWith(
-                    color: context.colors.grayColor,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      context.dollar,
+                      style: context.textStyles.font13SemiBoldPrimaryColor.copyWith(
+                        color: context.colors.grayColor,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
             20.verticalSizedBox,
-            Text(
-              "\$2,654.30",
-              style: context.textStyles.font16SemiBoldSecondaryColor,
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "\$2,654.30",
+                  style: context.textStyles.font16SemiBoldSecondaryColor,
+                ),
+              ),
             ),
           ],
         ),

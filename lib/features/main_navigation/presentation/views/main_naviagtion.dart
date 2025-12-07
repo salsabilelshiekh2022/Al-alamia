@@ -1,6 +1,7 @@
 import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:alalamia/features/home/presentation/views/home_view.dart';
 import 'package:alalamia/features/notifications/presentation/views/notifications_view.dart';
 import 'package:alalamia/features/settings/presentation/views/settings_view.dart';
@@ -8,6 +9,10 @@ import 'package:alalamia/features/transactions/presentation/views/transactions_v
 import 'package:alalamia/generated/app_assets.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/di/dependency_injection.dart';
+import '../../../home/data/repo/home_repo.dart';
 
 class MainNavigationView extends StatefulWidget {
   const MainNavigationView({super.key});
@@ -28,11 +33,11 @@ class _MainNavigationViewState extends State<MainNavigationView> {
   final int maxCount = 4;
 
   /// 👇 Your navigation pages (replace with your real views)
-  final List<Widget> bottomBarPages = const [
+  final List<Widget> bottomBarPages =  [
     SettingsView(),
     NotificationsView(),
     TransactionsView(),
-    HomeView(),
+    BlocProvider(create: (context) => HomeCubit(homeRepo: getIt<HomeRepo>())..getBranchCurrencies(), child: HomeView()),
   ];
 
   @override

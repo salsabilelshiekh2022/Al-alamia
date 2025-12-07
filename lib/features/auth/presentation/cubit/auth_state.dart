@@ -12,7 +12,6 @@ class AuthState extends Equatable {
 
   AuthState copyWith({
     RequestStatus? authStatus,
-    RequestStatus? signUpStatus,
     String? errorMessage,
   }) {
     return AuthState(
