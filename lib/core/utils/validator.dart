@@ -43,25 +43,25 @@ class Validator {
 
   static String? validatePassword(String? value, BuildContext context) {
     if (value!.isEmpty) {
-      return "S.of(context).field_is_required";
+      return "Field is Required";
     } else {
       bool result = passwordValidate(value);
       if (result) {
         return null;
       } else {
-        return "S.of(context).your_pass_should_contain_capital_small_special";
+        return "Password should be at least 8 characters";
       }
     }
   }
 
   static String? validatePhone(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return "context.fieldRequired";
+      return "Field is Required";
     }
-
-    final ksaLocalRegex = RegExp(r'^5[0-9]{8}$');
+    //egypt numbers
+    final ksaLocalRegex = RegExp( r'^01[0125][0-9]{8}$');
     if (!ksaLocalRegex.hasMatch(value)) {
-      return "context.pleaseEnterValidPhone";
+      return "Please enter a valid phone number";
     }
 
     return null;

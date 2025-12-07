@@ -18,7 +18,7 @@ class RegisturationMethodView extends StatelessWidget {
     return CustomPage(
       title: context.login,
       hasActions: false,
-      isBack: false,
+      isBack: true,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
       body: Column(
         children: [
@@ -75,13 +75,14 @@ class _RegisturationMethodItemState extends State<RegisturationMethodItem> {
             ),
             child: Row(
               children: [
-                CustomSvgBuilder(
+                CustomSvgBuilder( 
+
                   path: RegistrationMethodsEnum.values[index].chooseImage(
                     context,
                   ),
                   width: 32,
                   height: 32,
-                  fit: BoxFit.scaleDown,
+                  fit: BoxFit.scaleDown,   
                 ),
                 14.horizontalSizedBox,
                 Text(

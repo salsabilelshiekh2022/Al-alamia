@@ -1,25 +1,33 @@
 import 'dart:io';
 
+import 'package:alalamia/core/database/network/end_points.dart';
+import 'package:alalamia/core/database/network/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:requests_inspector/requests_inspector.dart';
 
+import '../../../features/auth/data/models/user_model.dart';
 import '../../utils/app_constatnts.dart';
 import '../../utils/app_keys.dart';
 import '../../utils/app_logs.dart';
+import '../cache/cache_helper.dart';
 import '../cache/cache_services.dart';
 import 'api_consumer.dart';
-import 'end_points.dart';
-import 'failure.dart';
 
+@LazySingleton(as: ApiConsumer)
 class DioConsumer extends ApiConsumer {
-  final Dio dio;
+  final dio = Dio()
+    ..interceptors.add(
+      RequestsInspectorInterceptor(),
+    );
   final CacheServices cacheServices;
 
-  DioConsumer({required this.dio, required this.cacheServices}) {
+  DioConsumer({required this.cacheServices}) {
     dio.options.baseUrl = EndPoints.baseUrl;
 
     if (kDebugMode) {
@@ -54,19 +62,16 @@ class DioConsumer extends ApiConsumer {
   }
 
   Future<Map<String, String>> _buildHeaders() async {
-    // final user = cacheServices.getDataFromCache<UserModel?>(
-    //   boxName: CacheBoxes.userModelBox,
-    //   key: 'user',
-    // );
-    final token =
-        // user?.meta?.token ??
-        '';
-    final locale =
-        EasyLocalization.of(
-          AppKeys.navigatorKey.currentContext!,
-        )?.locale.languageCode ??
+    final user = cacheServices.getDataFromCache<UserModel?>(
+      boxName: CacheBoxes.userModelBox,
+      key: 'user',
+    );
+    final token = user?.token ?? '';
+    final locale = EasyLocalization.of(AppKeys.navigatorKey.currentContext!)
+            ?.locale
+            .languageCode ??
         'ar';
-    final deviceId = await _getDeviceToken() ?? '';
+   // final deviceId = await _getDeviceToken() ?? '';
 
     return {
       'Content-Type': 'application/json',
@@ -74,7 +79,7 @@ class DioConsumer extends ApiConsumer {
       'lang': locale,
       'client-type': Platform.isIOS ? 'ios' : 'android',
       'client-version': AppConstants.appVersion,
-      'Device-ID': deviceId,
+      //'Device-ID': deviceId,
       if (token.isNotEmpty)
         AppConstants.authorizationKey: '${AppConstants.bearerKey} $token',
     };
@@ -110,7 +115,11 @@ class DioConsumer extends ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
   }) {
-    return dio.get(path, data: data, queryParameters: queryParameters);
+    return dio.get(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+    );
   }
 
   @override

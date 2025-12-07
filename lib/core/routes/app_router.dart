@@ -1,3 +1,4 @@
+import 'package:alalamia/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:alalamia/features/auth/presentation/views/registuration_method_view.dart';
 import 'package:alalamia/features/auth/presentation/views/sign_up_view.dart';
 import 'package:alalamia/features/debts/presentation/views/payment_debt_view.dart';
@@ -11,12 +12,15 @@ import 'package:alalamia/features/support/presentation/views/support_view.dart';
 import 'package:alalamia/features/transactions/presentation/views/transactions_details_view.dart.dart';
 import 'package:alalamia/features/transfer_currency/presentation/views/transfer_currency_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/presentation/views/login_view.dart';
 import '../../features/send_money/presentation/views/send_money_frist_step_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
 import '../../features/transactions/presentation/views/transactions_view.dart';
 import '../../features/transfer_currency/presentation/views/transaction_recipt_view.dart';
+import '../di/dependency_injection.dart';
 import 'routes.dart';
 
 abstract class AppRouter {
@@ -25,7 +29,14 @@ abstract class AppRouter {
       case Routes.splashView:
         return MaterialPageRoute(builder: (_) => const SplashView());
       case Routes.loginView:
-        return MaterialPageRoute(builder: (_) => const LoginView());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => AuthCubit(
+              authRepo:  getIt<AuthRepo>()
+            ),
+            child: const LoginView(),
+          ),
+        );
       case Routes.signUpView:
         return MaterialPageRoute(builder: (_) => const SignUpView());
       case Routes.mainNavigationView:
