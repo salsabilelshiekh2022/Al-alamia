@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/dependency_injection.dart';
-import '../../../home/data/repo/home_repo.dart';
 
 class MainNavigationView extends StatefulWidget {
   const MainNavigationView({super.key});
@@ -33,11 +32,14 @@ class _MainNavigationViewState extends State<MainNavigationView> {
   final int maxCount = 4;
 
   /// 👇 Your navigation pages (replace with your real views)
-  final List<Widget> bottomBarPages =  [
+  final List<Widget> bottomBarPages = [
     SettingsView(),
     NotificationsView(),
     TransactionsView(),
-    BlocProvider(create: (context) => HomeCubit(homeRepo: getIt<HomeRepo>())..getBranchCurrencies(), child: HomeView()),
+    BlocProvider.value(
+      value: getIt<HomeCubit>()..getBranchCurrencies(),
+      child: HomeView(),
+    ),
   ];
 
   @override

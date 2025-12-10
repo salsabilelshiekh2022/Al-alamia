@@ -1,15 +1,15 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
-import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/utils/global_ui_utils.dart';
+import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../../generated/app_assets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'wallet_details_bottom_sheet.dart';
 
 class WalletCard extends StatelessWidget {
-  const WalletCard({super.key});
+  const WalletCard({super.key, required this.currencyModel});
+  final CurrencyModel currencyModel;
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +31,19 @@ class WalletCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.asset(AppAssets.imagesFlag, width: 18, height: 12),
+                SvgPicture.network(
+                  currencyModel.currencyImage!,
+                  width: 18,
+                  height: 12,
+                ),
                 6.horizontalSpace,
                 Expanded(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      context.dollar,
-                      style: context.textStyles.font13SemiBoldPrimaryColor.copyWith(
-                        color: context.colors.grayColor,
-                      ),
+                      currencyModel.currencyName!,
+                      style: context.textStyles.font13SemiBoldPrimaryColor
+                          .copyWith(color: context.colors.grayColor),
                     ),
                   ),
                 ),
@@ -51,7 +54,7 @@ class WalletCard extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  "\$2,654.30",
+                  currencyModel.balance!,
                   style: context.textStyles.font16SemiBoldSecondaryColor,
                 ),
               ),

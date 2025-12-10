@@ -16,6 +16,7 @@ import '../../features/auth/data/repos/auth_repo.dart' as _i507;
 import '../../features/auth/data/repos/auth_repo_impl.dart' as _i152;
 import '../../features/home/data/repo/home_repo.dart' as _i429;
 import '../../features/home/data/repo/home_repo_impl.dart' as _i1024;
+import '../../features/home/presentation/cubit/home_cubit.dart' as _i9;
 import '../database/cache/cache_services.dart' as _i408;
 import '../database/network/api_consumer.dart' as _i742;
 import '../database/network/dio_consumer.dart' as _i1062;
@@ -33,6 +34,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i429.HomeRepo>(
       () => _i1024.HomeRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.factory<_i9.HomeCubit>(
+      () => _i9.HomeCubit(homeRepo: gh<_i429.HomeRepo>()),
     );
     gh.lazySingleton<_i507.AuthRepo>(
       () => _i152.AuthRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),

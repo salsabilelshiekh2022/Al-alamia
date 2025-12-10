@@ -21,10 +21,7 @@ import 'api_consumer.dart';
 
 @LazySingleton(as: ApiConsumer)
 class DioConsumer extends ApiConsumer {
-  final dio = Dio()
-    ..interceptors.add(
-      RequestsInspectorInterceptor(),
-    );
+  final dio = Dio()..interceptors.add(RequestsInspectorInterceptor());
   final CacheServices cacheServices;
 
   DioConsumer({required this.cacheServices}) {
@@ -67,12 +64,13 @@ class DioConsumer extends ApiConsumer {
       key: 'user',
     );
     // final token = user?.token ?? '';
-    final token = '13|w0wUprR6CgxqJqVvanUd4cnmPbPeZvivgWDSSOiQ352848bc';
-    final locale = EasyLocalization.of(AppKeys.navigatorKey.currentContext!)
-            ?.locale
-            .languageCode ??
+    final token = '1|LujFPwBS4rHRupbDmoCPlB4LMb6nf1VYQEL9T0Gl07e2b2f7';
+    final locale =
+        EasyLocalization.of(
+          AppKeys.navigatorKey.currentContext!,
+        )?.locale.languageCode ??
         'ar';
-   // final deviceId = await _getDeviceToken() ?? '';
+    // final deviceId = await _getDeviceToken() ?? '';
 
     return {
       'Content-Type': 'application/json',
@@ -111,16 +109,14 @@ class DioConsumer extends ApiConsumer {
   }
 
   @override
-  Future<Response> get(
+  Future<dynamic> get(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
   }) {
-    return dio.get(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-    );
+    return dio
+        .get(path, data: data, queryParameters: queryParameters)
+        .then((response) => response.data);
   }
 
   @override

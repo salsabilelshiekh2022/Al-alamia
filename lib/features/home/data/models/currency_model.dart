@@ -1,3 +1,5 @@
+import 'package:alalamia/generated/app_assets.dart';
+
 class CurrencyModel {
   final int? id;
   final String? currencyName;
@@ -12,7 +14,6 @@ class CurrencyModel {
     this.currencyCode,
     this.balance,
   });
-
 
   factory CurrencyModel.fromJson(Map<String, dynamic> json) => CurrencyModel(
     id: json["id"],
@@ -30,3 +31,11 @@ class CurrencyModel {
     "balance": balance,
   };
 }
+
+CurrencyModel dummyCurrenyModel = CurrencyModel(
+  id: 1,
+  currencyName: 'Dollar Dollar',
+  currencyImage: AppAssets.svgsEnglishFlag,
+  currencyCode: 'USD',
+  balance: '2,222',
+);

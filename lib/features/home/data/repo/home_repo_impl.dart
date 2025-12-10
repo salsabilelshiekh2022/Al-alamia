@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/database/network/api_consumer.dart';
 import '../../../../core/database/network/end_points.dart';
+
 @LazySingleton(as: HomeRepo)
 class HomeRepoImpl extends HomeRepo {
   final ApiConsumer apiConsumer;
@@ -13,11 +14,11 @@ class HomeRepoImpl extends HomeRepo {
 
   @override
   Future<Either<Failure, List<CurrencyModel>>> getBranchCurrencies() {
-     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get( EndPoints.getBranchCurrencies,
-         ),
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getBranchCurrencies),
       onSuccess: (result) {
-        return (result as List).map((e) => CurrencyModel.fromJson(e)).toList();
+        final data = result['data'] as List;
+        return data.map((e) => CurrencyModel.fromJson(e)).toList();
       },
     );
   }
