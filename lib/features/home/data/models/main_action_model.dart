@@ -1,10 +1,8 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/features/debts/presentation/views/debts_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/routes/routes.dart';
-import '../../../../core/utils/global_ui_utils.dart';
 import '../../../../generated/app_assets.dart';
 
 class MainActionModel {
@@ -35,16 +33,8 @@ List<MainActionModel> mainActionsList({required BuildContext context}) => [
     },
   ),
   MainActionModel(
-    title: context.expenses,
-    iconPath: AppAssets.svgsCash,
-    onTap: () {
-      context.pushNamed(Routes.expensesView);
-    },
-  ),
-  MainActionModel(
-    title: context.debts,
-    iconPath: AppAssets.svgsWallet,
-    onTap: () =>
-        GlobalUiUtils.showBottomSheet(context, child: DebtsBottomSheet()),
+    title: context.inOut,
+    iconPath: AppAssets.svgsInOut,
+    onTap: () {},
   ),
 ];

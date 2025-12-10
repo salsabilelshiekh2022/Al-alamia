@@ -34,9 +34,6 @@ class MainActionsBox extends StatelessWidget {
             MainActionWidget(
               mainActionModel: mainActionsList(context: context)[2],
             ),
-            MainActionWidget(
-              mainActionModel: mainActionsList(context: context)[3],
-            ),
           ],
         ),
       ),

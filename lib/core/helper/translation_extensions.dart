@@ -156,4 +156,5 @@ extension TranslationExtension on BuildContext {
   String get open => tr("open");
   String get closed => tr("closed");
   String get addComplaint => tr("add_complaint");
+  String get inOut => tr("in_out");
 }

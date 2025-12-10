@@ -70,6 +70,8 @@ class AppAssets {
 
   static const String svgsIdIcon = "assets/svgs/id_icon.svg";
 
+  static const String svgsInOut = "assets/svgs/in_out.svg";
+
   static const String svgsInfoIcon = "assets/svgs/info_icon.svg";
 
   static const String svgsLangBtnIcon = "assets/svgs/lang_btn_icon.svg";

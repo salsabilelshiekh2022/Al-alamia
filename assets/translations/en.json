@@ -150,5 +150,6 @@
   "name_hint" : "Enter name",
   "open" : "Open",
   "closed" : "Closed",
-  "add_complaint": "Add a Complaint"
+  "add_complaint": "Add a Complaint",
+  "in_out" :"In/Out"
 }

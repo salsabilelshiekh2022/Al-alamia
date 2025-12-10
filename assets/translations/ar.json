@@ -150,5 +150,6 @@
   "enter_name_hint" : "ادخل الاسم",
   "open" : "مفتوحة",
   "closed" : "مغلقة",
-  "add_complaint":"إضافة شكوي"
+  "add_complaint":"إضافة شكوي",
+  "in_out" :"دخول/خروج"
 }
