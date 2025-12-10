@@ -4,41 +4,93 @@ import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'wallet_card.dart';
+import 'wallet_grid_page.dart';
+import 'wallet_page_indicator.dart';
 
-class WalletsList extends StatelessWidget {
+class WalletsList extends StatefulWidget {
   const WalletsList({super.key});
+
+  @override
+  State<WalletsList> createState() => _WalletsListState();
+}
+
+class _WalletsListState extends State<WalletsList> {
+  final PageController _pageController = PageController();
+  static const int _itemsPerPage = 6;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        bool isLoading =
+        final isLoading =
             state.homeStatus.isLoading && state.currenciesList.isEmpty;
-        return GridView.builder(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 1.4,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            mainAxisExtent: 100,
-          ),
-          itemBuilder: (context, index) => Skeletonizer(
-            enabled: isLoading,
-            child: WalletCard(
-              currencyModel: isLoading
-                  ? dummyCurrenyModel
-                  : state.currenciesList[index],
-            ),
-          ),
-          itemCount: isLoading ? 6 : 6,
+        final items = _getItemsList(state.currenciesList, isLoading);
+        final pages = _divideIntoPages(items);
+        final pageCount = pages.isEmpty ? 1 : pages.length;
+
+        return Column(
+          children: [
+            _buildPageView(pages, pageCount, isLoading),
+            if (pageCount > 1) _buildPageIndicator(pageCount),
+          ],
         );
       },
+    );
+  }
+
+  List<CurrencyModel> _getItemsList(
+    List<CurrencyModel> currencies,
+    bool isLoading,
+  ) {
+    return isLoading
+        ? List.generate(_itemsPerPage, (_) => dummyCurrenyModel)
+        : currencies;
+  }
+
+  List<List<CurrencyModel>> _divideIntoPages(List<CurrencyModel> items) {
+    final pages = <List<CurrencyModel>>[];
+    for (int i = 0; i < items.length; i += _itemsPerPage) {
+      final end = (i + _itemsPerPage < items.length)
+          ? i + _itemsPerPage
+          : items.length;
+      pages.add(items.sublist(i, end));
+    }
+    return pages;
+  }
+
+  Widget _buildPageView(
+    List<List<CurrencyModel>> pages,
+    int pageCount,
+    bool isLoading,
+  ) {
+    return SizedBox(
+      height: 212.h,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: pageCount,
+        itemBuilder: (context, pageIndex) {
+          final pageItems = pages.isEmpty
+              ? List.generate(_itemsPerPage, (_) => dummyCurrenyModel)
+              : pages[pageIndex];
+
+          return WalletGridPage(items: pageItems, isLoading: isLoading);
+        },
+      ),
+    );
+  }
+
+  Widget _buildPageIndicator(int pageCount) {
+    return Padding(
+      padding: EdgeInsets.only(top: 16.h),
+      child: WalletPageIndicator(controller: _pageController, count: pageCount),
     );
   }
 }
