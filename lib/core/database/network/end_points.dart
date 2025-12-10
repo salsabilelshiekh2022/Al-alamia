@@ -7,4 +7,6 @@ class EndPoints {
   static String getBranchCurrencies = '/employee/home/get-branch-currencies';
   static String getDenominations({required int id}) =>
       '/employee/home/currency/$id/get-denominations';
+
+  static String getCurrencies = '/employee/general/get-all-currencies';
 }

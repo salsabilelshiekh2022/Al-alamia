@@ -1,4 +1,4 @@
-import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/data/models/wallet_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -12,7 +12,7 @@ class WalletGridPage extends StatelessWidget {
     required this.isLoading,
   });
 
-  final List<CurrencyModel> items;
+  final List<WalletModel> items;
   final bool isLoading;
 
   @override

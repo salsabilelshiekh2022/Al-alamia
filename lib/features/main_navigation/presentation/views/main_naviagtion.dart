@@ -37,7 +37,9 @@ class _MainNavigationViewState extends State<MainNavigationView> {
     NotificationsView(),
     TransactionsView(),
     BlocProvider.value(
-      value: getIt<HomeCubit>()..getBranchCurrencies(),
+      value: getIt<HomeCubit>()
+        ..getBranchCurrencies()
+        ..getCurrencies(),
       child: HomeView(),
     ),
   ];

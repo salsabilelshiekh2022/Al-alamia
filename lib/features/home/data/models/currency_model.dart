@@ -1,41 +1,26 @@
-import 'package:alalamia/generated/app_assets.dart';
-
 class CurrencyModel {
   final int? id;
-  final String? currencyName;
-  final String? currencyImage;
-  final String? currencyCode;
-  final String? balance;
+  final String? name;
+  final String? code;
+  final String? image;
 
-  CurrencyModel({
-    this.id,
-    this.currencyName,
-    this.currencyImage,
-    this.currencyCode,
-    this.balance,
-  });
+  CurrencyModel({this.id, this.name, this.code, this.image});
 
-  factory CurrencyModel.fromJson(Map<String, dynamic> json) => CurrencyModel(
-    id: json["id"],
-    currencyName: json["currency_name"],
-    currencyImage: json["currency_image"],
-    currencyCode: json["currency_code"],
-    balance: json["balance"],
-  );
+  factory CurrencyModel.fromJson(Map<String, dynamic> json) {
+    return CurrencyModel(
+      id: json['id'],
+      name: json['name'],
+      code: json['code'],
+      image: json['image'],
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "currency_name": currencyName,
-    "currency_image": currencyImage,
-    "currency_code": currencyCode,
-    "balance": balance,
-  };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['code'] = code;
+    data['image'] = image;
+    return data;
+  }
 }
-
-CurrencyModel dummyCurrenyModel = CurrencyModel(
-  id: 1,
-  currencyName: 'Dollar Dollar',
-  currencyImage: AppAssets.svgsEnglishFlag,
-  currencyCode: 'USD',
-  balance: '2,222',
-);

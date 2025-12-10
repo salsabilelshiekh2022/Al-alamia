@@ -15,10 +15,10 @@ class HomeCubit extends Cubit<HomeState> {
     final result = await homeRepo.getBranchCurrencies();
     result.fold(
       (failure) => emit(state.copyWith(homeStatus: RequestStatus.error)),
-      (currenciesList) => emit(
+      (walletsList) => emit(
         state.copyWith(
           homeStatus: RequestStatus.success,
-          currenciesList: currenciesList,
+          walletsList: walletsList,
         ),
       ),
     );
@@ -41,6 +41,20 @@ class HomeCubit extends Cubit<HomeState> {
         state.copyWith(
           denominationsStatus: RequestStatus.success,
           denominations: denominations,
+        ),
+      ),
+    );
+  }
+
+  Future<void> getCurrencies() async {
+    emit(state.copyWith(homeStatus: RequestStatus.loading));
+    final result = await homeRepo.getCurrencies();
+    result.fold(
+      (failure) => emit(state.copyWith(homeStatus: RequestStatus.error)),
+      (currenciesList) => emit(
+        state.copyWith(
+          homeStatus: RequestStatus.success,
+          currenciesList: currenciesList,
         ),
       ),
     );

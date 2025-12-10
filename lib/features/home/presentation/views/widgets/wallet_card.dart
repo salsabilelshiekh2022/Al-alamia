@@ -2,7 +2,7 @@ import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/utils/global_ui_utils.dart';
-import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/data/models/wallet_model.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +12,7 @@ import 'wallet_details_bottom_sheet.dart';
 
 class WalletCard extends StatelessWidget {
   const WalletCard({super.key, required this.currencyModel});
-  final CurrencyModel currencyModel;
+  final WalletModel currencyModel;
 
   @override
   Widget build(BuildContext context) {

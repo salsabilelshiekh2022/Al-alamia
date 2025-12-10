@@ -1,5 +1,6 @@
 import 'package:alalamia/core/database/network/failure.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/data/models/wallet_model.dart';
 import 'package:alalamia/features/home/data/models/denominations_model.dart';
 import 'package:alalamia/features/home/data/repo/home_repo.dart';
 import 'package:dartz/dartz.dart';
@@ -14,12 +15,12 @@ class HomeRepoImpl extends HomeRepo {
   HomeRepoImpl({required this.apiConsumer});
 
   @override
-  Future<Either<Failure, List<CurrencyModel>>> getBranchCurrencies() {
+  Future<Either<Failure, List<WalletModel>>> getBranchCurrencies() {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.get(EndPoints.getBranchCurrencies),
       onSuccess: (result) {
         final data = result['data'] as List;
-        return data.map((e) => CurrencyModel.fromJson(e)).toList();
+        return data.map((e) => WalletModel.fromJson(e)).toList();
       },
     );
   }
@@ -34,6 +35,17 @@ class HomeRepoImpl extends HomeRepo {
       onSuccess: (result) {
         final data = result['data'] as List;
         return data.map((e) => DenominationsModel.fromJson(e)).toList();
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<CurrencyModel>>> getCurrencies() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getCurrencies),
+      onSuccess: (result) {
+        final data = result['data'] as List;
+        return data.map((e) => CurrencyModel.fromJson(e)).toList();
       },
     );
   }

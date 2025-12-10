@@ -1,5 +1,5 @@
 import 'package:alalamia/core/enums/request_status.dart';
-import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/data/models/wallet_model.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_state.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +31,8 @@ class _WalletsListState extends State<WalletsList> {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         final isLoading =
-            state.homeStatus.isLoading && state.currenciesList.isEmpty;
-        final items = _getItemsList(state.currenciesList, isLoading);
+            state.homeStatus.isLoading && state.walletsList.isEmpty;
+        final items = _getItemsList(state.walletsList, isLoading);
         final pages = _divideIntoPages(items);
         final pageCount = pages.isEmpty ? 1 : pages.length;
 
@@ -46,8 +46,8 @@ class _WalletsListState extends State<WalletsList> {
     );
   }
 
-  List<CurrencyModel> _getItemsList(
-    List<CurrencyModel> currencies,
+  List<WalletModel> _getItemsList(
+    List<WalletModel> currencies,
     bool isLoading,
   ) {
     return isLoading
@@ -55,8 +55,8 @@ class _WalletsListState extends State<WalletsList> {
         : currencies;
   }
 
-  List<List<CurrencyModel>> _divideIntoPages(List<CurrencyModel> items) {
-    final pages = <List<CurrencyModel>>[];
+  List<List<WalletModel>> _divideIntoPages(List<WalletModel> items) {
+    final pages = <List<WalletModel>>[];
     for (int i = 0; i < items.length; i += _itemsPerPage) {
       final end = (i + _itemsPerPage < items.length)
           ? i + _itemsPerPage
@@ -67,7 +67,7 @@ class _WalletsListState extends State<WalletsList> {
   }
 
   Widget _buildPageView(
-    List<List<CurrencyModel>> pages,
+    List<List<WalletModel>> pages,
     int pageCount,
     bool isLoading,
   ) {
