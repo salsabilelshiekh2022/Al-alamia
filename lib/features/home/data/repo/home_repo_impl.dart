@@ -1,5 +1,6 @@
 import 'package:alalamia/core/database/network/failure.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/data/models/denominations_model.dart';
 import 'package:alalamia/features/home/data/repo/home_repo.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
@@ -19,6 +20,20 @@ class HomeRepoImpl extends HomeRepo {
       onSuccess: (result) {
         final data = result['data'] as List;
         return data.map((e) => CurrencyModel.fromJson(e)).toList();
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<DenominationsModel>>> getDenominationsOfCurrency({
+    required int currencyId,
+  }) {
+    return apiConsumer.handleRequest(
+      request: () =>
+          apiConsumer.get(EndPoints.getDenominations(id: currencyId)),
+      onSuccess: (result) {
+        final data = result['data'] as List;
+        return data.map((e) => DenominationsModel.fromJson(e)).toList();
       },
     );
   }

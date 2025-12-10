@@ -9,7 +9,13 @@ import '../../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../../generated/app_assets.dart';
 
 class WalletDetailsBottomSheet extends StatelessWidget {
-  const WalletDetailsBottomSheet({super.key});
+  const WalletDetailsBottomSheet({
+    super.key,
+    required this.currencyName,
+    required this.totalBalance,
+  });
+  final String currencyName;
+  final String totalBalance;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class WalletDetailsBottomSheet extends StatelessWidget {
             ),
             8.horizontalSpace,
             Text(
-              context.dollar,
+              currencyName,
               style: context.textStyles.font16SemiBoldSecondaryColor,
             ),
           ],
@@ -37,26 +43,36 @@ class WalletDetailsBottomSheet extends StatelessWidget {
         ),
         14.verticalSizedBox,
         Text(
-          "1,250.00 ",
+          totalBalance,
           style: context.textStyles.font24BoldSecondaryColor.copyWith(
             fontSize: 28,
           ),
         ),
         32.verticalSizedBox,
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              context.cashCategory,
-              style: context.textStyles.font15MediumGrayColor,
+            Expanded(
+              child: Text(
+                context.cashCategory,
+                textAlign: TextAlign.start,
+                style: context.textStyles.font15MediumGrayColor,
+              ),
             ),
-            Text(
-              context.number,
-              style: context.textStyles.font15MediumGrayColor,
+            Expanded(
+              child: Text(
+                context.number,
+                textAlign: TextAlign.center,
+
+                style: context.textStyles.font15MediumGrayColor,
+              ),
             ),
-            Text(
-              context.total,
-              style: context.textStyles.font15MediumGrayColor,
+            Expanded(
+              child: Text(
+                context.total,
+                textAlign: TextAlign.end,
+
+                style: context.textStyles.font15MediumGrayColor,
+              ),
             ),
           ],
         ),
@@ -67,19 +83,39 @@ class WalletDetailsBottomSheet extends StatelessWidget {
           children: List.generate(
             7,
             (index) => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "\$100",
-                  style: context.textStyles.font16SemiBoldSecondaryColor,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      "\$100",
+                      textAlign: TextAlign.start,
+                      style: context.textStyles.font16SemiBoldSecondaryColor,
+                    ),
+                  ),
                 ),
-                Text(
-                  "100",
-                  style: context.textStyles.font16SemiBoldSecondaryColor,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.center,
+                    child: Text(
+                      "100",
+                      textAlign: TextAlign.center,
+                      style: context.textStyles.font16SemiBoldSecondaryColor,
+                    ),
+                  ),
                 ),
-                Text(
-                  "\$1,000.00",
-                  style: context.textStyles.font16SemiBoldSecondaryColor,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text(
+                      "\$1,000.00",
+                      textAlign: TextAlign.end,
+                      style: context.textStyles.font16SemiBoldSecondaryColor,
+                    ),
+                  ),
                 ),
               ],
             ).onlyPadding(bottomPadding: 20),

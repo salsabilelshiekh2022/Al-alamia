@@ -2,7 +2,9 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/utils/global_ui_utils.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'wallet_details_bottom_sheet.dart';
@@ -15,9 +17,15 @@ class WalletCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        context.read<HomeCubit>().getDenominationsOfCurrency(
+          currencyId: currencyModel.id!,
+        );
         GlobalUiUtils.showBottomSheet(
           context,
-          child: WalletDetailsBottomSheet(),
+          child: WalletDetailsBottomSheet(
+            currencyName: currencyModel.currencyName!,
+            totalBalance: currencyModel.balance ?? "0.0",
+          ),
         );
       },
       child: Container(

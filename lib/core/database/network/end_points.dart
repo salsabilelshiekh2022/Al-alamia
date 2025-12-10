@@ -5,4 +5,6 @@ class EndPoints {
 
   static String login = '/employee/auth/login';
   static String getBranchCurrencies = '/employee/home/get-branch-currencies';
+  static String getDenominations({required int id}) =>
+      '/employee/home/currency/$id/get-denominations';
 }
