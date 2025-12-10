@@ -25,15 +25,21 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> getDenominationsOfCurrency({required int currencyId}) async {
-    emit(state.copyWith(homeStatus: RequestStatus.loading));
+    emit(
+      state.copyWith(
+        denominationsStatus: RequestStatus.loading,
+        denominations: [],
+      ),
+    );
     final result = await homeRepo.getDenominationsOfCurrency(
       currencyId: currencyId,
     );
     result.fold(
-      (failure) => emit(state.copyWith(homeStatus: RequestStatus.error)),
+      (failure) =>
+          emit(state.copyWith(denominationsStatus: RequestStatus.error)),
       (denominations) => emit(
         state.copyWith(
-          homeStatus: RequestStatus.success,
+          denominationsStatus: RequestStatus.success,
           denominations: denominations,
         ),
       ),

@@ -1,8 +1,11 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
+import 'package:alalamia/features/home/presentation/cubit/home_state.dart';
+import 'package:alalamia/features/home/presentation/views/widgets/denominations_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/components/widgets/custom_svg_builder.dart';
@@ -14,6 +17,7 @@ class WalletDetailsBottomSheet extends StatelessWidget {
     required this.currencyName,
     required this.totalBalance,
   });
+
   final String currencyName;
   final String totalBalance;
 
@@ -49,77 +53,10 @@ class WalletDetailsBottomSheet extends StatelessWidget {
           ),
         ),
         32.verticalSizedBox,
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                context.cashCategory,
-                textAlign: TextAlign.start,
-                style: context.textStyles.font15MediumGrayColor,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                context.number,
-                textAlign: TextAlign.center,
-
-                style: context.textStyles.font15MediumGrayColor,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                context.total,
-                textAlign: TextAlign.end,
-
-                style: context.textStyles.font15MediumGrayColor,
-              ),
-            ),
-          ],
-        ),
-
-        Divider(color: context.colors.strokeColor).verticalPadding(14),
-
-        Column(
-          children: List.generate(
-            7,
-            (index) => Row(
-              children: [
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(
-                      "\$100",
-                      textAlign: TextAlign.start,
-                      style: context.textStyles.font16SemiBoldSecondaryColor,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: AlignmentDirectional.center,
-                    child: Text(
-                      "100",
-                      textAlign: TextAlign.center,
-                      style: context.textStyles.font16SemiBoldSecondaryColor,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Text(
-                      "\$1,000.00",
-                      textAlign: TextAlign.end,
-                      style: context.textStyles.font16SemiBoldSecondaryColor,
-                    ),
-                  ),
-                ),
-              ],
-            ).onlyPadding(bottomPadding: 20),
-          ),
+        BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            return DenominationsListView();
+          },
         ),
       ],
     );

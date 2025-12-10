@@ -1,3 +1,4 @@
+import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/utils/global_ui_utils.dart';
@@ -17,14 +18,16 @@ class WalletCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<HomeCubit>().getDenominationsOfCurrency(
-          currencyId: currencyModel.id!,
-        );
+        final cubit = getIt<HomeCubit>();
+        cubit.getDenominationsOfCurrency(currencyId: currencyModel.id!);
         GlobalUiUtils.showBottomSheet(
           context,
-          child: WalletDetailsBottomSheet(
-            currencyName: currencyModel.currencyName!,
-            totalBalance: currencyModel.balance ?? "0.0",
+          child: BlocProvider.value(
+            value: cubit,
+            child: WalletDetailsBottomSheet(
+              currencyName: currencyModel.currencyName!,
+              totalBalance: currencyModel.balance ?? "0.0",
+            ),
           ),
         );
       },

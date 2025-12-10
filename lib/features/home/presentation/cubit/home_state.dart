@@ -6,26 +6,30 @@ import '../../data/models/currency_model.dart';
 
 class HomeState extends Equatable {
   final RequestStatus homeStatus;
+  final RequestStatus denominationsStatus;
   final List<CurrencyModel> currenciesList;
   final List<DenominationsModel> denominations;
   const HomeState({
     this.homeStatus = RequestStatus.initial,
+    this.denominationsStatus = RequestStatus.initial,
     this.currenciesList = const [],
     this.denominations = const [],
   });
 
   HomeState copyWith({
     RequestStatus? homeStatus,
+    RequestStatus? denominationsStatus,
     List<CurrencyModel>? currenciesList,
     List<DenominationsModel>? denominations,
   }) {
     return HomeState(
       homeStatus: homeStatus ?? this.homeStatus,
+      denominationsStatus: denominationsStatus ?? this.denominationsStatus,
       currenciesList: currenciesList ?? this.currenciesList,
       denominations: denominations ?? this.denominations,
     );
   }
 
   @override
-  List<Object?> get props => [homeStatus, currenciesList, denominations];
+  List<Object?> get props => [homeStatus, denominationsStatus, currenciesList, denominations];
 }

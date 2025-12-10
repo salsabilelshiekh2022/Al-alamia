@@ -22,3 +22,13 @@ class DenominationsModel {
     return data;
   }
 }
+
+List<DenominationsModel> get dummyDenominations => List.generate(
+  6,
+  (index) => DenominationsModel(
+    name: 'Denomination ${index + 1}',
+    value: '\$${(index + 1) * 100}',
+    quantity: 10,
+    total: (index + 1) * 1000,
+  ),
+);
