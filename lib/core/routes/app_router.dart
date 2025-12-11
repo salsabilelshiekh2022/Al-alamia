@@ -81,7 +81,15 @@ abstract class AppRouter {
           ),
         );
       case Routes.paymentDeptView:
-        return MaterialPageRoute(builder: (_) => const PaymentDebtView());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: getIt<HomeCubit>(),
+            child: BlocProvider(
+              create: (context) => getIt<DebtsCubit>(),
+              child: const PaymentDebtView(),
+            ),
+          ),
+        );
       case Routes.expensesView:
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(

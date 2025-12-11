@@ -11,4 +11,5 @@ class EndPoints {
   static String getCurrencies = '/employee/general/get-all-currencies';
   static String addExpenses = '/employee/transactions/expenses';
   static String addDebt = '/employee/transactions/add-debt';
+  static String payDebt = '/employee/transactions/pay-debt';
 }
