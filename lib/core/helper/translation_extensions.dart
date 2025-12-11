@@ -158,4 +158,5 @@ extension TranslationExtension on BuildContext {
   String get addComplaint => tr("add_complaint");
   String get inOut => tr("in_out");
   String get fieldIsRequired => tr("field_is_Required");
+  String get clientInfo => tr("client_info");
 }

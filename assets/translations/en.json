@@ -152,5 +152,6 @@
   "closed" : "Closed",
   "add_complaint": "Add a Complaint",
   "in_out" :"In/Out",
-  "field_is_Required" :"Field is Required"
+  "field_is_Required" :"Field is Required",
+  "client_info" : "Client Information"
 }

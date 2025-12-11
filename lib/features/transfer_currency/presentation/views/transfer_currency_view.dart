@@ -1,17 +1,14 @@
+import 'package:alalamia/core/components/widgets/card_with_purple_shadow.dart';
 import 'package:alalamia/core/components/widgets/custom_page.dart';
-import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/components/widgets/custom_text_field_with_label.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/core/helper/widget_extentions.dart';
-import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/components/widgets/custom_drop_down.dart';
-import 'widgets/total_section.dart';
-import 'widgets/transaction_details_section.dart';
+import '../../../../core/utils/validator.dart';
+import '../../../../generated/app_assets.dart';
+import '../../../home/presentation/views/widgets/currency_calculator_section.dart';
 
 class TransferCurrencyView extends StatelessWidget {
   const TransferCurrencyView({super.key});
@@ -26,40 +23,103 @@ class TransferCurrencyView extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.currencyExchange,
-            style: context.textStyles.font16SemiBoldSecondaryColor,
-          ),
-          24.verticalSizedBox,
-
-          CustomDropDown(title: context.fromCurrency, text: context.dollar),
-          14.verticalSizedBox,
-          Container(
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(17.r),
-              color: context.colors.primaryColor,
-            ),
-            child: CustomSvgBuilder(
-              path: AppAssets.svgsTransfarIcon,
-              width: 18,
-              height: 18,
-              fit: BoxFit.scaleDown,
-            ),
-          ).center(),
-          CustomDropDown(title: context.toCurrency, text: context.dollar),
-          20.verticalSpace,
-          CustomTextFieldWithLabel(
-            controller: TextEditingController(text: '100.00'),
-            label: context.amount,
-            hintText: context.amountHint,
-            textAlign: TextAlign.center,
-          ),
+          ClientInfoSection(),
           20.verticalSizedBox,
-          TotalSection(),
-          32.verticalSizedBox,
-          TransactionDetailsSection(),
+          CurrencyCalculatorSection(),
+          20.verticalSizedBox,
+          AmountSection(),
+          20.verticalSizedBox,
+          NotesSection(),
+        ],
+      ),
+    );
+  }
+}
+
+class ClientInfoSection extends StatelessWidget {
+  const ClientInfoSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CardWithPurpleShadow(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.clientInfo,
+            style: context.textStyles.font18SemiBoldSecondaryColor,
+          ),
+          12.verticalSizedBox,
+          CustomTextFieldWithLabel(
+            controller: TextEditingController(),
+            label: context.phone,
+            hintText: context.phoneHint,
+            isRequired: true,
+            prefixWidget: AppAssets.svgsPhone,
+            keyboardType: TextInputType.phone,
+            validator: (val) => Validator.validatePhone(val, context),
+          ),
+          16.verticalSizedBox,
+          CustomTextFieldWithLabel(
+            controller: TextEditingController(),
+            label: context.clientName,
+            hintText: context.clientNameHint,
+            isRequired: true,
+            prefixWidget: AppAssets.svgsUser,
+            keyboardType: TextInputType.phone,
+            validator: (val) => Validator.validateName(val, context),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AmountSection extends StatelessWidget {
+  const AmountSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CardWithPurpleShadow(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.amount,
+            style: context.textStyles.font17SemiBoldSecondaryColor,
+          ),
+          12.verticalSizedBox,
+          CustomTextFieldWithLabel(
+            controller: TextEditingController(),
+            label: context.amountByChar,
+            hintText: context.amountHint,
+            isRequired: true,
+            prefixWidget: AppAssets.svgsDollarIcon,
+            keyboardType: TextInputType.text,
+            validator: (val) => Validator.validateAnotherField(val, context),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NotesSection extends StatelessWidget {
+  const NotesSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CardWithPurpleShadow(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextFieldWithLabel(
+            controller: TextEditingController(),
+            label: context.addNotes,
+            hintText: context.notesHint,
+            maxLines: 3,
+            keyboardType: TextInputType.text,
+          ),
         ],
       ),
     );

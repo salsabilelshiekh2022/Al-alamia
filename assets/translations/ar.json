@@ -152,5 +152,7 @@
   "closed" : "مغلقة",
   "add_complaint":"إضافة شكوي",
   "in_out" :"دخول/خروج",
-  "field_is_Required" : "الحقل مطلوب"
+  "field_is_Required" : "الحقل مطلوب",
+  "client_info" : "بيانات العميل"
+  
 }
