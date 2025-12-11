@@ -18,20 +18,23 @@ class CalculatorTextField extends StatelessWidget {
               style: context.textStyles.font15MediumGrayColor,
             ),
 
-            fillColor: Color(0xffEFEFEF),
+            fillColor: context.colors.backgroundFieldColor,
             filled: true,
-            border: _buildBorder(),
-            enabledBorder: _buildBorder(),
-            focusedBorder: _buildBorder(),
+            border: _buildBorder(context),
+            enabledBorder: _buildBorder(context),
+            focusedBorder: _buildBorder(context),
           ),
         ),
       ),
     );
   }
 
-  OutlineInputBorder _buildBorder() {
+  OutlineInputBorder _buildBorder(BuildContext context) {
     return OutlineInputBorder(
-      borderSide: BorderSide(color: Color(0xffEFEFEF)),
+      borderSide: BorderSide(
+        color: context.colors.backgroundFieldColor,
+        width: 1,
+      ),
       borderRadius: BorderRadius.circular(12.r),
     );
   }
