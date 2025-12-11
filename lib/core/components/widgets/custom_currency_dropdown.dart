@@ -2,7 +2,6 @@ import 'package:alalamia/core/components/widgets/card_with_purple_shadow.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -84,14 +83,14 @@ class CustomCurrencyDropdown extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (selectedItem?.image != null) ...[
-                FittedBox(
-                  fit: BoxFit.scaleDown,
+                ClipOval(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: SvgPicture.network(
                     selectedItem!.image!,
                     width: 22,
                     height: 22,
-                    fit: BoxFit.contain,
-                  ).clipRRect(borderRadius: BorderRadius.circular(11)),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ],
               11.horizontalSpace,
