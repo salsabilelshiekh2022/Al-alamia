@@ -1,3 +1,4 @@
+import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -22,48 +23,199 @@ class CurrencyCalculator extends StatefulWidget {
 }
 
 class _CurrencyCalculatorState extends State<CurrencyCalculator> {
-  CurrencyModel? fromCurrency;
-  CurrencyModel? toCurrency;
+  late final TextEditingController _amountController;
+  late final TextEditingController _resultController;
 
-  late TextEditingController amountController;
-  late TextEditingController resultController;
+  CurrencyModel? _fromCurrency;
+  CurrencyModel? _toCurrency;
+
   @override
   void initState() {
-    amountController = TextEditingController();
-    resultController = TextEditingController();
     super.initState();
+    _amountController = TextEditingController();
+    _resultController = TextEditingController();
   }
 
   @override
   void dispose() {
-    amountController.dispose();
-    resultController.dispose();
+    _amountController.dispose();
+    _resultController.dispose();
     super.dispose();
+  }
+
+  void _swapCurrencies() {
+    setState(() {
+      final temp = _fromCurrency;
+      _fromCurrency = _toCurrency;
+      _toCurrency = temp;
+      _calculateExchangeRate();
+    });
+  }
+
+  void _onAmountChanged(String value) {
+    final homeState = context.read<HomeCubit>().state;
+    final double amount = double.tryParse(value) ?? 0;
+    final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
+    final result = (amount * exchangeRate).toStringAsFixed(2);
+    _resultController.text = result;
+  }
+
+  void _onFromCurrencyChanged(CurrencyModel? currency) {
+    if (currency == null || _toCurrency == null) return;
+
+    setState(() {
+      _fromCurrency = currency;
+      _calculateExchangeRate();
+    });
+  }
+
+  void _onToCurrencyChanged(CurrencyModel? currency) {
+    if (currency == null || _fromCurrency == null) return;
+
+    setState(() {
+      _toCurrency = currency;
+      _calculateExchangeRate();
+    });
+  }
+
+  void _calculateExchangeRate() {
+    if (_fromCurrency == null || _toCurrency == null) return;
+
+    final cubit = context.read<HomeCubit>();
+    cubit.transferCurrency(
+      transferCurrencyRequestParams: TransferCurrencyRequestParams(
+        fromCurrencyId: _fromCurrency!.id!,
+        toCurrencyId: _toCurrency!.id!,
+      ),
+    );
+  }
+
+  void _initializeCurrencies(HomeState state) {
+    if (state.currenciesList.length >= 2 &&
+        _fromCurrency == null &&
+        _toCurrency == null) {
+      _fromCurrency = state.currenciesList.first;
+      _toCurrency = state.currenciesList[1];
+      _calculateExchangeRate();
+    }
+  }
+
+  void _updateResultFromExchangeRate(HomeState state) {
+    if (state.transferCurrencyStatus.isSuccess) {
+      final double amount = double.tryParse(_amountController.text) ?? 0;
+      final num exchangeRate = state.transferCurrency?.exchangePriceUsed ?? 0;
+      final result = (amount * exchangeRate).toStringAsFixed(2);
+      _resultController.text = result;
+    }
+  }
+
+  Widget _buildAmountSection(HomeState state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(context.amount, style: context.textStyles.font15MediumGrayColor),
+        16.verticalSizedBox,
+        Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: CustomCurrencyDropdown(
+                items: state.currenciesList,
+                selectedItem: _fromCurrency,
+                onChanged: _onFromCurrencyChanged,
+              ),
+            ),
+            12.horizontalSpace,
+            CalculatorTextField(
+              controller: _amountController,
+              enabled: true,
+              onChanged: _onAmountChanged,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDividerWithSwapButton() {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Divider(color: Color(0xffE7E7EE), thickness: 1),
+        PositionedDirectional(top: -13, child: _buildSwapButton()),
+      ],
+    );
+  }
+
+  Widget _buildSwapButton() {
+    return InkWell(
+      onTap: _swapCurrencies,
+      borderRadius: BorderRadius.circular(19),
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(19),
+          color: context.colors.primaryColor,
+        ),
+        child: CustomSvgBuilder(
+          path: AppAssets.svgsTransfarIcon,
+          width: 21,
+          height: 21,
+          fit: BoxFit.scaleDown,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultSection(HomeState state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.transeferedAmount,
+          style: context.textStyles.font15MediumGrayColor,
+        ),
+        16.verticalSizedBox,
+        Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: CustomCurrencyDropdown(
+                items: state.currenciesList,
+                selectedItem: _toCurrency,
+                onChanged: _onToCurrencyChanged,
+              ),
+            ),
+            12.horizontalSpace,
+            CalculatorTextField(controller: _resultController, enabled: false),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        _initializeCurrencies(state);
+        _updateResultFromExchangeRate(state);
+      },
       builder: (context, state) {
-        var cubit = context.read<HomeCubit>();
-        if (state.currenciesList.isNotEmpty &&
-            fromCurrency == null &&
-            toCurrency == null) {
-          fromCurrency = state.currenciesList.first;
-          toCurrency = state.currenciesList[1];
-        }
+        _initializeCurrencies(state);
+
         return Container(
-          padding: 20.allPadding,
-          decoration: ShapeDecoration(
+          padding: EdgeInsets.all(20.r),
+          decoration: BoxDecoration(
             color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            shadows: [
+            borderRadius: BorderRadius.circular(20.r),
+            boxShadow: [
               BoxShadow(
-                color: Color(0x11000000),
+                color: const Color(0x11000000),
                 blurRadius: 44,
-                offset: Offset(0, 0),
+                offset: const Offset(0, 0),
                 spreadRadius: 0,
               ),
             ],
@@ -71,114 +223,12 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                context.amount,
-                style: context.textStyles.font15MediumGrayColor,
-              ),
-              16.verticalSizedBox,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: CustomCurrencyDropdown(
-                      items: state.currenciesList,
-                      selectedItem: fromCurrency,
-                      onChanged: (value) {
-                        setState(() {
-                          fromCurrency = value;
-                          cubit.transferCurrency(
-                            transferCurrencyRequestParams:
-                                TransferCurrencyRequestParams(
-                                  fromCurrencyId: fromCurrency!.id!,
-                                  toCurrencyId: toCurrency!.id!,
-                                ),
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                  12.horizontalSpace,
-                  CalculatorTextField(
-                    controller: amountController,
-                    enabled: true,
-                    onChanged: (value) {
-                      final double amount = double.tryParse(value) ?? 0;
-                      final num exchangeRate =
-                          state.transferCurrency?.exchangePriceUsed ?? 0;
-                      resultController.text = (amount * exchangeRate)
-                          .toString();
-                    },
-                  ),
-                ],
-              ),
+              _buildAmountSection(state),
               35.verticalSpace,
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.center,
-                children: [
-                  Divider(color: context.colors.strokeColor),
-                  PositionedDirectional(
-                    top: -13,
-                    child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        width: 38,
-                        height: 38,
-                        decoration: BoxDecoration(
-                          borderRadius: 19.allBorderRadius,
-                          color: context.colors.primaryColor,
-                        ),
-                        child: CustomSvgBuilder(
-                          path: AppAssets.svgsTransfarIcon,
-                          width: 21,
-                          height: 21,
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildDividerWithSwapButton(),
               5.verticalSizedBox,
-              Text(
-                context.transeferedAmount,
-                style: context.textStyles.font15MediumGrayColor,
-              ),
-              16.verticalSizedBox,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: CustomCurrencyDropdown(
-                      items: state.currenciesList,
-                      selectedItem: toCurrency,
-                      onChanged: (value) {
-                        setState(() {
-                          toCurrency = value;
-                          cubit.transferCurrency(
-                            transferCurrencyRequestParams:
-                                TransferCurrencyRequestParams(
-                                  fromCurrencyId: fromCurrency!.id!,
-                                  toCurrencyId: value!.id!,
-                                ),
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                  12.horizontalSpace,
-                  CalculatorTextField(
-                    controller: resultController,
-                    enabled: false,
-                  ),
-                ],
-              ),
+              _buildResultSection(state),
             ],
           ),
         );

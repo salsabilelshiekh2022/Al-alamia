@@ -15,6 +15,9 @@ class HomeState extends Equatable {
   final List<WalletModel> walletsList;
   final List<DenominationsModel> denominations;
   final TransferCurrencyModel? transferCurrency;
+
+  static HomeState initial() => const HomeState();
+
   const HomeState({
     this.homeStatus = RequestStatus.initial,
     this.denominationsStatus = RequestStatus.initial,

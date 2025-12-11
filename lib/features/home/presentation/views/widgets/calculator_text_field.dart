@@ -6,43 +6,48 @@ class CalculatorTextField extends StatelessWidget {
   const CalculatorTextField({
     super.key,
     this.controller,
-    this.enabled,
+    this.enabled = true,
     this.onChanged,
   });
 
   final TextEditingController? controller;
-  final bool? enabled;
+  final bool enabled;
   final void Function(String)? onChanged;
+
+  static const double _borderRadius = 12;
+  static const double _borderWidth = 1;
+  static const EdgeInsets _contentPadding = EdgeInsets.all(4);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: 2,
-      child: SizedBox(
-        child: TextField(
-          controller: controller,
-          style: context.textStyles.font18SemiBoldSecondaryColor,
-          keyboardType: TextInputType.number,
-          maxLines: 2,
-          minLines: 1,
-          decoration: InputDecoration(
-            hint: Text(
-              "000.00",
-              style: context.textStyles.font15MediumGrayColor,
-            ),
-            contentPadding: EdgeInsets.all(4),
-            fillColor: context.colors.backgroundFieldColor,
-            filled: true,
-
-            enabled: enabled ?? true,
-            border: _buildBorder(context),
-            enabledBorder: _buildBorder(context),
-            focusedBorder: _buildBorder(context),
-            disabledBorder: _buildBorder(context),
-          ),
-          onChanged: onChanged,
-        ),
+      child: TextField(
+        controller: controller,
+        style: context.textStyles.font18SemiBoldSecondaryColor,
+        keyboardType: TextInputType.number,
+        maxLines: 2,
+        minLines: 1,
+        decoration: _buildInputDecoration(context),
+        onChanged: onChanged,
+        enabled: enabled,
       ),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(BuildContext context) {
+    final border = _buildBorder(context);
+
+    return InputDecoration(
+      hintText: "000.00",
+      hintStyle: context.textStyles.font15MediumGrayColor,
+      contentPadding: _contentPadding,
+      fillColor: context.colors.backgroundFieldColor,
+      filled: true,
+      border: border,
+      enabledBorder: border,
+      focusedBorder: border,
+      disabledBorder: border,
     );
   }
 
@@ -50,9 +55,9 @@ class CalculatorTextField extends StatelessWidget {
     return OutlineInputBorder(
       borderSide: BorderSide(
         color: context.colors.backgroundFieldColor,
-        width: 1,
+        width: _borderWidth,
       ),
-      borderRadius: BorderRadius.circular(12.r),
+      borderRadius: BorderRadius.circular(_borderRadius.r),
     );
   }
 }

@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/enums/request_status.dart';
+import '../../data/models/currency_model.dart';
 import '../../data/models/transfer_currency_request_params.dart';
 import 'home_state.dart';
 
 @Singleton()
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit({required this.homeRepo}) : super(HomeState());
+  HomeCubit({required this.homeRepo}) : super(HomeState.initial());
   final HomeRepo homeRepo;
 
   Future<void> getBranchCurrencies() async {
@@ -52,20 +53,25 @@ class HomeCubit extends Cubit<HomeState> {
     final result = await homeRepo.getCurrencies();
     result.fold(
       (failure) => emit(state.copyWith(homeStatus: RequestStatus.error)),
-      (currenciesList) {
-        emit(
-          state.copyWith(
-            homeStatus: RequestStatus.success,
-            currenciesList: currenciesList,
-          ),
-        );
-        transferCurrency(
-          transferCurrencyRequestParams: TransferCurrencyRequestParams(
-            fromCurrencyId: currenciesList.first.id!,
-            toCurrencyId: currenciesList[1].id!,
-          ),
-        );
-      },
+      (currenciesList) => _handleCurrenciesSuccess(currenciesList),
+    );
+  }
+
+  void _handleCurrenciesSuccess(List<CurrencyModel> currenciesList) {
+    if (currenciesList.length >= 2) {
+      transferCurrency(
+        transferCurrencyRequestParams: TransferCurrencyRequestParams(
+          fromCurrencyId: currenciesList.first.id!,
+          toCurrencyId: currenciesList[1].id!,
+        ),
+      );
+    }
+
+    emit(
+      state.copyWith(
+        homeStatus: RequestStatus.success,
+        currenciesList: currenciesList,
+      ),
     );
   }
 
