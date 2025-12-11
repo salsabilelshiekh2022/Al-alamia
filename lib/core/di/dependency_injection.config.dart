@@ -14,6 +14,9 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/auth/data/repos/auth_repo.dart' as _i507;
 import '../../features/auth/data/repos/auth_repo_impl.dart' as _i152;
+import '../../features/expenses/data/repos/expenses_repo.dart' as _i505;
+import '../../features/expenses/data/repos/expenses_repo_impl.dart' as _i731;
+import '../../features/expenses/presentation/cubit/expenses_cubit.dart' as _i66;
 import '../../features/home/data/repo/home_repo.dart' as _i429;
 import '../../features/home/data/repo/home_repo_impl.dart' as _i1024;
 import '../../features/home/presentation/cubit/home_cubit.dart' as _i9;
@@ -40,6 +43,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i507.AuthRepo>(
       () => _i152.AuthRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.lazySingleton<_i505.ExpensesRepo>(
+      () => _i731.ExpensesRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.factory<_i66.ExpensesCubit>(
+      () => _i66.ExpensesCubit(expensesRepo: gh<_i505.ExpensesRepo>()),
     );
     return this;
   }

@@ -1,3 +1,4 @@
+import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 
 class Validator {
@@ -12,7 +13,7 @@ class Validator {
 
   static String? validateAnotherField(String? value, BuildContext context) {
     if (value!.isEmpty) {
-      return "context.fieldRequired";
+      return context.fieldIsRequired;
     } else {
       return null;
     }
@@ -33,8 +34,9 @@ class Validator {
       return "context.fieldRequired";
     } else if (value.length > 50) {
       return "S.of(context).max_characters_limit";
-    } else if (!RegExp(r'^[\u0621-\u064A\u0660-\u0669a-zA-Z0-9\s]+$')
-        .hasMatch(value)) {
+    } else if (!RegExp(
+      r'^[\u0621-\u064A\u0660-\u0669a-zA-Z0-9\s]+$',
+    ).hasMatch(value)) {
       return "context.pleaseEnterValidName";
     } else {
       return null;
@@ -59,7 +61,7 @@ class Validator {
       return "Field is Required";
     }
     //egypt numbers
-    final ksaLocalRegex = RegExp( r'^01[0125][0-9]{8}$');
+    final ksaLocalRegex = RegExp(r'^01[0125][0-9]{8}$');
     if (!ksaLocalRegex.hasMatch(value)) {
       return "Please enter a valid phone number";
     }

@@ -9,4 +9,5 @@ class EndPoints {
       '/employee/home/currency/$id/get-denominations';
 
   static String getCurrencies = '/employee/general/get-all-currencies';
+  static String addExpenses = '/employee/transactions/expenses';
 }

@@ -3,6 +3,7 @@ import 'package:alalamia/features/auth/presentation/views/registuration_method_v
 import 'package:alalamia/features/auth/presentation/views/sign_up_view.dart';
 import 'package:alalamia/features/debts/presentation/views/payment_debt_view.dart';
 import 'package:alalamia/features/debts/presentation/views/request_debt_view.dart';
+import 'package:alalamia/features/expenses/presentation/cubit/expenses_cubit.dart';
 import 'package:alalamia/features/expenses/presentation/views/expenses_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
 import 'package:alalamia/features/send_money/presentation/views/send_money_second_step_view.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/presentation/views/login_view.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../../features/send_money/presentation/views/send_money_frist_step_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
@@ -31,9 +33,7 @@ abstract class AppRouter {
       case Routes.loginView:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (context) => AuthCubit(
-              authRepo:  getIt<AuthRepo>()
-            ),
+            create: (context) => AuthCubit(authRepo: getIt<AuthRepo>()),
             child: const LoginView(),
           ),
         );
@@ -74,7 +74,16 @@ abstract class AppRouter {
       case Routes.paymentDeptView:
         return MaterialPageRoute(builder: (_) => const PaymentDebtView());
       case Routes.expensesView:
-        return MaterialPageRoute(builder: (_) => const ExpensesView());
+        final homeCubit = settings.arguments as HomeCubit;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: homeCubit,
+            child: BlocProvider(
+              create: (context) => getIt<ExpensesCubit>(),
+              child: const ExpensesView(),
+            ),
+          ),
+        );
       case Routes.supportView:
         return MaterialPageRoute(builder: (_) => const SupportView());
       default:

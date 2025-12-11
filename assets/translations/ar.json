@@ -151,5 +151,6 @@
   "open" : "مفتوحة",
   "closed" : "مغلقة",
   "add_complaint":"إضافة شكوي",
-  "in_out" :"دخول/خروج"
+  "in_out" :"دخول/خروج",
+  "field_is_Required" : "الحقل مطلوب"
 }
