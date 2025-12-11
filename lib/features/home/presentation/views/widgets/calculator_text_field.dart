@@ -8,6 +8,7 @@ class CalculatorTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: 2,
       child: SizedBox(
         height: 46,
         child: TextField(

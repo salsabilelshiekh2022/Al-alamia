@@ -39,6 +39,7 @@ dependencies:
   dotted_border: ^3.1.0
   injectable: ^2.7.1+2
   smooth_page_indicator: 2.0.1
+  dropdown_search: ^6.0.2
 
 dev_dependencies:
   flutter_test:
