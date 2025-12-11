@@ -14,6 +14,9 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/auth/data/repos/auth_repo.dart' as _i507;
 import '../../features/auth/data/repos/auth_repo_impl.dart' as _i152;
+import '../../features/debts/data/repos/debt_repo.dart' as _i87;
+import '../../features/debts/data/repos/debt_repo_impl.dart' as _i311;
+import '../../features/debts/presentation/cubit/debts_cubit.dart' as _i784;
 import '../../features/expenses/data/repos/expenses_repo.dart' as _i505;
 import '../../features/expenses/data/repos/expenses_repo_impl.dart' as _i731;
 import '../../features/expenses/presentation/cubit/expenses_cubit.dart' as _i66;
@@ -35,10 +38,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i742.ApiConsumer>(
       () => _i1062.DioConsumer(cacheServices: gh<_i408.CacheServices>()),
     );
+    gh.lazySingleton<_i87.DebtRepo>(
+      () => _i311.DebtRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
     gh.lazySingleton<_i429.HomeRepo>(
       () => _i1024.HomeRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
-    gh.factory<_i9.HomeCubit>(
+    gh.factory<_i784.DebtsCubit>(
+      () => _i784.DebtsCubit(debtRepo: gh<_i87.DebtRepo>()),
+    );
+    gh.singleton<_i9.HomeCubit>(
       () => _i9.HomeCubit(homeRepo: gh<_i429.HomeRepo>()),
     );
     gh.lazySingleton<_i507.AuthRepo>(

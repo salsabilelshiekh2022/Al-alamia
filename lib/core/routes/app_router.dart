@@ -1,6 +1,7 @@
 import 'package:alalamia/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:alalamia/features/auth/presentation/views/registuration_method_view.dart';
 import 'package:alalamia/features/auth/presentation/views/sign_up_view.dart';
+import 'package:alalamia/features/debts/presentation/cubit/debts_cubit.dart';
 import 'package:alalamia/features/debts/presentation/views/payment_debt_view.dart';
 import 'package:alalamia/features/debts/presentation/views/request_debt_view.dart';
 import 'package:alalamia/features/expenses/presentation/cubit/expenses_cubit.dart';
@@ -70,14 +71,21 @@ abstract class AppRouter {
           builder: (_) => const RegisturationMethodView(),
         );
       case Routes.requestDeptView:
-        return MaterialPageRoute(builder: (_) => const RequestDebtView());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: getIt<HomeCubit>(),
+            child: BlocProvider(
+              create: (context) => getIt<DebtsCubit>(),
+              child: const RequestDebtView(),
+            ),
+          ),
+        );
       case Routes.paymentDeptView:
         return MaterialPageRoute(builder: (_) => const PaymentDebtView());
       case Routes.expensesView:
-        final homeCubit = settings.arguments as HomeCubit;
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
-            value: homeCubit,
+            value: getIt<HomeCubit>(),
             child: BlocProvider(
               create: (context) => getIt<ExpensesCubit>(),
               child: const ExpensesView(),

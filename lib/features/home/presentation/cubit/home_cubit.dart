@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/enums/request_status.dart';
 import 'home_state.dart';
 
-@injectable
+@Singleton()
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required this.homeRepo}) : super(HomeState());
   final HomeRepo homeRepo;

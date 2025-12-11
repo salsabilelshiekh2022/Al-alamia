@@ -1,9 +1,7 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../../core/routes/routes.dart';
@@ -23,11 +21,7 @@ class DebtsAndExpensesSection extends StatelessWidget {
           title: context.expenses,
           icon: AppAssets.svgsCash,
           onTap: () {
-            final homeCubit = context.read<HomeCubit>();
-            context.pushNamed(
-              Routes.expensesView,
-              arguments: homeCubit,
-            );
+            context.pushNamed(Routes.expensesView);
           },
         ),
         12.horizontalSizedBox,
