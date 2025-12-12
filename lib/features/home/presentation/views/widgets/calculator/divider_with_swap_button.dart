@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../generated/app_assets.dart';
 import 'currency_swap_button.dart';
 
 class DividerWithSwapButton extends StatelessWidget {
@@ -17,10 +16,7 @@ class DividerWithSwapButton extends StatelessWidget {
         Divider(color: Color(0xffE7E7EE)),
         PositionedDirectional(
           top: -13,
-          child: CurrencySwapButton(
-            onPressed: onSwapPressed,
-            iconPath: AppAssets.svgsTransfarIcon,
-          ),
+          child: CurrencySwapButton(onPressed: onSwapPressed),
         ),
       ],
     );

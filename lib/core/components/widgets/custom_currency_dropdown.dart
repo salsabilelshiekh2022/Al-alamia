@@ -82,15 +82,15 @@ class CustomCurrencyDropdown extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(_itemPadding.r),
       decoration: BoxDecoration(
-        color: isSelected
-            ? context.colors.primaryColor.withOpacity(0.04)
+        color: selectedItem == item
+            ? context.colors.primaryColor.withValues(alpha: 0.04)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Text(
         item.name ?? '',
         style: context.textStyles.font15MediumGrayColor.copyWith(
-          color: isSelected
+          color: selectedItem == item
               ? context.colors.primaryColor
               : context.colors.secondaryColor,
         ),

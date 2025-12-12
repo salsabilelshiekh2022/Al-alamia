@@ -2,6 +2,7 @@ import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:alalamia/features/home/presentation/views/widgets/calculator/currency_input_row.dart';
 import 'package:flutter/material.dart';
@@ -14,32 +15,27 @@ import '../../../cubit/home_state.dart';
 import 'divider_with_swap_button.dart';
 
 class CurrencyCalculator extends StatefulWidget {
-  const CurrencyCalculator({super.key});
+  const CurrencyCalculator({
+    super.key,
+    required this.amountController,
+    required this.resultController,
+    this.boxShadow,
+    this.title,
+  });
+
+  final TextEditingController amountController;
+  final TextEditingController resultController;
+  final List<BoxShadow>? boxShadow;
+  final String? title;
 
   @override
   State<CurrencyCalculator> createState() => _CurrencyCalculatorState();
 }
 
 class _CurrencyCalculatorState extends State<CurrencyCalculator> {
-  late final TextEditingController _amountController;
-  late final TextEditingController _resultController;
-
   CurrencyModel? _fromCurrency;
   CurrencyModel? _toCurrency;
-
-  @override
-  void initState() {
-    super.initState();
-    _amountController = TextEditingController();
-    _resultController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _amountController.dispose();
-    _resultController.dispose();
-    super.dispose();
-  }
+  bool _currenciesInitialized = false;
 
   void _swapCurrencies() {
     setState(() {
@@ -55,7 +51,8 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
     final double amount = double.tryParse(value) ?? 0;
     final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
     final result = (amount * exchangeRate).toStringAsFixed(2);
-    _resultController.text = result;
+
+    widget.resultController.text = result;
   }
 
   void _onFromCurrencyChanged(CurrencyModel? currency) {
@@ -89,21 +86,32 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   }
 
   void _initializeCurrencies(HomeState state) {
-    if (state.currenciesList.length >= 2 &&
+    // Only initialize once
+    if (!_currenciesInitialized &&
         _fromCurrency == null &&
-        _toCurrency == null) {
-      _fromCurrency = state.currenciesList.first;
-      _toCurrency = state.currenciesList[1];
-      _calculateExchangeRate();
+        _toCurrency == null &&
+        state.currenciesList.length >= 2) {
+      // Use WidgetsBinding to schedule the state change after build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _fromCurrency = state.currenciesList.first;
+            _toCurrency = state.currenciesList[1];
+            _currenciesInitialized = true;
+            _calculateExchangeRate();
+          });
+        }
+      });
     }
   }
 
   void _updateResultFromExchangeRate(HomeState state) {
     if (state.transferCurrencyStatus.isSuccess) {
-      final double amount = double.tryParse(_amountController.text) ?? 0;
+      final double amount = double.tryParse(widget.amountController.text) ?? 0;
       final num exchangeRate = state.transferCurrency?.exchangePriceUsed ?? 0;
       final result = (amount * exchangeRate).toStringAsFixed(2);
-      _resultController.text = result;
+
+      widget.resultController.text = result;
     }
   }
 
@@ -115,26 +123,37 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
         _updateResultFromExchangeRate(state);
       },
       builder: (context, state) {
-        _initializeCurrencies(state);
-
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _initializeCurrencies(state);
+          }
+        });
         return Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0x11000000),
-                blurRadius: 44,
-                offset: const Offset(0, 0),
-                spreadRadius: 0,
-              ),
-            ],
+            boxShadow:
+                widget.boxShadow ??
+                [
+                  BoxShadow(
+                    color: const Color(0x11000000),
+                    blurRadius: 44,
+                    offset: const Offset(0, 0),
+                    spreadRadius: 0,
+                  ),
+                ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
+              widget.title != null
+                  ? Text(
+                      widget.title!,
+                      style: context.textStyles.font18SemiBoldSecondaryColor,
+                    ).onlyPadding(bottomPadding: 12)
+                  : SizedBox(),
               Text(
                 context.amount,
                 style: context.textStyles.font15MediumGrayColor,
@@ -145,12 +164,12 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
                 currencies: state.currenciesList,
                 selectedCurrency: _fromCurrency,
                 onCurrencyChanged: _onFromCurrencyChanged,
-                controller: _amountController,
+                controller: widget.amountController,
                 onAmountChanged: _onAmountChanged,
               ),
               35.verticalSizedBox,
               DividerWithSwapButton(onSwapPressed: _swapCurrencies),
-              5.verticalSizedBox,
+              16.verticalSizedBox,
               Text(
                 context.transeferedAmount,
                 style: context.textStyles.font15MediumGrayColor,
@@ -161,7 +180,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
                 currencies: state.currenciesList,
                 selectedCurrency: _toCurrency,
                 onCurrencyChanged: _onToCurrencyChanged,
-                controller: _resultController,
+                controller: widget.resultController,
               ),
             ],
           ),

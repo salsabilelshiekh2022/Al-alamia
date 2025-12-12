@@ -55,7 +55,12 @@ abstract class AppRouter {
           builder: (_) => const TransactionsDetailsView(),
         );
       case Routes.transferCurrencyView:
-        return MaterialPageRoute(builder: (_) => const TransferCurrencyView());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: getIt<HomeCubit>(),
+            child: const TransferCurrencyView(),
+          ),
+        );
       case Routes.transactionReciptView:
         return MaterialPageRoute(builder: (_) => const TransactionReciptView());
       case Routes.sendMoneyFristStepView:

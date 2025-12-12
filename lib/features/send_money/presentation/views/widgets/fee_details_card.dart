@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 
 class FeeDetailsCard extends StatelessWidget {
-  const FeeDetailsCard({super.key});
+  const FeeDetailsCard({super.key, this.totalPrice});
+  final String? totalPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class FeeDetailsCard extends StatelessWidget {
                   style: context.textStyles.font15MediumPrimaryColor,
                 ),
                 Text(
-                  "0.00",
+                  totalPrice != null ? totalPrice.toString() : "0.00",
                   style: context.textStyles.font16MediumPrimaryColor,
                 ),
               ],
