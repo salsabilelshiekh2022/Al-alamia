@@ -13,4 +13,6 @@ class EndPoints {
   static String addDebt = '/employee/transactions/add-debt';
   static String payDebt = '/employee/transactions/pay-debt';
   static String transferCurrency = '/employee/home/transfer-currency';
+  static String getUserByPhone({required String phone}) =>
+      '/employee/transactions/get-user-by-phone?phone=$phone';
 }

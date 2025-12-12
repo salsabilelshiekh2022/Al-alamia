@@ -11,6 +11,7 @@ import '../../../../core/utils/validator.dart';
 import '../../../../generated/app_assets.dart';
 import '../../../home/presentation/views/widgets/calculator/currency_calculator.dart';
 import '../../../send_money/presentation/views/widgets/fee_details_card.dart';
+import 'widgets/client_info_section.dart';
 import 'widgets/total_section.dart';
 
 class TransferCurrencyView extends StatefulWidget {
@@ -66,7 +67,6 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
           20.verticalSizedBox,
           TotalSection(),
           20.verticalSizedBox,
-
           AmountSection(),
           20.verticalSizedBox,
           NotesSection(),
@@ -75,45 +75,6 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
           24.verticalSizedBox,
           MainButton(title: context.confirm, onTap: () {}),
           40.verticalSizedBox,
-        ],
-      ),
-    );
-  }
-}
-
-class ClientInfoSection extends StatelessWidget {
-  const ClientInfoSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CardWithPurpleShadow(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            context.clientInfo,
-            style: context.textStyles.font18SemiBoldSecondaryColor,
-          ),
-          12.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: TextEditingController(),
-            label: context.phone,
-            hintText: context.phoneHint,
-            isRequired: true,
-            prefixWidget: AppAssets.svgsPhone,
-            keyboardType: TextInputType.phone,
-            validator: (val) => Validator.validatePhone(val, context),
-          ),
-          16.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: TextEditingController(),
-            label: context.clientName,
-            hintText: context.clientNameHint,
-            isRequired: true,
-            prefixWidget: AppAssets.svgsUser,
-            keyboardType: TextInputType.phone,
-            validator: (val) => Validator.validateName(val, context),
-          ),
         ],
       ),
     );

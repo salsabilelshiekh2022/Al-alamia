@@ -26,6 +26,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixWidget,
     this.textAlign,
     this.initialValue,
+    this.onChanged,
   });
 
   final String hintText;
@@ -45,6 +46,7 @@ class CustomTextField extends StatefulWidget {
   final String? initialValue;
   final bool? suffixIcon;
   final TextAlign? textAlign;
+  final void Function(String)? onChanged;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -113,7 +115,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         errorBorder: _errorBorder(context.colors),
         focusedErrorBorder: _focusedBorder(context.colors),
       ),
-
+      onChanged: widget.onChanged,
       textAlignVertical: TextAlignVertical.center,
       onTapOutside: (_) {
         FocusScope.of(context).unfocus();

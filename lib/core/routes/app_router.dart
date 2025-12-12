@@ -1,3 +1,4 @@
+import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:alalamia/features/auth/presentation/views/registuration_method_view.dart';
 import 'package:alalamia/features/auth/presentation/views/sign_up_view.dart';
@@ -58,7 +59,10 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<HomeCubit>(),
-            child: const TransferCurrencyView(),
+            child: BlocProvider.value(
+              value: getIt<GeneralCubit>(),
+              child: const TransferCurrencyView(),
+            ),
           ),
         );
       case Routes.transactionReciptView:

@@ -29,6 +29,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
     this.isRequired = false,
     this.isReadOnly,
     this.onTap,
+    this.onChanged,
   });
 
   final String label;
@@ -51,6 +52,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
   final int? maxLines;
   final bool isRequired;
   final void Function()? onTap;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +79,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
               horizontal: textFiledHorizontalPadding ?? 0,
             ),
             child: CustomTextField(
+              onChanged: onChanged,
               onTap: onTap,
               textAlign: textAlign,
               initialValue: initialValue,

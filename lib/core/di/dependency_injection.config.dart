@@ -26,6 +26,9 @@ import '../../features/home/presentation/cubit/home_cubit.dart' as _i9;
 import '../database/cache/cache_services.dart' as _i408;
 import '../database/network/api_consumer.dart' as _i742;
 import '../database/network/dio_consumer.dart' as _i1062;
+import '../general/cubit/general_cubit.dart' as _i360;
+import '../general/data/repos/general_repo.dart' as _i287;
+import '../general/data/repos/general_repo_impl.dart' as _i868;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -50,11 +53,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i9.HomeCubit>(
       () => _i9.HomeCubit(homeRepo: gh<_i429.HomeRepo>()),
     );
+    gh.lazySingleton<_i287.GeneralRepo>(
+      () => _i868.GeneralRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
     gh.lazySingleton<_i507.AuthRepo>(
       () => _i152.AuthRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
     gh.lazySingleton<_i505.ExpensesRepo>(
       () => _i731.ExpensesRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.factory<_i360.GeneralCubit>(
+      () => _i360.GeneralCubit(generalRepo: gh<_i287.GeneralRepo>()),
     );
     gh.factory<_i66.ExpensesCubit>(
       () => _i66.ExpensesCubit(expensesRepo: gh<_i505.ExpensesRepo>()),
