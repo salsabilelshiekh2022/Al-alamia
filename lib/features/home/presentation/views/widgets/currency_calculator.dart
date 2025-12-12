@@ -3,17 +3,15 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
+import 'package:alalamia/features/home/presentation/views/widgets/currency_input_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../core/components/widgets/custom_currency_dropdown.dart';
-import '../../../../../core/components/widgets/custom_svg_builder.dart';
-import '../../../../../generated/app_assets.dart';
 import '../../../data/models/currency_model.dart';
 import '../../../data/models/transfer_currency_request_params.dart';
 import '../../cubit/home_state.dart';
-import 'calculator_text_field.dart';
+import 'divider_with_swap_button.dart';
 
 class CurrencyCalculator extends StatefulWidget {
   const CurrencyCalculator({super.key});
@@ -109,93 +107,6 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
     }
   }
 
-  Widget _buildAmountSection(HomeState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(context.amount, style: context.textStyles.font15MediumGrayColor),
-        16.verticalSizedBox,
-        Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: CustomCurrencyDropdown(
-                items: state.currenciesList,
-                selectedItem: _fromCurrency,
-                onChanged: _onFromCurrencyChanged,
-              ),
-            ),
-            12.horizontalSpace,
-            CalculatorTextField(
-              controller: _amountController,
-              enabled: true,
-              onChanged: _onAmountChanged,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDividerWithSwapButton() {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Divider(color: Color(0xffE7E7EE), thickness: 1),
-        PositionedDirectional(top: -13, child: _buildSwapButton()),
-      ],
-    );
-  }
-
-  Widget _buildSwapButton() {
-    return InkWell(
-      onTap: _swapCurrencies,
-      borderRadius: BorderRadius.circular(19),
-      child: Container(
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(19),
-          color: context.colors.primaryColor,
-        ),
-        child: CustomSvgBuilder(
-          path: AppAssets.svgsTransfarIcon,
-          width: 21,
-          height: 21,
-          fit: BoxFit.scaleDown,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildResultSection(HomeState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.transeferedAmount,
-          style: context.textStyles.font15MediumGrayColor,
-        ),
-        16.verticalSizedBox,
-        Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: CustomCurrencyDropdown(
-                items: state.currenciesList,
-                selectedItem: _toCurrency,
-                onChanged: _onToCurrencyChanged,
-              ),
-            ),
-            12.horizontalSpace,
-            CalculatorTextField(controller: _resultController, enabled: false),
-          ],
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
@@ -224,11 +135,34 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildAmountSection(state),
-              35.verticalSpace,
-              _buildDividerWithSwapButton(),
+              Text(
+                context.amount,
+                style: context.textStyles.font15MediumGrayColor,
+              ),
+              16.verticalSizedBox,
+              CurrencyInputRow(
+                enabled: true,
+                currencies: state.currenciesList,
+                selectedCurrency: _fromCurrency,
+                onCurrencyChanged: _onFromCurrencyChanged,
+                controller: _amountController,
+                onAmountChanged: _onAmountChanged,
+              ),
+              35.verticalSizedBox,
+              DividerWithSwapButton(onSwapPressed: _swapCurrencies),
               5.verticalSizedBox,
-              _buildResultSection(state),
+              Text(
+                context.transeferedAmount,
+                style: context.textStyles.font15MediumGrayColor,
+              ),
+              16.verticalSizedBox,
+              CurrencyInputRow(
+                enabled: false,
+                currencies: state.currenciesList,
+                selectedCurrency: _toCurrency,
+                onCurrencyChanged: _onToCurrencyChanged,
+                controller: _resultController,
+              ),
             ],
           ),
         );
