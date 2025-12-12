@@ -1,8 +1,8 @@
 import 'package:alalamia/core/enums/commission_type_enum.dart';
 
 class FeeDetailsRequestParams {
-  final String fromCurrencyId;
-  final String toCurrencyId;
+  final int fromCurrencyId;
+  final int toCurrencyId;
   final String amount;
   final CommissionTypeEnum commissionType;
 

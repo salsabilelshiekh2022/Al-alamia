@@ -23,6 +23,7 @@ class CurrencyCalculator extends StatefulWidget {
     this.title,
     this.onFromCurrencyChanged,
     this.onToCurrencyChanged,
+    this.onAmountChanged,
   });
 
   final TextEditingController amountController;
@@ -31,6 +32,7 @@ class CurrencyCalculator extends StatefulWidget {
   final String? title;
   final ValueChanged<CurrencyModel?>? onFromCurrencyChanged;
   final ValueChanged<CurrencyModel?>? onToCurrencyChanged;
+  final void Function(String)? onAmountChanged;
 
   @override
   State<CurrencyCalculator> createState() => _CurrencyCalculatorState();
@@ -59,8 +61,8 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
     final double amount = double.tryParse(value) ?? 0;
     final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
     final result = (amount * exchangeRate).toStringAsFixed(2);
-
     widget.resultController.text = result;
+    widget.onAmountChanged?.call(value);
   }
 
   void _onFromCurrencyChanged(CurrencyModel? currency) {

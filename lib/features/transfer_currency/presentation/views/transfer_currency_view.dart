@@ -2,12 +2,15 @@ import 'package:alalamia/core/components/widgets/card_with_purple_shadow.dart';
 import 'package:alalamia/core/components/widgets/custom_page.dart';
 import 'package:alalamia/core/components/widgets/custom_text_field_with_label.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
+import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/general/data/models/fee_details_request_params.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../../generated/app_assets.dart';
 import '../../../home/presentation/views/widgets/calculator/currency_calculator.dart';
@@ -58,6 +61,15 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
             title: context.conversionData,
             amountController: _amountController,
             resultController: _resultController,
+            onAmountChanged: (val) {
+              context.read<GeneralCubit>().getFeeDetails(
+                params: FeeDetailsRequestParams(
+                  amount: val,
+                  fromCurrencyId: _fromCurrencyCode?.id ?? 0,
+                  toCurrencyId: _toCurrencyCode?.id ?? 0,
+                ),
+              );
+            },
             onFromCurrencyChanged: (c) => setState(() => _fromCurrencyCode = c),
             onToCurrencyChanged: (c) => setState(() => _toCurrencyCode = c),
             boxShadow: [

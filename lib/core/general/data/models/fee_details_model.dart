@@ -22,12 +22,12 @@ class FeeDetailsModel {
   final String? fromCurrency;
   final String? toCurrency;
   final String? convertedFee;
-  final double? exchangePrice;
+  final num? exchangePrice;
   final String? commissionRate;
   final CommissionTypeEnum? commissionType;
-  final double? commissionAmount;
-  final double? convertedAmount;
-  final double? finalAmount;
+  final num? commissionAmount;
+  final num? convertedAmount;
+  final num? finalAmount;
 
   FeeDetailsModel({
     this.amount,
