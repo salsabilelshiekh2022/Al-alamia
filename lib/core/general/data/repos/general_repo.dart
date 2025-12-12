@@ -1,3 +1,4 @@
+import 'package:alalamia/core/general/data/models/denomination_model.dart';
 import 'package:alalamia/core/general/data/models/fee_details_model.dart';
 import 'package:dartz/dartz.dart';
 
@@ -13,4 +14,6 @@ abstract class GeneralRepo {
   Future<Either<Failure, FeeDetailsModel>> getFeeDetails({
     required FeeDetailsRequestParams feeDetailsRequestParams,
   });
+
+  Future<Either<Failure, List<DenominationModel>>> getAllDenominations();
 }

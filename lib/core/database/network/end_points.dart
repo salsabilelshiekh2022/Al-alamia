@@ -16,4 +16,5 @@ class EndPoints {
   static String getUserByPhone({required String phone}) =>
       '/employee/transactions/get-user-by-phone?phone=$phone';
   static String getFeeDetails = '/employee/transactions/get-fee-details';
+  static String getAllDenominations = '/employee/general/get-all-denominations';
 }

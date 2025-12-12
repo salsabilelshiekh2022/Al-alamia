@@ -42,4 +42,19 @@ class GeneralCubit extends Cubit<GeneralState> {
       ),
     );
   }
+
+  Future<void> getAllDenominations() async {
+    emit(state.copyWith(getAllDenominationsStatus: RequestStatus.loading));
+    final result = await generalRepo.getAllDenominations();
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(getAllDenominationsStatus: RequestStatus.error)),
+      (denominations) => emit(
+        state.copyWith(
+          getAllDenominationsStatus: RequestStatus.success,
+          denominations: denominations,
+        ),
+      ),
+    );
+  }
 }

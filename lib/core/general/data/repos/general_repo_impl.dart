@@ -1,4 +1,5 @@
 import 'package:alalamia/core/database/network/api_consumer.dart';
+import 'package:alalamia/core/general/data/models/denomination_model.dart';
 import 'package:alalamia/core/general/data/models/fee_details_model.dart';
 import 'package:alalamia/core/general/data/models/fee_details_request_params.dart';
 import 'package:dartz/dartz.dart';
@@ -37,6 +38,18 @@ class GeneralRepoImpl extends GeneralRepo {
       ),
       onSuccess: (result) {
         return FeeDetailsModel.fromJson(result['data']);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<DenominationModel>>> getAllDenominations() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getAllDenominations),
+      onSuccess: (result) {
+        return List<DenominationModel>.from(
+          result['data'].map((x) => DenominationModel.fromJson(x)),
+        );
       },
     );
   }

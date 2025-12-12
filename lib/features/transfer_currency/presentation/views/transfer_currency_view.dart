@@ -30,14 +30,13 @@ class TransferCurrencyView extends StatefulWidget {
 class _TransferCurrencyViewState extends State<TransferCurrencyView> {
   late TextEditingController _amountController;
   late TextEditingController _resultController;
-  CurrencyModel? _fromCurrencyCode;
-  CurrencyModel? _toCurrencyCode;
+  CurrencyModel? _fromCurrency;
+  CurrencyModel? _toCurrency;
 
   @override
   void initState() {
     _amountController = TextEditingController();
     _resultController = TextEditingController();
-    // Fetch currencies when the view initializes
     context.read<HomeCubit>().getCurrencies();
     super.initState();
   }
@@ -50,12 +49,12 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
   }
 
   void _getFeeDetails() {
-    if (_fromCurrencyCode != null && _toCurrencyCode != null) {
+    if (_fromCurrency != null && _toCurrency != null) {
       context.read<GeneralCubit>().getFeeDetails(
         params: FeeDetailsRequestParams(
           amount: _amountController.text,
-          fromCurrencyId: _fromCurrencyCode!.id!,
-          toCurrencyId: _toCurrencyCode!.id!,
+          fromCurrencyId: _fromCurrency!.id!,
+          toCurrencyId: _toCurrency!.id!,
         ),
       );
     }
@@ -66,11 +65,11 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
     return BlocListener<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state.currenciesList.isNotEmpty &&
-            _fromCurrencyCode == null &&
-            _toCurrencyCode == null) {
+            _fromCurrency == null &&
+            _toCurrency == null) {
           setState(() {
-            _fromCurrencyCode = state.currenciesList[0];
-            _toCurrencyCode = state.currenciesList.length > 1
+            _fromCurrency = state.currenciesList[0];
+            _toCurrency = state.currenciesList.length > 1
                 ? state.currenciesList[1]
                 : state.currenciesList[0];
           });
@@ -95,11 +94,11 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
                 _getFeeDetails();
               },
               onFromCurrencyChanged: (c) {
-                setState(() => _fromCurrencyCode = c);
+                setState(() => _fromCurrency = c);
                 _getFeeDetails();
               },
               onToCurrencyChanged: (c) {
-                setState(() => _toCurrencyCode = c);
+                setState(() => _toCurrency = c);
                 _getFeeDetails();
               },
               boxShadow: [
@@ -115,8 +114,8 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _resultController,
               builder: (_, value, __) => TotalSection(
-                fromCurrency: _fromCurrencyCode!,
-                toCurrency: _toCurrencyCode!,
+                fromCurrency: _fromCurrency!,
+                toCurrency: _toCurrency!,
                 total: value.text,
                 exchangePrice: 0.0,
               ),
