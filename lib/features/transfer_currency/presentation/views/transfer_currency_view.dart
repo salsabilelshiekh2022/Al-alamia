@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/validator.dart';
 import '../../../../generated/app_assets.dart';
-import '../../../home/presentation/views/widgets/currency_calculator_section.dart';
+import '../../../home/presentation/views/widgets/calculator/currency_calculator_section.dart';
 
 class TransferCurrencyView extends StatelessWidget {
   const TransferCurrencyView({super.key});

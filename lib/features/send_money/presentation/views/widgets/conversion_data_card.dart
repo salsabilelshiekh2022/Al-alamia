@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 import '../../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../../generated/app_assets.dart';
-import '../../../../home/presentation/views/widgets/calculator_text_field.dart';
+import '../../../../home/presentation/views/widgets/calculator/calculator_text_field.dart';
 
 class ConversionDatacard extends StatelessWidget {
   const ConversionDatacard({super.key});

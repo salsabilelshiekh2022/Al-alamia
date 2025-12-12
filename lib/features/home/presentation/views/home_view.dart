@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../generated/app_assets.dart';
-import 'widgets/currency_calculator_section.dart';
+import 'widgets/calculator/currency_calculator_section.dart';
 import 'widgets/debts_and_expenses_section.dart';
 import 'widgets/main_actions_box.dart';
 import 'widgets/wallets_section.dart';

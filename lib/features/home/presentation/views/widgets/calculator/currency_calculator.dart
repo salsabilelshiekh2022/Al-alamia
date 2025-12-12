@@ -3,14 +3,14 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
-import 'package:alalamia/features/home/presentation/views/widgets/currency_input_row.dart';
+import 'package:alalamia/features/home/presentation/views/widgets/calculator/currency_input_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../data/models/currency_model.dart';
-import '../../../data/models/transfer_currency_request_params.dart';
-import '../../cubit/home_state.dart';
+import '../../../../data/models/currency_model.dart';
+import '../../../../data/models/transfer_currency_request_params.dart';
+import '../../../cubit/home_state.dart';
 import 'divider_with_swap_button.dart';
 
 class CurrencyCalculator extends StatefulWidget {

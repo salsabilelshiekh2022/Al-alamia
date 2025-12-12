@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../generated/app_assets.dart';
+import '../../../../../../generated/app_assets.dart';
 import 'currency_swap_button.dart';
 
 class DividerWithSwapButton extends StatelessWidget {

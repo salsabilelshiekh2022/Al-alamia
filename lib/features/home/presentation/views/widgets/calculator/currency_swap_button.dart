@@ -1,7 +1,7 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/components/widgets/custom_svg_builder.dart';
+import '../../../../../../core/components/widgets/custom_svg_builder.dart';
 
 class CurrencySwapButton extends StatelessWidget {
   const CurrencySwapButton({
