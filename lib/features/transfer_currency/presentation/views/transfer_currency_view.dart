@@ -17,6 +17,8 @@ import '../../../home/presentation/views/widgets/calculator/currency_calculator.
 import '../../../send_money/presentation/views/widgets/fee_details_card.dart';
 import 'widgets/client_info_section.dart';
 import 'widgets/total_section.dart';
+import '../../../home/presentation/cubit/home_cubit.dart';
+import '../../../home/presentation/cubit/home_state.dart';
 
 class TransferCurrencyView extends StatefulWidget {
   const TransferCurrencyView({super.key});
@@ -35,6 +37,8 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
   void initState() {
     _amountController = TextEditingController();
     _resultController = TextEditingController();
+    // Fetch currencies when the view initializes
+    context.read<HomeCubit>().getCurrencies();
     super.initState();
   }
 
@@ -45,62 +49,89 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
     super.dispose();
   }
 
+  void _getFeeDetails() {
+    if (_fromCurrencyCode != null && _toCurrencyCode != null) {
+      context.read<GeneralCubit>().getFeeDetails(
+        params: FeeDetailsRequestParams(
+          amount: _amountController.text,
+          fromCurrencyId: _fromCurrencyCode!.id!,
+          toCurrencyId: _toCurrencyCode!.id!,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomPage(
-      title: context.currencyTransfer,
-      isBack: true,
-      hasActions: false,
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClientInfoSection(),
-          20.verticalSizedBox,
-          CurrencyCalculator(
-            title: context.conversionData,
-            amountController: _amountController,
-            resultController: _resultController,
-            onAmountChanged: (val) {
-              context.read<GeneralCubit>().getFeeDetails(
-                params: FeeDetailsRequestParams(
-                  amount: val,
-                  fromCurrencyId: _fromCurrencyCode?.id ?? 0,
-                  toCurrencyId: _toCurrencyCode?.id ?? 0,
+    return BlocListener<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state.currenciesList.isNotEmpty &&
+            _fromCurrencyCode == null &&
+            _toCurrencyCode == null) {
+          setState(() {
+            _fromCurrencyCode = state.currenciesList[0];
+            _toCurrencyCode = state.currenciesList.length > 1
+                ? state.currenciesList[1]
+                : state.currenciesList[0];
+          });
+          _getFeeDetails();
+        }
+      },
+      child: CustomPage(
+        title: context.currencyTransfer,
+        isBack: true,
+        hasActions: false,
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClientInfoSection(),
+            20.verticalSizedBox,
+            CurrencyCalculator(
+              title: context.conversionData,
+              amountController: _amountController,
+              resultController: _resultController,
+              onAmountChanged: (val) {
+                _getFeeDetails();
+              },
+              onFromCurrencyChanged: (c) {
+                setState(() => _fromCurrencyCode = c);
+                _getFeeDetails();
+              },
+              onToCurrencyChanged: (c) {
+                setState(() => _toCurrencyCode = c);
+                _getFeeDetails();
+              },
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x336E0084),
+                  blurRadius: 20,
+                  offset: Offset(0, 0),
+                  spreadRadius: 0,
                 ),
-              );
-            },
-            onFromCurrencyChanged: (c) => setState(() => _fromCurrencyCode = c),
-            onToCurrencyChanged: (c) => setState(() => _toCurrencyCode = c),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x336E0084),
-                blurRadius: 20,
-                offset: Offset(0, 0),
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-          20.verticalSizedBox,
-          ValueListenableBuilder<TextEditingValue>(
-            valueListenable: _resultController,
-            builder: (_, value, __) => TotalSection(
-              fromCurrency: _fromCurrencyCode!,
-              toCurrency: _toCurrencyCode!,
-              total: value.text,
-              exchangePrice: 0.0,
+              ],
             ),
-          ),
-          20.verticalSizedBox,
-          AmountSection(),
-          20.verticalSizedBox,
-          NotesSection(),
-          20.verticalSizedBox,
-          FeeDetailsCard(),
-          24.verticalSizedBox,
-          MainButton(title: context.confirm, onTap: () {}),
-          40.verticalSizedBox,
-        ],
+            20.verticalSizedBox,
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _resultController,
+              builder: (_, value, __) => TotalSection(
+                fromCurrency: _fromCurrencyCode!,
+                toCurrency: _toCurrencyCode!,
+                total: value.text,
+                exchangePrice: 0.0,
+              ),
+            ),
+            20.verticalSizedBox,
+            AmountSection(),
+            20.verticalSizedBox,
+            NotesSection(),
+            20.verticalSizedBox,
+            FeeDetailsCard(),
+            24.verticalSizedBox,
+            MainButton(title: context.confirm, onTap: () {}),
+            40.verticalSizedBox,
+          ],
+        ),
       ),
     );
   }
