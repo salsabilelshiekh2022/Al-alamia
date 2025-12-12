@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../enums/request_status.dart';
+import '../data/models/fee_details_request_params.dart';
 import 'general_state.dart';
 
 @injectable
@@ -20,6 +21,23 @@ class GeneralCubit extends Cubit<GeneralState> {
         state.copyWith(
           getUserByPhoneStatus: RequestStatus.success,
           userByPhone: userByPhone,
+        ),
+      ),
+    );
+  }
+
+  Future<void> getFeeDetails({required FeeDetailsRequestParams params}) async {
+    emit(state.copyWith(getFeeDetailsStatus: RequestStatus.loading));
+    final result = await generalRepo.getFeeDetails(
+      feeDetailsRequestParams: params,
+    );
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(getFeeDetailsStatus: RequestStatus.error)),
+      (feeDetails) => emit(
+        state.copyWith(
+          getFeeDetailsStatus: RequestStatus.success,
+          feeDetails: feeDetails,
         ),
       ),
     );

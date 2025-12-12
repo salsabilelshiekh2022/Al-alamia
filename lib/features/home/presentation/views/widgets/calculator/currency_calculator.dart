@@ -21,12 +21,16 @@ class CurrencyCalculator extends StatefulWidget {
     required this.resultController,
     this.boxShadow,
     this.title,
+    this.onFromCurrencyChanged,
+    this.onToCurrencyChanged,
   });
 
   final TextEditingController amountController;
   final TextEditingController resultController;
   final List<BoxShadow>? boxShadow;
   final String? title;
+  final ValueChanged<CurrencyModel?>? onFromCurrencyChanged;
+  final ValueChanged<CurrencyModel?>? onToCurrencyChanged;
 
   @override
   State<CurrencyCalculator> createState() => _CurrencyCalculatorState();
@@ -42,6 +46,10 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
       final temp = _fromCurrency;
       _fromCurrency = _toCurrency;
       _toCurrency = temp;
+
+      widget.onFromCurrencyChanged?.call(_fromCurrency);
+      widget.onToCurrencyChanged?.call(_toCurrency);
+
       _calculateExchangeRate();
     });
   }
@@ -62,6 +70,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
       _fromCurrency = currency;
       _calculateExchangeRate();
     });
+    widget.onFromCurrencyChanged?.call(currency);
   }
 
   void _onToCurrencyChanged(CurrencyModel? currency) {
@@ -71,6 +80,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
       _toCurrency = currency;
       _calculateExchangeRate();
     });
+    widget.onToCurrencyChanged?.call(currency);
   }
 
   void _calculateExchangeRate() {
@@ -86,18 +96,18 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   }
 
   void _initializeCurrencies(HomeState state) {
-    // Only initialize once
     if (!_currenciesInitialized &&
         _fromCurrency == null &&
         _toCurrency == null &&
         state.currenciesList.length >= 2) {
-      // Use WidgetsBinding to schedule the state change after build
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {
             _fromCurrency = state.currenciesList.first;
             _toCurrency = state.currenciesList[1];
             _currenciesInitialized = true;
+            widget.onFromCurrencyChanged?.call(state.currenciesList.first);
+            widget.onToCurrencyChanged?.call(state.currenciesList[1]);
             _calculateExchangeRate();
           });
         }

@@ -1,4 +1,6 @@
 import 'package:alalamia/core/database/network/api_consumer.dart';
+import 'package:alalamia/core/general/data/models/fee_details_model.dart';
+import 'package:alalamia/core/general/data/models/fee_details_request_params.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
@@ -20,6 +22,21 @@ class GeneralRepoImpl extends GeneralRepo {
       request: () => apiConsumer.get(EndPoints.getUserByPhone(phone: phone)),
       onSuccess: (result) {
         return UserByPhoneModel.fromJson(result['data']);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, FeeDetailsModel>> getFeeDetails({
+    required FeeDetailsRequestParams feeDetailsRequestParams,
+  }) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(
+        EndPoints.getFeeDetails,
+        queryParameters: feeDetailsRequestParams.toJson(),
+      ),
+      onSuccess: (result) {
+        return FeeDetailsModel.fromJson(result['data']);
       },
     );
   }

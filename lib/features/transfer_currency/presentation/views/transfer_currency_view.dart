@@ -5,6 +5,7 @@ import 'package:alalamia/core/components/widgets/main_button.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/validator.dart';
@@ -24,6 +25,8 @@ class TransferCurrencyView extends StatefulWidget {
 class _TransferCurrencyViewState extends State<TransferCurrencyView> {
   late TextEditingController _amountController;
   late TextEditingController _resultController;
+  CurrencyModel? _fromCurrencyCode;
+  CurrencyModel? _toCurrencyCode;
 
   @override
   void initState() {
@@ -55,6 +58,8 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
             title: context.conversionData,
             amountController: _amountController,
             resultController: _resultController,
+            onFromCurrencyChanged: (c) => setState(() => _fromCurrencyCode = c),
+            onToCurrencyChanged: (c) => setState(() => _toCurrencyCode = c),
             boxShadow: [
               BoxShadow(
                 color: Color(0x336E0084),
@@ -65,13 +70,21 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
             ],
           ),
           20.verticalSizedBox,
-          TotalSection(),
+          ValueListenableBuilder<TextEditingValue>(
+            valueListenable: _resultController,
+            builder: (_, value, __) => TotalSection(
+              fromCurrency: _fromCurrencyCode!,
+              toCurrency: _toCurrencyCode!,
+              total: value.text,
+              exchangePrice: 0.0,
+            ),
+          ),
           20.verticalSizedBox,
           AmountSection(),
           20.verticalSizedBox,
           NotesSection(),
           20.verticalSizedBox,
-          FeeDetailsCard(totalPrice: _resultController.text.toString()),
+          FeeDetailsCard(),
           24.verticalSizedBox,
           MainButton(title: context.confirm, onTap: () {}),
           40.verticalSizedBox,

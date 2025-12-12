@@ -1,11 +1,24 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TotalSection extends StatelessWidget {
-  const TotalSection({super.key});
+  const TotalSection({
+    super.key,
+    required this.total,
+    required this.exchangePrice,
+    required this.fromCurrency,
+    required this.toCurrency,
+  });
+  final String total;
+  final num exchangePrice;
+  final CurrencyModel fromCurrency;
+  final CurrencyModel toCurrency;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +36,12 @@ class TotalSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            " EGP 4,850.00",
+            " ${toCurrency.code} $total ",
             style: context.textStyles.font22BoldPrimaryColor,
           ),
           12.verticalSizedBox,
           Text(
-            "${context.exchangeRate} : ١  ${context.dollar} = EGP 48.50",
+            "${context.exchangeRate} : ١  ${fromCurrency.name} =  ${context.read<HomeCubit>().state.transferCurrency?.exchangePriceUsed?.toStringAsFixed(2)} ${toCurrency.name}",
             style: context.textStyles.font14MediumSecondaryColor,
           ),
         ],

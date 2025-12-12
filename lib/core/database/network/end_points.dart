@@ -15,4 +15,5 @@ class EndPoints {
   static String transferCurrency = '/employee/home/transfer-currency';
   static String getUserByPhone({required String phone}) =>
       '/employee/transactions/get-user-by-phone?phone=$phone';
+  static String getFeeDetails = '/employee/transactions/get-fee-details';
 }
