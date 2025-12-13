@@ -20,14 +20,14 @@ import 'widgets/total_section.dart';
 import '../../../home/presentation/cubit/home_cubit.dart';
 import '../../../home/presentation/cubit/home_state.dart';
 
-class TransferCurrencyView extends StatefulWidget {
-  const TransferCurrencyView({super.key});
+class TransferMoneyView extends StatefulWidget {
+  const TransferMoneyView({super.key});
 
   @override
-  State<TransferCurrencyView> createState() => _TransferCurrencyViewState();
+  State<TransferMoneyView> createState() => _TransferMoneyViewState();
 }
 
-class _TransferCurrencyViewState extends State<TransferCurrencyView> {
+class _TransferMoneyViewState extends State<TransferMoneyView> {
   late TextEditingController _amountController;
   late TextEditingController _resultController;
   CurrencyModel? _fromCurrency;

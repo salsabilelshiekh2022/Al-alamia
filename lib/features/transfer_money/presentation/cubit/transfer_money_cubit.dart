@@ -1,4 +1,4 @@
-import 'package:alalamia/features/transfer_currency/data/repos/transfer_money_repo.dart';
+import 'package:alalamia/features/transfer_money/data/repos/transfer_money_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
