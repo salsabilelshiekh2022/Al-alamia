@@ -27,6 +27,7 @@ class CustomTextField extends StatefulWidget {
     this.textAlign,
     this.initialValue,
     this.onChanged,
+    this.textStyle,
   });
 
   final String hintText;
@@ -47,6 +48,7 @@ class CustomTextField extends StatefulWidget {
   final bool? suffixIcon;
   final TextAlign? textAlign;
   final void Function(String)? onChanged;
+  final TextStyle? textStyle;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -69,7 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.keyboardType,
       cursorColor: context.colors.primaryColor,
       cursorErrorColor: context.colors.primaryColor,
-      style: context.textStyles.font14MediumSecondaryColor,
+      style: widget.textStyle ?? context.textStyles.font14MediumSecondaryColor,
       validator: (value) {
         if (widget.validator != null) {
           return widget.validator!(value);

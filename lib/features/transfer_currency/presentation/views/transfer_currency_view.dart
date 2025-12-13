@@ -1,21 +1,21 @@
-import 'package:alalamia/core/components/widgets/card_with_purple_shadow.dart';
 import 'package:alalamia/core/components/widgets/custom_page.dart';
-import 'package:alalamia/core/components/widgets/custom_text_field_with_label.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
+import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
-import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/core/utils/global_ui_utils.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/general/data/models/fee_details_request_params.dart';
-import '../../../../core/utils/validator.dart';
-import '../../../../generated/app_assets.dart';
 import '../../../home/presentation/views/widgets/calculator/currency_calculator.dart';
 import '../../../send_money/presentation/views/widgets/fee_details_card.dart';
+import 'widgets/all_denominations_bottom_sheet.dart';
+import 'widgets/amount_section.dart';
 import 'widgets/client_info_section.dart';
+import 'widgets/notes_section.dart';
 import 'widgets/total_section.dart';
 import '../../../home/presentation/cubit/home_cubit.dart';
 import '../../../home/presentation/cubit/home_state.dart';
@@ -127,61 +127,21 @@ class _TransferCurrencyViewState extends State<TransferCurrencyView> {
             20.verticalSizedBox,
             FeeDetailsCard(),
             24.verticalSizedBox,
-            MainButton(title: context.confirm, onTap: () {}),
+            MainButton(
+              title: context.confirm,
+              onTap: () {
+                GlobalUiUtils.showBottomSheet(
+                  context,
+                  child: BlocProvider.value(
+                    value: getIt<GeneralCubit>(),
+                    child: AllDenominationsBottomSheet(),
+                  ),
+                );
+              },
+            ),
             40.verticalSizedBox,
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AmountSection extends StatelessWidget {
-  const AmountSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CardWithPurpleShadow(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            context.amount,
-            style: context.textStyles.font17SemiBoldSecondaryColor,
-          ),
-          12.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: TextEditingController(),
-            label: context.amountByChar,
-            hintText: context.amountHint,
-            isRequired: true,
-            prefixWidget: AppAssets.svgsDollarIcon,
-            keyboardType: TextInputType.text,
-            validator: (val) => Validator.validateAnotherField(val, context),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class NotesSection extends StatelessWidget {
-  const NotesSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CardWithPurpleShadow(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTextFieldWithLabel(
-            controller: TextEditingController(),
-            label: context.addNotes,
-            hintText: context.notesHint,
-            maxLines: 3,
-            keyboardType: TextInputType.text,
-          ),
-        ],
       ),
     );
   }

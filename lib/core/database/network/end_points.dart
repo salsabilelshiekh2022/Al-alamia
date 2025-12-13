@@ -17,4 +17,5 @@ class EndPoints {
       '/employee/transactions/get-user-by-phone?phone=$phone';
   static String getFeeDetails = '/employee/transactions/get-fee-details';
   static String getAllDenominations = '/employee/general/get-all-denominations';
+  static String transferMoney = '/employee/transactions/transfering-money';
 }
