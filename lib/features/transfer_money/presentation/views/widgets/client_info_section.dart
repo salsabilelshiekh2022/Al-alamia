@@ -12,29 +12,54 @@ import '../../../../../core/components/widgets/custom_text_field_with_label.dart
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 
+/// Callback type for when client info changes.
+typedef OnClientInfoChanged = void Function(String phone, String name);
+
 class ClientInfoSection extends StatefulWidget {
-  const ClientInfoSection({super.key});
+  const ClientInfoSection({super.key, required this.onClientInfoChanged});
+
+  /// Callback that fires when phone or name changes.
+  final OnClientInfoChanged onClientInfoChanged;
 
   @override
-  State<ClientInfoSection> createState() => _ClientInfoSectionState();
+  State<ClientInfoSection> createState() => ClientInfoSectionState();
 }
 
-class _ClientInfoSectionState extends State<ClientInfoSection> {
+class ClientInfoSectionState extends State<ClientInfoSection> {
   late TextEditingController phoneController;
   late TextEditingController nameController;
 
+  /// Returns the current phone value.
+  String get phone => phoneController.text;
+
+  /// Returns the current name value.
+  String get name => nameController.text;
+
   @override
   void initState() {
+    super.initState();
     phoneController = TextEditingController();
     nameController = TextEditingController();
-    super.initState();
+
+    // Listen to changes and notify parent
+    phoneController.addListener(_notifyParent);
+    nameController.addListener(_notifyParent);
   }
 
   @override
   void dispose() {
+    phoneController.removeListener(_notifyParent);
+    nameController.removeListener(_notifyParent);
     phoneController.dispose();
     nameController.dispose();
     super.dispose();
+  }
+
+  void _notifyParent() {
+    widget.onClientInfoChanged(
+      phoneController.text.trim(),
+      nameController.text.trim(),
+    );
   }
 
   @override
@@ -48,6 +73,8 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
         }
       },
       builder: (context, state) {
+        final isLoadingUser = state.getUserByPhoneStatus.isLoading;
+
         return CardWithPurpleShadow(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,14 +99,31 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
                 validator: (val) => Validator.validatePhone(val, context),
               ),
               16.verticalSizedBox,
-              CustomTextFieldWithLabel(
-                controller: nameController,
-                label: context.clientName,
-                hintText: context.clientNameHint,
-                isRequired: true,
-                prefixWidget: AppAssets.svgsUser,
-                keyboardType: TextInputType.phone,
-                validator: (val) => Validator.validateName(val, context),
+              Stack(
+                children: [
+                  CustomTextFieldWithLabel(
+                    controller: nameController,
+                    label: context.clientName,
+                    hintText: context.clientNameHint,
+                    isRequired: true,
+                    prefixWidget: AppAssets.svgsUser,
+                    keyboardType: TextInputType.name,
+                    validator: (val) => Validator.validateName(val, context),
+                  ),
+                  if (isLoadingUser)
+                    Positioned(
+                      right: 16,
+                      top: 40,
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: context.colors.primaryColor,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
