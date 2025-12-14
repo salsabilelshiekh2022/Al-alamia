@@ -8,6 +8,7 @@ import 'package:alalamia/features/debts/presentation/views/request_debt_view.dar
 import 'package:alalamia/features/expenses/presentation/cubit/expenses_cubit.dart';
 import 'package:alalamia/features/expenses/presentation/views/expenses_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
+import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
 import 'package:alalamia/features/send_money/presentation/views/send_money_second_step_view.dart';
 import 'package:alalamia/features/settings/presentation/views/settings_view.dart';
 import 'package:alalamia/features/splash/presentations/views/splash_view.dart';
@@ -69,7 +70,20 @@ abstract class AppRouter {
         return MaterialPageRoute(builder: (_) => const TransactionReciptView());
       case Routes.sendMoneyFristStepView:
         return MaterialPageRoute(
-          builder: (_) => const SendMoneyFristStepView(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: getIt<HomeCubit>(),
+              ),
+              BlocProvider.value(
+                value: getIt<GeneralCubit>(),
+              ),
+              BlocProvider.value(
+                value: getIt<SendMoneyCubit>(),
+              ),
+            ],
+            child: const SendMoneyFristStepView(),
+          ),
         );
       case Routes.sendMoneySecondStepView:
         return MaterialPageRoute(
