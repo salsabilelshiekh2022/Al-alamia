@@ -154,5 +154,7 @@
   "in_out": "In/Out",
   "field_is_Required": "Field is Required",
   "client_info": "Client Information",
-  "enter_amount_by_denominations": "Enter amount by denomenations"
+  "enter_amount_by_denominations": "Enter amount by denomenations",
+  "add_expenses" : "Add Expenses",
+  "expense" : "Expenses"
 }

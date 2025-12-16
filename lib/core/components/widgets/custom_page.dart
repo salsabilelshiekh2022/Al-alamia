@@ -41,7 +41,6 @@ class CustomPage extends StatelessWidget {
                   hasActions: hasActions,
                   isBack: isBack,
                 ).onlyPadding(bottomPadding: 24),
-             
                 Container(
                   margin: EdgeInsets.only(top: topMargin ?? 0),
                   padding:padding ?? const EdgeInsets.all(24),

@@ -21,7 +21,8 @@ class DebtsAndExpensesSection extends StatelessWidget {
           title: context.expenses,
           icon: AppAssets.svgsCash,
           onTap: () {
-            context.pushNamed(Routes.expensesView);
+            context.pushNamed(Routes.
+            expensesListView);
           },
         ),
         12.horizontalSizedBox,

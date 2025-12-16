@@ -160,4 +160,6 @@ extension TranslationExtension on BuildContext {
   String get fieldIsRequired => tr("field_is_Required");
   String get clientInfo => tr("client_info");
   String get enterAmountByDenominations => tr("enter_amount_by_denominations");
+  String get expense => tr("expense");
+  String get addExpenses => tr("add_expenses");
 }

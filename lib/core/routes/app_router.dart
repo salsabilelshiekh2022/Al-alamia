@@ -6,6 +6,7 @@ import 'package:alalamia/features/debts/presentation/cubit/debts_cubit.dart';
 import 'package:alalamia/features/debts/presentation/views/payment_debt_view.dart';
 import 'package:alalamia/features/debts/presentation/views/request_debt_view.dart';
 import 'package:alalamia/features/expenses/presentation/cubit/expenses_cubit.dart';
+import 'package:alalamia/features/expenses/presentation/views/expenses_list_view.dart';
 import 'package:alalamia/features/expenses/presentation/views/expenses_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
@@ -72,15 +73,9 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider.value(
-                value: getIt<HomeCubit>(),
-              ),
-              BlocProvider.value(
-                value: getIt<GeneralCubit>(),
-              ),
-              BlocProvider.value(
-                value: getIt<SendMoneyCubit>(),
-              ),
+              BlocProvider.value(value: getIt<HomeCubit>()),
+              BlocProvider.value(value: getIt<GeneralCubit>()),
+              BlocProvider.value(value: getIt<SendMoneyCubit>()),
             ],
             child: const SendMoneyFristStepView(),
           ),
@@ -125,6 +120,13 @@ abstract class AppRouter {
         );
       case Routes.supportView:
         return MaterialPageRoute(builder: (_) => const SupportView());
+      case Routes.expensesListView:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+           value: getIt<HomeCubit>(),
+            child: const ExpensesListView(),
+          ),
+        );
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());
     }

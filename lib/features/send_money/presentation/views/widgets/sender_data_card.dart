@@ -45,7 +45,7 @@ class _SenderDataCardState extends State<SenderDataCard> {
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
             label: context.name,
-            hintText: context.enterNameHint,
+            hintText: context.enterNameHint,     
             prefixWidget: AppAssets.svgsUser,
             isRequired: true,
             validator: (val) => Validator.validateName(val, context),

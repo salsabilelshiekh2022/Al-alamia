@@ -12,18 +12,20 @@ class CustomCurrencyDropdown extends StatelessWidget {
     super.key,
     required this.items,
     this.selectedItem,
-    required this.onChanged,
+    required this.onChanged, this.color, this.displayImageCurrency =true,
   });
 
   final List<CurrencyModel> items;
   final CurrencyModel? selectedItem;
   final ValueChanged<CurrencyModel?> onChanged;
+  final Color? color;
+  final bool displayImageCurrency;
 
   static const double _popupMaxHeight = 180;
   static const double _itemPadding = 14;
   static const double _dropdownBorderRadius = 10;
   static const double _imageSize = 22;
-  static const Color _arrowColor = Color(0xff3C3C3C);
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -105,17 +107,17 @@ class CustomCurrencyDropdown extends StatelessWidget {
       return Container(
         padding: EdgeInsets.all(10.r),
         decoration: BoxDecoration(
-          color: context.colors.backgroundFieldColor,
+          color:color != null ? Colors.white.withValues(alpha: 0.12) : context.colors.backgroundFieldColor,
           borderRadius: BorderRadius.circular(_dropdownBorderRadius.r),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (selectedItem?.image != null) _buildCurrencyImage(selectedItem!),
-            SizedBox(width: 11.w),
+          if (selectedItem?.image != null && displayImageCurrency)  _buildCurrencyImage(selectedItem!),
+         displayImageCurrency ?   SizedBox(width: 11.w) : const SizedBox.shrink(),
             _buildCurrencyName(context, selectedItem),
             SizedBox(width: 10.w),
-            const Icon(Icons.keyboard_arrow_down, color: _arrowColor),
+             Icon(Icons.keyboard_arrow_down, color: color ?? Color(0xff3C3C3C)),
           ],
         ),
       );
@@ -139,7 +141,9 @@ class CustomCurrencyDropdown extends StatelessWidget {
         fit: BoxFit.scaleDown,
         child: Text(
           currency?.name ?? context.dollar,
-          style: context.textStyles.font14MediumPrimaryColor,
+          style: context.textStyles.font14MediumPrimaryColor.copyWith(
+            color: color?? context.colors.primaryColor,
+          ),
           overflow: TextOverflow.ellipsis,
         ),
       ),

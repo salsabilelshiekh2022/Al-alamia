@@ -154,5 +154,7 @@
   "in_out": "دخول/خروج",
   "field_is_Required": "الحقل مطلوب",
   "client_info": "بيانات العميل",
-  "enter_amount_by_denominations": "ادخل المبلغ بالفئات"
+  "enter_amount_by_denominations": "ادخل المبلغ بالفئات",
+  "add_expenses" : "اضافة مصروف",
+  "expense" : "المصروفات "
 }

@@ -64,7 +64,7 @@ class DioConsumer extends ApiConsumer {
       key: 'user',
     );
     // final token = user?.token ?? '';
-    final token = '1|LujFPwBS4rHRupbDmoCPlB4LMb6nf1VYQEL9T0Gl07e2b2f7';
+    final token = '4|BdhdYUnUoJEoVt6Sjr8Sq5EsI1ujsZsqynDRAx0k842e64fe';
     final locale =
         EasyLocalization.of(
           AppKeys.navigatorKey.currentContext!,
