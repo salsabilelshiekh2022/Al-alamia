@@ -50,7 +50,7 @@ class ExpensesListView extends StatelessWidget {
                 26.verticalSizedBox,
                 MainButton(
                   title: context.addExpenses,
-                  onTap: () => context.pushNamed(Routes.expensesView),
+                  onTap: () => context.pushNamed(Routes.addExpensesView),
                   color: Colors.white.withValues(alpha: 0.08),
                   borderColor: context.colors.whiteColor.withValues(alpha: 0.36),
                   icon: AppAssets.svgsCash,

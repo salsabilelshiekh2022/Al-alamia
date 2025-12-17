@@ -7,8 +7,8 @@ import '../../../../core/components/widgets/custom_page.dart';
 import '../cubit/expenses_cubit.dart';
 import 'widgets/expenses_form.dart';
 
-class ExpensesView extends StatelessWidget {
-  const ExpensesView({super.key});
+class AddExpensesView extends StatelessWidget {
+  const AddExpensesView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ import 'package:alalamia/features/debts/presentation/views/payment_debt_view.dar
 import 'package:alalamia/features/debts/presentation/views/request_debt_view.dart';
 import 'package:alalamia/features/expenses/presentation/cubit/expenses_cubit.dart';
 import 'package:alalamia/features/expenses/presentation/views/expenses_list_view.dart';
-import 'package:alalamia/features/expenses/presentation/views/expenses_view.dart';
+import 'package:alalamia/features/expenses/presentation/views/add_expenses_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
 import 'package:alalamia/features/send_money/presentation/views/send_money_second_step_view.dart';
@@ -108,13 +108,13 @@ abstract class AppRouter {
             ),
           ),
         );
-      case Routes.expensesView:
+      case Routes.addExpensesView:
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<HomeCubit>(),
             child: BlocProvider(
               create: (context) => getIt<ExpensesCubit>(),
-              child: const ExpensesView(),
+              child: const AddExpensesView(),
             ),
           ),
         );
