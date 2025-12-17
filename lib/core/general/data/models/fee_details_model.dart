@@ -21,13 +21,13 @@ class FeeDetailsModel {
   final String? amount;
   final String? fromCurrency;
   final String? toCurrency;
-  final String? convertedFee;
+  final num? convertedFee;
   final num? exchangePrice;
   final String? commissionRate;
   final CommissionTypeEnum? commissionType;
   final num? commissionAmount;
   final num? convertedAmount;
-  final num? finalAmount;
+  final num? finalAmount; 
 
   FeeDetailsModel({
     this.amount,
