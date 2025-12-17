@@ -7,6 +7,7 @@ class TransferMoneyRequestParams {
   final String totalPrice;
   final String amountByChar;
   final List<DenominationsRequestParams> denominations;
+  final List<DenominationsRequestParams> denominationsOut ;
   final String? note;
 
   TransferMoneyRequestParams({
@@ -18,6 +19,7 @@ class TransferMoneyRequestParams {
     required this.totalPrice,
     required this.amountByChar,
     required this.denominations,
+    required this.denominationsOut,
     this.note,
   });
 
@@ -31,6 +33,7 @@ class TransferMoneyRequestParams {
     data['total_price'] = totalPrice;
     data['amount_by_char'] = amountByChar;
     data['denominations'] = denominations.map((v) => v.toJson()).toList();
+    data['denominations_out'] = denominationsOut.map((v) => v.toJson()).toList();
     data['note'] = note;
     return data;
   }

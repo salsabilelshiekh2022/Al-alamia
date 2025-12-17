@@ -19,11 +19,12 @@ class AllDenominationsBottomSheet extends StatefulWidget {
   const AllDenominationsBottomSheet({
     required this.amount,
     required this.onConfirm,
-    super.key,
+    super.key,  this.showTitle = true,
   });
   
   final num amount;
   final Function(List<DenominationsRequestParams> denominations) onConfirm;
+  final bool showTitle;
 
   @override
   State<AllDenominationsBottomSheet> createState() =>
@@ -91,11 +92,11 @@ class _AllDenominationsBottomSheetState
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+    widget.showTitle ?    Text(
           context.enterAmountByDenominations,
           style: context.textStyles.font17SemiBoldSecondaryColor,
-        ),
-        27.verticalSizedBox,
+        ) : const SizedBox.shrink(),
+       widget.showTitle ?   27.verticalSizedBox : const SizedBox.shrink(),
         CustomTextField(
           hintText: context.amountHint,
           enabled: false,
@@ -135,7 +136,7 @@ class _AllDenominationsBottomSheetState
             ).onlyPadding(topPadding: 28);
           },
         ),
-        24.verticalSizedBox,
+      _isAmountComplete ?  24.verticalSizedBox : const SizedBox.shrink() ,
         if (_isAmountComplete)
           MainButton(
             title: context.confirm,

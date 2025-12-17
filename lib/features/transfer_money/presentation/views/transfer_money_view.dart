@@ -1,19 +1,17 @@
 import 'package:alalamia/core/components/widgets/custom_page.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
-import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
+import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/core/utils/global_ui_utils.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/general/data/models/fee_details_request_params.dart';
+import '../../../../core/routes/routes.dart';
 import '../../../home/presentation/views/widgets/calculator/currency_calculator.dart';
 import '../../../send_money/presentation/views/widgets/fee_details_card.dart';
-import '../../data/models/transfer_money_request_params.dart';
-import 'widgets/all_denominations_bottom_sheet.dart';
 import 'widgets/amount_section.dart';
 import 'widgets/client_info_section.dart';
 import 'widgets/notes_section.dart';
@@ -131,16 +129,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
             MainButton(
               title: context.confirm,
               onTap: () {
-                GlobalUiUtils.showBottomSheet(
-                  context,
-                  child: BlocProvider.value(
-                    value: getIt<GeneralCubit>(),
-                    child: AllDenominationsBottomSheet(
-                      amount: 200,
-                      onConfirm: (List<DenominationsRequestParams> denominations) {},
-                    ),
-                  ),
-                );
+               context.pushNamed(Routes.addAmountByDenominationView);
               },
             ),
             40.verticalSizedBox,

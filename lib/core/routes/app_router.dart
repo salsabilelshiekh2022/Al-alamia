@@ -15,6 +15,7 @@ import 'package:alalamia/features/settings/presentation/views/settings_view.dart
 import 'package:alalamia/features/splash/presentations/views/splash_view.dart';
 import 'package:alalamia/features/support/presentation/views/support_view.dart';
 import 'package:alalamia/features/transactions/presentation/views/transactions_details_view.dart.dart';
+import 'package:alalamia/features/transfer_money/presentation/views/add_amount_by_denomination_view.dart';
 import 'package:alalamia/features/transfer_money/presentation/views/transfer_money_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -122,12 +123,27 @@ abstract class AppRouter {
         return MaterialPageRoute(builder: (_) => const SupportView());
       case Routes.expensesListView:
         return MaterialPageRoute(
+          
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<HomeCubit>()),
               BlocProvider.value(value: getIt<ExpensesCubit>()),
             ],
+
             child: const ExpensesListView(),
+          ),
+        );
+      case Routes.addAmountByDenominationView:
+
+        return MaterialPageRoute(
+
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<GeneralCubit>()),
+            ],
+            child:  AddAmountByDenominationView(
+          
+            ),
           ),
         );
       default:

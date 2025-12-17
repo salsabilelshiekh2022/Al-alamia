@@ -20,18 +20,7 @@ class CustomAppBar extends StatelessWidget {
     return AppBar(
       title: Text(title, style: context.textStyles.font18SemiBoldWhiteColor),
       leading: isBack
-          ? Padding(
-              padding: const EdgeInsetsDirectional.only(start: 16),
-              child: InkWell(
-                onTap: () => context.pop(),
-                child: CustomSvgBuilder(
-                  path: AppAssets.svgsArrowBtnIcon,
-                  width: 44,
-                  height: 44,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            )
+          ? CustomBackButton()
           : null,
       actions: hasActions
           ? [
@@ -51,5 +40,27 @@ class CustomAppBar extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
     );
+  }
+}
+
+class CustomBackButton extends StatelessWidget {
+  const CustomBackButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.only(start: 16),
+        child: InkWell(
+          onTap: () => context.pop(),
+          child: CustomSvgBuilder(
+            path: AppAssets.svgsArrowBtnIcon,
+            width: 44,
+            height: 44,
+            fit: BoxFit.contain,
+          ),
+        ),
+      );
   }
 }
