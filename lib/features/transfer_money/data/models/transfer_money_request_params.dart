@@ -48,4 +48,11 @@ class DenominationsRequestParams {
     data['quantity'] = quantity;
     return data;
   }
+
+@override
+  String toString() {
+    return 'DenominationsRequestParams{id: $id, quantity: $quantity}';
+  }
+
+
 }

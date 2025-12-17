@@ -10,10 +10,15 @@ import '../../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
+import '../../../../../core/di/dependency_injection.dart';
+import '../../../../../core/general/cubit/general_cubit.dart';
+import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../../home/presentation/cubit/home_state.dart';
+import '../../../../transfer_money/data/models/transfer_money_request_params.dart';
+import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/expenses_request_params.dart';
 import '../../cubit/expenses_cubit.dart';
 import '../../cubit/expenses_state.dart';
@@ -33,12 +38,13 @@ class _ExpensesFormState extends State<ExpensesForm> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   bool isDropDownOpen = false;
   int? selectedCurrencyId;
+
   @override
   void initState() {
+    super.initState();
     amountController = TextEditingController();
     currencyController = TextEditingController();
     purposeController = TextEditingController();
-    super.initState();
   }
 
   @override
@@ -49,7 +55,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
     super.dispose();
   }
 
-  void _onItemSelected(String selectedItem) {
+  void _onCurrencySelected(String selectedItem) {
     final homeCubit = context.read<HomeCubit>();
     final selectedCurrency = homeCubit.state.currenciesList.firstWhere(
       (currency) => currency.name == selectedItem,
@@ -60,6 +66,47 @@ class _ExpensesFormState extends State<ExpensesForm> {
       currencyController.text = selectedItem;
       selectedCurrencyId = selectedCurrency.id;
     });
+  }
+
+  void _onDenominationsConfirmed(List<DenominationsRequestParams> denominations) {
+    final cubit = context.read<ExpensesCubit>();
+    cubit.addExpense(
+      expensesRequestParams: ExpensesRequestParams(
+        currencyId: selectedCurrencyId ?? 0,
+        amount: amountController.text,
+        notes: purposeController.text,
+        denominations: denominations,
+      ),
+    );
+  }
+
+  void _handleSendButton() {
+    if (formKey.currentState?.validate() ?? false) {
+      final amount = double.tryParse(amountController.text);
+      
+      if (amount == null || amount <= 0) {
+        AppSnackBar.showSnackBar(
+          context: context,
+          message:"pleaseEnterValidAmount",
+          state: SnackBarStates.error,
+        );
+        return;
+      }
+      GlobalUiUtils.showBottomSheet(
+        context,
+        child: BlocProvider.value(
+          value: getIt<GeneralCubit>(),
+          child: AllDenominationsBottomSheet(
+            amount: amount,
+            onConfirm: _onDenominationsConfirmed,
+          ),
+        ),
+      );
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.always;
+      });
+    }
   }
 
   @override
@@ -82,52 +129,18 @@ class _ExpensesFormState extends State<ExpensesForm> {
         }
       },
       builder: (context, state) {
-        var cubit = context.read<ExpensesCubit>();
         return Form(
           key: formKey,
           autovalidateMode: autovalidateMode,
           child: Column(
             children: [
-              CustomTextFieldWithLabel(
-                controller: purposeController,
-                label: context.purpose,
-                hintText: context.purposeHint,
-                isRequired: true,
-                keyboardType: TextInputType.text,
-                validator: (value) =>
-                    Validator.validateAnotherField(value, context),
-              ),
+              _buildPurposeField(),
               20.verticalSizedBox,
-              currencyField(context),
+              _buildCurrencyField(context),
               20.verticalSizedBox,
-              CustomTextFieldWithLabel(
-                controller: amountController,
-                label: context.amount,
-                hintText: context.enterAmountExpenses,
-                isRequired: true,
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                    Validator.validateAnotherField(value, context),
-              ),
+              _buildAmountField(),
               40.verticalSizedBox,
-              MainButton(
-                title: context.send,
-                onTap: () {
-                  if (formKey.currentState?.validate() ?? false) {
-                    cubit.addExpense(
-                      expensesRequestParams: ExpensesRequestParams(
-                        currencyId: selectedCurrencyId ?? 0,
-                        amount: amountController.text,
-                        notes: purposeController.text,
-                      ),
-                    );
-                  } else {
-                    setState(() {
-                      autovalidateMode = AutovalidateMode.always;
-                    });
-                  }
-                },
-              ),
+              _buildSubmitButton(state.expensesStatus),
             ],
           ),
         );
@@ -135,57 +148,86 @@ class _ExpensesFormState extends State<ExpensesForm> {
     );
   }
 
-  Widget currencyField(BuildContext context) {
+  Widget _buildPurposeField() {
+    return CustomTextFieldWithLabel(
+      controller: purposeController,
+      label: context.purpose,
+      hintText: context.purposeHint,
+      isRequired: true,
+      keyboardType: TextInputType.text,
+      validator: (value) => Validator.validateAnotherField(value, context),
+    );
+  }
+
+  Widget _buildAmountField() {
+    return CustomTextFieldWithLabel(
+      controller: amountController,
+      label: context.amount,
+      hintText: context.enterAmountExpenses,
+      isRequired: true,
+      keyboardType: TextInputType.number,
+      validator: (value) => Validator.validateAnotherField(value, context),
+    );
+  }
+
+  Widget _buildSubmitButton(RequestStatus status) {
+    return MainButton(
+      title: context.send,
+      onTap: status.isLoading ? (){} : _handleSendButton,
+    
+    );
+  }
+
+  Widget _buildCurrencyField(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return Column(
           children: [
             CustomTextFieldWithLabel(
-              onTap: () {
-                setState(() {
-                  isDropDownOpen = !isDropDownOpen;
-                });
-              },
+              onTap: _toggleDropdown,
               controller: currencyController,
               label: context.currency,
               hintText: context.currenyHint,
               prefixWidget: AppAssets.svgsCoinsIcon,
               isRequired: true,
               isReadOnly: true,
-
               validator: (value) =>
                   Validator.validateAnotherField(value, context),
-              suffixWidget: InkWell(
-                splashColor: Colors.transparent,
-                onTap: () {
-                  setState(() {
-                    isDropDownOpen = !isDropDownOpen;
-                  });
-                },
-                child: Icon(
-                  isDropDownOpen
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded,
-                  color: isDropDownOpen
-                      ? context.colors.primaryColor
-                      : context.colors.grayColor,
-                ),
-              ),
+              suffixWidget: _buildDropdownIcon(),
             ),
-
-            isDropDownOpen
-                ? CustomDropDownCard(
-                    dropDownItems: state.currenciesList
-                        .map((e) => e.name)
-                        .whereType<String>()
-                        .toList(),
-                    selectedValue: currencyController.text,
-                    onItemSelected: _onItemSelected,
-                  ).onlyPadding(topPadding: 6)
-                : SizedBox(),
+            if (isDropDownOpen)
+              CustomDropDownCard(
+                dropDownItems: state.currenciesList
+                    .map((e) => e.name)
+                    .whereType<String>()
+                    .toList(),
+                selectedValue: currencyController.text,
+                onItemSelected: _onCurrencySelected,
+              ).onlyPadding(topPadding: 6),
           ],
         );
       },
     );
+  }
+
+  Widget _buildDropdownIcon() {
+    return InkWell(
+      splashColor: Colors.transparent,
+      onTap: _toggleDropdown,
+      child: Icon(
+        isDropDownOpen
+            ? Icons.keyboard_arrow_up_rounded
+            : Icons.keyboard_arrow_down_rounded,
+        color: isDropDownOpen
+            ? context.colors.primaryColor
+            : context.colors.grayColor,
+      ),
+    );
+  }
+
+  void _toggleDropdown() {
+    setState(() {
+      isDropDownOpen = !isDropDownOpen;
+    });
   }
 }

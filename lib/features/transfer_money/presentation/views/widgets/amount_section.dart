@@ -8,45 +8,8 @@ import '../../../../../core/components/widgets/custom_text_field_with_label.dart
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 
-/// Callback type for when amount by char changes.
-typedef OnAmountByCharChanged = void Function(String amountByChar);
-
-class AmountSection extends StatefulWidget {
-  const AmountSection({
-    super.key,
-    required this.controller,
-    required this.onAmountByCharChanged,
-  });
-
-  /// Controller for the amount by char text field.
-  final TextEditingController controller;
-
-  /// Callback that fires when amount by char changes.
-  final OnAmountByCharChanged onAmountByCharChanged;
-
-  @override
-  State<AmountSection> createState() => AmountSectionState();
-}
-
-class AmountSectionState extends State<AmountSection> {
-  /// Returns the current amount by char value.
-  String get amountByChar => widget.controller.text;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(_notifyParent);
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_notifyParent);
-    super.dispose();
-  }
-
-  void _notifyParent() {
-    widget.onAmountByCharChanged(widget.controller.text);
-  }
+class AmountSection extends StatelessWidget {
+  const AmountSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +23,7 @@ class AmountSectionState extends State<AmountSection> {
           ),
           12.verticalSizedBox,
           CustomTextFieldWithLabel(
-            controller: widget.controller,
+            controller: TextEditingController(),
             label: context.amountByChar,
             hintText: context.amountHint,
             isRequired: true,

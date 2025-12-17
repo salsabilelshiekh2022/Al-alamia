@@ -8,25 +8,22 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/transfer_money/data/models/transfer_money_request_params.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// Callback type for when denominations are selected.
-/// Returns a list of maps containing 'id' and 'quantity' for each selected denomination.
-typedef OnDenominationsSelected = void Function(
-  List<Map<String, dynamic>> denominations,
-);
+import 'denomination_item.dart';
 
 class AllDenominationsBottomSheet extends StatefulWidget {
   const AllDenominationsBottomSheet({
+    required this.amount,
+    required this.onConfirm,
     super.key,
-    required this.onDenominationsSelected,
   });
-
-  /// Callback that fires when user confirms denomination selection.
-  final OnDenominationsSelected onDenominationsSelected;
+  
+  final num amount;
+  final Function(List<DenominationsRequestParams> denominations) onConfirm;
 
   @override
   State<AllDenominationsBottomSheet> createState() =>
@@ -35,243 +32,120 @@ class AllDenominationsBottomSheet extends StatefulWidget {
 
 class _AllDenominationsBottomSheetState
     extends State<AllDenominationsBottomSheet> {
-  /// Tracks the quantity selected for each denomination by its ID.
-  final Map<int, int> _denominationQuantities = {};
-
-  /// Calculates the total count of selected denominations.
-  int _calculateTotalCount() {
-    int total = 0;
-    for (final quantity in _denominationQuantities.values) {
-      total += quantity;
-    }
-    return total;
-  }
-
-  /// Handles quantity change for a specific denomination.
-  void _onQuantityChanged(int denominationId, int quantity) {
-    setState(() {
-      if (quantity > 0) {
-        _denominationQuantities[denominationId] = quantity;
-      } else {
-        _denominationQuantities.remove(denominationId);
-      }
-    });
-  }
-
-  /// Builds the list of selected denominations to return via callback.
-  List<Map<String, dynamic>> _buildSelectedDenominations() {
-    return _denominationQuantities.entries
-        .where((entry) => entry.value > 0)
-        .map((entry) => {
-              'id': entry.key,
-              'quantity': entry.value,
-            })
-        .toList();
-  }
-
-  /// Handles the confirm button tap.
-  void _onConfirm() {
-    final selectedDenominations = _buildSelectedDenominations();
-    Navigator.of(context).pop();
-    widget.onDenominationsSelected(selectedDenominations);
-  }
+  late num remainingAmount;
+  late TextEditingController amountController;
+  Map<int, int> denominationCounts = {};
 
   @override
   void initState() {
     super.initState();
+    remainingAmount = widget.amount;
+    amountController = TextEditingController(text: _formatAmount(remainingAmount));
     context.read<GeneralCubit>().getAllDenominations();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<GeneralCubit, GeneralState>(
-      builder: (context, state) {
-        final totalCount = _calculateTotalCount();
-        final isLoading = state.getAllDenominationsStatus.isLoading;
-        final hasSelections = _denominationQuantities.values.any((q) => q > 0);
-        
-        // Filter out null denominations
-        final denominations = state.denominations
-            ?.whereType<DenominationModel>()
-            .toList() ?? [];
-
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              context.enterAmountByDenominations,
-              style: context.textStyles.font17SemiBoldSecondaryColor,
-            ),
-            27.verticalSizedBox,
-            CustomTextField(
-              hintText: context.amountHint,
-              enabled: false,
-              initialValue: '$totalCount ${context.number}',
-              textStyle: context.textStyles.font16MediumSecondaryColor,
-            ),
-            GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
-                mainAxisExtent: 50,
-              ),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: isLoading ? 6 : denominations.length,
-              itemBuilder: (context, index) {
-                if (isLoading) {
-                  return Skeletonizer(
-                    enabled: true,
-                    child: DenominationItem(
-                      denominationModel: DenominationModel(),
-                      quantity: 0,
-                      onQuantityChanged: (_) {},
-                    ),
-                  );
-                }
-
-                final denomination = denominations[index];
-                final quantity = _denominationQuantities[denomination.id] ?? 0;
-
-                return DenominationItem(
-                  denominationModel: denomination,
-                  quantity: quantity,
-                  onQuantityChanged: (newQuantity) {
-                    if (denomination.id != null) {
-                      _onQuantityChanged(denomination.id!, newQuantity);
-                    }
-                  },
-                );
-              },
-            ).onlyPadding(topPadding: 28),
-            MainButton(
-              title: context.confirm,
-              onTap: hasSelections ? _onConfirm : () {},
-            ),
-            32.verticalSizedBox,
-          ],
-        );
-      },
-    );
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
   }
-}
 
-class DenominationItem extends StatelessWidget {
-  const DenominationItem({
-    super.key,
-    required this.denominationModel,
-    required this.quantity,
-    required this.onQuantityChanged,
-  });
+  String _formatAmount(num amount) {
+    return amount.toStringAsFixed(2);
+  }
 
-  final DenominationModel denominationModel;
-  final int quantity;
-  final ValueChanged<int> onQuantityChanged;
+  void _updateAmount(int denominationId, num denominationValue, int countChange) {
+    setState(() {
+      remainingAmount -= (denominationValue * countChange);
+      amountController.text = _formatAmount(remainingAmount);
 
-  void _increment() => onQuantityChanged(quantity + 1);
+      denominationCounts[denominationId] = 
+          (denominationCounts[denominationId] ?? 0) + countChange;
 
-  void _decrement() {
-    if (quantity > 0) {
-      onQuantityChanged(quantity - 1);
+      if (denominationCounts[denominationId] == 0) {
+        denominationCounts.remove(denominationId);
+      }
+    });
+  }
+
+  List<DenominationsRequestParams> _buildDenominationsList() {
+    return denominationCounts.entries
+        .map((entry) => DenominationsRequestParams(
+              id: entry.key,
+              quantity: entry.value,
+            ))
+        .toList();
+  }
+
+  bool get _isAmountComplete => remainingAmount == 0;
+
+  void _handleConfirm() {
+    if (_isAmountComplete) {
+      final denominations = _buildDenominationsList();
+      widget.onConfirm(denominations);
+      context.pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.colors.backgroundFieldColor,
-        borderRadius: 12.allBorderRadius,
-        border: Border.all(color: context.colors.strokeColor, width: 1),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: double.infinity,
-              padding: 12.allPadding,
-              decoration: BoxDecoration(
-                color: context.colors.strokeColor,
-                borderRadius: BorderRadiusDirectional.only(
-                  topStart: Radius.circular(12.r),
-                  bottomStart: Radius.circular(12.r),
-                ),
-              ),
-              child: FittedBox(
-                child: Text(
-                  denominationModel.name ?? 'N/A',
-                  style: context.textStyles.font18SemiBoldSecondaryColor,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              padding: 12.allPadding,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: context.colors.backgroundFieldColor,
-                borderRadius: BorderRadiusDirectional.only(
-                  topEnd: Radius.circular(12.r),
-                  bottomEnd: Radius.circular(12.r),
-                ),
-              ),
-              child: Row(
-                children: [
-                  _CountButton(
-                    icon: Icons.add_rounded,
-                    onTap: _increment,
-                  ),
-                  10.horizontalSizedBox,
-                  Text(
-                    quantity.toString(),
-                    style: context.textStyles.font17SemiBoldSecondaryColor
-                        .copyWith(fontWeight: FontWeight.w500),
-                  ),
-                  10.horizontalSizedBox,
-                  _CountButton(
-                    icon: Icons.remove_rounded,
-                    onTap: _decrement,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CountButton extends StatelessWidget {
-  const _CountButton({
-    required this.icon,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 26,
-        height: 26,
-        decoration: BoxDecoration(
-          borderRadius: 13.allBorderRadius,
-          color: const Color(0xff9b9b9b).withValues(alpha: 0.09),
+    return Column(
+      children: [
+        Text(
+          context.enterAmountByDenominations,
+          style: context.textStyles.font17SemiBoldSecondaryColor,
         ),
-        child: Icon(
-          icon,
-          color: context.colors.secondaryColor,
-          size: 16.sp,
-        ).center(),
-      ),
+        27.verticalSizedBox,
+        CustomTextField(
+          hintText: context.amountHint,
+          enabled: false,
+          controller: amountController,
+          textStyle: context.textStyles.font16MediumSecondaryColor,
+        ),
+        BlocBuilder<GeneralCubit, GeneralState>(
+          builder: (context, state) {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 4,
+                mainAxisExtent: 50,
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: state.denominations?.length ?? 6,
+              itemBuilder: (context, index) {
+                final denomination = state.denominations?[index];
+                return Skeletonizer(
+                  enabled: state.getAllDenominationsStatus.isLoading,
+                  child: DenominationItem(
+                    denominationModel: denomination ?? DenominationModel(),
+                    onCountChanged: (change) {
+                      if (denomination != null) {
+                        _updateAmount(
+                          denomination.id ?? 0,
+                          double.parse(denomination.value ?? '0'),
+                          change,
+                        );
+                      }
+                    },
+                  ),
+                );
+              },
+            ).onlyPadding(topPadding: 28);
+          },
+        ),
+        24.verticalSizedBox,
+        if (_isAmountComplete)
+          MainButton(
+            title: context.confirm,
+            onTap: _handleConfirm,
+          )
+        else
+          SizedBox(),
+        32.verticalSizedBox,
+      ],
     );
   }
 }
+
