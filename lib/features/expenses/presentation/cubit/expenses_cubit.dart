@@ -31,4 +31,36 @@ class ExpensesCubit extends Cubit<ExpensesState> {
       ),
     );
   }
+
+  Future<void> getExpenses() async {
+    emit(state.copyWith(expensesStatus: RequestStatus.loading));
+    final result = await expensesRepo.getExpenses();
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          expensesStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (expenses) => emit(
+        state.copyWith(expensesStatus: RequestStatus.success, expenses: expenses),
+      ),
+    );
+  }
+
+  Future<void> getExpensesByCurrency({required int id}) async {
+    emit(state.copyWith(expensesStatus: RequestStatus.loading));
+    final result = await expensesRepo.getExpensesByCurrency(id: id);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          expensesStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (amount) => emit(
+        state.copyWith(expensesStatus: RequestStatus.success, expensesAmountByCurrency: amount),
+      ),
+    );
+  }
 }

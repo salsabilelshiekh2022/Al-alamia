@@ -122,8 +122,11 @@ abstract class AppRouter {
         return MaterialPageRoute(builder: (_) => const SupportView());
       case Routes.expensesListView:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider.value(
-           value: getIt<HomeCubit>(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<HomeCubit>()),
+              BlocProvider.value(value: getIt<ExpensesCubit>()),
+            ],
             child: const ExpensesListView(),
           ),
         );

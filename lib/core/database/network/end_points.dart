@@ -18,4 +18,6 @@ class EndPoints {
   static String getFeeDetails = '/employee/transactions/get-fee-details';
   static String getAllDenominations = '/employee/general/get-all-denominations';
   static String transferMoney = '/employee/transactions/transfering-money';
+  static  String getExpenses = '/employee/transactions/expenses';
+  static String getExpensesByCurrency({required int id}) => '/employee/general/currencies/$id/expenses';
 }

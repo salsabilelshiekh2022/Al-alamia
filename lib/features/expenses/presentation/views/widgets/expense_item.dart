@@ -1,3 +1,5 @@
+import 'package:alalamia/features/expenses/data/models/expense_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,7 +8,8 @@ import '../../../../../core/helper/number_extentions.dart';
 import '../../../../transactions/presentation/views/widgets/transactions_details/card_with_shadow.dart';
 
 class ExpenseItem extends StatelessWidget {
-  const ExpenseItem({super.key});
+  const ExpenseItem( {super.key, required this.expenseModel,});
+  final ExpenseModel  expenseModel;
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +29,19 @@ class ExpenseItem extends StatelessWidget {
               ),),
             ),
             Spacer(),
-            Text("15 يناير 2025",style: context.textStyles.font14MediumGrayColor,),
+            Text(DateFormat('d MMMM yyyy', EasyLocalization.of(context)!.locale.languageCode).format(expenseModel.createdAt ?? DateTime.now()),style: context.textStyles.font14MediumGrayColor,),
           ],
         ),
         16.verticalSizedBox,
         Row(
           children: [
-            Text("أحمد محمد ",style: context.textStyles.font15SemiBoldSecondaryColor,),
+            Text(expenseModel.employee?.name ?? "",style: context.textStyles.font15SemiBoldSecondaryColor,),
             Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text("usd",style: context.textStyles.font13SemiBoldPrimaryColor.copyWith(color: context.colors.grayColor, fontWeight: FontWeight.w500),),
-                Text("1,250",style: context.textStyles.font16SemiBoldSecondaryColor,),
+              Text(expenseModel.currency?.code ?? "",style: context.textStyles.font13SemiBoldPrimaryColor.copyWith(color: context.colors.grayColor, fontWeight: FontWeight.w500),),
+                Text(expenseModel.amount ?? "",style: context.textStyles.font16SemiBoldSecondaryColor,),
               ],
             )
           ],
@@ -50,7 +53,7 @@ class ExpenseItem extends StatelessWidget {
          decoration: BoxDecoration(
           borderRadius: 10.allBorderRadius,
            color: context.colors.backgroundFieldColor,),
-          child: Text("الغرض: مصاريف تعليمية",style: context.textStyles.font14MediumGrayColor,),
+          child: Text("الغرض: ${expenseModel.note}",style: context.textStyles.font14MediumGrayColor,),
         )
       ],
     ),

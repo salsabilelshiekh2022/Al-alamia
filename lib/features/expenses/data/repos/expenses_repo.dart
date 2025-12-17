@@ -1,3 +1,4 @@
+import 'package:alalamia/features/expenses/data/models/expense_model.dart';
 import 'package:alalamia/features/expenses/data/models/expenses_request_params.dart';
 import 'package:dartz/dartz.dart';
 
@@ -7,4 +8,7 @@ abstract class ExpensesRepo {
   Future<Either<Failure, String>> addExpense({
     required ExpensesRequestParams expensesRequestParams,
   });
+
+  Future<Either<Failure, List<ExpenseModel>>> getExpenses();
+  Future<Either<Failure, String>> getExpensesByCurrency({required int id});
 }

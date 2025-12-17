@@ -1,22 +1,39 @@
 import 'package:alalamia/core/components/widgets/custom_currency_dropdown.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
+import 'package:alalamia/features/expenses/presentation/cubit/expenses_state.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/components/widgets/custom_app_bar.dart';
+import '../../../../core/enums/request_status.dart';
 import '../../../../core/helper/app_extention.dart';
 import '../../../../core/helper/translation_extensions.dart';
 import '../../../../core/helper/widget_extentions.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../generated/app_assets.dart';
+import '../../../home/data/models/currency_model.dart';
+import '../../data/models/expense_model.dart';
+import '../cubit/expenses_cubit.dart';
 import 'widgets/expense_item.dart';
 
-class ExpensesListView extends StatelessWidget {
+class ExpensesListView extends StatefulWidget {
   const ExpensesListView({super.key});
 
+  @override
+  State<ExpensesListView> createState() => _ExpensesListViewState();
+}
+
+class _ExpensesListViewState extends State<ExpensesListView> {
+  @override
+  void initState() {
+    context.read<ExpensesCubit>().getExpenses();
+    super.initState();
+  }
+CurrencyModel? selectedCurrency;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,18 +48,27 @@ class ExpensesListView extends StatelessWidget {
 
                   isBack: true,
                 ).onlyPadding(bottomPadding: 16),
-                Text(
-                  "\$5,000.00",
-                  style: context.textStyles.font24BoldSecondaryColor.copyWith(
-                    color: context.colors.whiteColor,
-                  ),
+                BlocBuilder<ExpensesCubit, ExpensesState>(
+                  builder: (context, state) {
+                    return Text(
+                      "\$${state.expensesAmountByCurrency ?? ''}",
+                      style: context.textStyles.font24BoldSecondaryColor
+                          .copyWith(color: context.colors.whiteColor),
+                    );
+                  },
                 ),
                 12.verticalSizedBox,
                 SizedBox(
                   width: 150.w,
                   child: CustomCurrencyDropdown(
                     items: context.read<HomeCubit>().state.currenciesList,
-                    onChanged: (val) {},
+                    selectedItem: selectedCurrency,
+                    onChanged: (val) {
+                    setState(() {
+                        selectedCurrency = val;
+                      context.read<ExpensesCubit>().getExpensesByCurrency(id: val!.id!);
+                    });
+                    },
                     color: Colors.white,
                     displayImageCurrency: false,
                   ),
@@ -52,7 +78,9 @@ class ExpensesListView extends StatelessWidget {
                   title: context.addExpenses,
                   onTap: () => context.pushNamed(Routes.addExpensesView),
                   color: Colors.white.withValues(alpha: 0.08),
-                  borderColor: context.colors.whiteColor.withValues(alpha: 0.36),
+                  borderColor: context.colors.whiteColor.withValues(
+                    alpha: 0.36,
+                  ),
                   icon: AppAssets.svgsCash,
                 ).horizontalPadding(16),
                 Container(
@@ -74,18 +102,34 @@ class ExpensesListView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        context.expense, style: context.textStyles.font15SemiBoldSecondaryColor.copyWith(
-                          fontWeight: FontWeight.bold
-                        ),),
-                       18.verticalSizedBox,
-                        ListView.separated(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          physics: const NeverScrollableScrollPhysics(),
-                          separatorBuilder: (context, index) => 16.verticalSizedBox,
-                          itemCount: 10,
-                          itemBuilder: (context, index) => ExpenseItem(),
-                        ),
+                        context.expense,
+                        style: context.textStyles.font15SemiBoldSecondaryColor
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      18.verticalSizedBox,
+                      BlocBuilder<ExpensesCubit, ExpensesState>(
+                        builder: (context, state) {
+                          bool isLoading = state.expensesStatus.isLoading && state.expenses == null;
+                          return Skeletonizer(
+                            enabled: isLoading,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: const NeverScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) =>
+                                  16.verticalSizedBox,
+                              itemCount: isLoading
+                                  ? 3
+                                  : state.expenses?.length ?? 0,
+                              itemBuilder: (context, index) => ExpenseItem(
+                                expenseModel: isLoading
+                                    ? dummyExpenseModel
+                                    : state.expenses![index]!,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -106,4 +150,3 @@ class ExpensesListView extends StatelessWidget {
     );
   }
 }
-
