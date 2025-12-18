@@ -1,21 +1,21 @@
 import 'package:alalamia/core/enums/debets_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
-import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-import '../../../../../core/components/widgets/custom_svg_builder.dart';
 
 class DebtCardWidget extends StatelessWidget {
   const DebtCardWidget({
     super.key,
     required this.isSelected,
     required this.onTap,
-    required this.debets,
+    required this.debets, required this.imagePath,
   });
-  final DebetsEnum debets;
+  final DebetsTypeEnum debets;
   final bool isSelected;
   final VoidCallback onTap;
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,11 @@ class DebtCardWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            CustomSvgBuilder(
-              path: AppAssets.svgsSendMoneyIcon,
+            SvgPicture.asset(
+           imagePath,
               width: 40,
               height: 32,
-              color: isSelected
-                  ? context.colors.primaryColor
-                  : context.colors.secondaryColor,
+              colorFilter: ColorFilter.mode(isSelected ? context.colors.primaryColor : context.colors.grayColor, BlendMode.srcIn),
             ),
             16.verticalSizedBox,
             Text(

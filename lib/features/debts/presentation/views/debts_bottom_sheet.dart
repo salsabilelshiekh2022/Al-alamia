@@ -4,6 +4,7 @@ import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/routes/routes.dart';
 import 'package:alalamia/features/debts/presentation/views/widgets/debt_card_widget.dart';
+import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/components/widgets/main_button.dart';
@@ -16,9 +17,9 @@ class DebtsBottomSheet extends StatefulWidget {
 }
 
 class _DebtsBottomSheetState extends State<DebtsBottomSheet> {
-  DebetsEnum? selectedDebt = DebetsEnum.requestDebt;
+  DebetsTypeEnum? selectedDebt = DebetsTypeEnum.debt_inside;
 
-  void _onDebtSelected(DebetsEnum debt) {
+  void _onDebtSelected(DebetsTypeEnum debt) {
     setState(() {
       selectedDebt = debt;
     });
@@ -27,10 +28,10 @@ class _DebtsBottomSheetState extends State<DebtsBottomSheet> {
   void _navigateToDebtView() {
     if (selectedDebt == null) return;
     context.pop();
-    final route = selectedDebt == DebetsEnum.requestDebt
-        ? Routes.requestDeptView
-        : Routes.paymentDeptView;
-    context.pushNamed(route);
+    final route = selectedDebt == DebetsTypeEnum.debt_inside
+        ? Routes.debtsView
+        : Routes.debtsView;
+    context.pushNamed(route, arguments: selectedDebt);
   }
 
   @override
@@ -43,7 +44,7 @@ class _DebtsBottomSheetState extends State<DebtsBottomSheet> {
         ),
         8.verticalSizedBox,
         Text(
-          context.requestPaymentDebt,
+          context.requestDebtInOut,
           style: context.textStyles.font15RegularGrayColor,
           textAlign: TextAlign.center,
         ),
@@ -52,17 +53,19 @@ class _DebtsBottomSheetState extends State<DebtsBottomSheet> {
           children: [
             Expanded(
               child: DebtCardWidget(
-                debets: DebetsEnum.requestDebt,
-                isSelected: selectedDebt == DebetsEnum.requestDebt,
-                onTap: () => _onDebtSelected(DebetsEnum.requestDebt),
+                imagePath:AppAssets.svgsDebtIn ,
+                debets: DebetsTypeEnum.debt_inside,
+                isSelected: selectedDebt == DebetsTypeEnum.debt_inside,
+                onTap: () => _onDebtSelected(DebetsTypeEnum.debt_inside),
               ),
             ),
             16.horizontalSizedBox,
             Expanded(
               child: DebtCardWidget(
-                debets: DebetsEnum.paymentDebt,
-                isSelected: selectedDebt == DebetsEnum.paymentDebt,
-                onTap: () => _onDebtSelected(DebetsEnum.paymentDebt),
+                  imagePath:AppAssets.svgsDebtOut ,
+                debets: DebetsTypeEnum.debt_outside,
+                isSelected: selectedDebt == DebetsTypeEnum.debt_outside,
+                onTap: () => _onDebtSelected(DebetsTypeEnum.debt_outside),
               ),
             ),
           ],

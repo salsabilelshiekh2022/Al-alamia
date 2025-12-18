@@ -14,3 +14,18 @@ enum DebetsEnum {
     }
   }
 }
+
+
+enum DebetsTypeEnum {
+  debt_inside,
+  debt_outside;
+
+  String translate(BuildContext context) {
+    switch (this) {
+      case DebetsTypeEnum.debt_inside:
+        return context.debtIn;
+      case DebetsTypeEnum.debt_outside:
+        return context.debtOut;
+    }
+  }
+}

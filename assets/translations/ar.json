@@ -156,5 +156,9 @@
   "client_info": "بيانات العميل",
   "enter_amount_by_denominations": "ادخل المبلغ بالفئات",
   "add_expenses" : "اضافة مصروف",
-  "expense" : "المصروفات "
+  "expense" : "المصروفات ",
+  "request_debt_in_out" : "طلب دين داخلي/خارجي",
+  "debt_in" : "دين داخلي",
+  "debt_out" : "دين خارجي",
+  "total_debt" : "اجمالي الدين"
 }

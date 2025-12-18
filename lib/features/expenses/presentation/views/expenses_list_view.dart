@@ -47,7 +47,7 @@ CurrencyModel? selectedCurrency;
                   title: context.expenses,
 
                   isBack: true,
-                ).onlyPadding(bottomPadding: 16),
+                ).onlyPadding(bottomPadding: 0),
                 BlocBuilder<ExpensesCubit, ExpensesState>(
                   builder: (context, state) {
                     return Text(
@@ -57,7 +57,7 @@ CurrencyModel? selectedCurrency;
                     );
                   },
                 ),
-                12.verticalSizedBox,
+                8.verticalSizedBox,
                 SizedBox(
                   width: 150.w,
                   child: CustomCurrencyDropdown(
@@ -73,7 +73,7 @@ CurrencyModel? selectedCurrency;
                     displayImageCurrency: false,
                   ),
                 ),
-                26.verticalSizedBox,
+                12.verticalSizedBox,
                 MainButton(
                   title: context.addExpenses,
                   onTap: () => context.pushNamed(Routes.addExpensesView),

@@ -1,3 +1,4 @@
+import 'package:alalamia/core/enums/debets_enum.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:alalamia/features/auth/presentation/views/registuration_method_view.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/presentation/views/login_view.dart';
+import '../../features/debts/presentation/views/debts_view.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../../features/send_money/presentation/views/send_money_frist_step_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
@@ -125,7 +127,6 @@ abstract class AppRouter {
         return MaterialPageRoute(builder: (_) => const SupportView());
       case Routes.expensesListView:
         return MaterialPageRoute(
-          
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<HomeCubit>()),
@@ -143,8 +144,21 @@ abstract class AppRouter {
               BlocProvider.value(value: getIt<GeneralCubit>()),
               BlocProvider(create: (_) => getIt<TransferCurrencyCubit>()),
             ],
-            child: AddAmountByDenominationView(
-              transferData: transferData,
+            child: AddAmountByDenominationView(transferData: transferData),
+          ),
+        );
+      case Routes.debtsView:
+         final debtType = settings.arguments as DebetsTypeEnum;
+        return MaterialPageRoute(
+          
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<HomeCubit>()),
+              BlocProvider.value(value: getIt<DebtsCubit>()),
+              
+            ],
+            child:  DebtsView(
+              debetType: debtType,
             ),
           ),
         );

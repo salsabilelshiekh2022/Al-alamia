@@ -156,5 +156,9 @@
   "client_info": "Client Information",
   "enter_amount_by_denominations": "Enter amount by denomenations",
   "add_expenses" : "Add Expenses",
-  "expense" : "Expenses"
+  "expense" : "Expenses",
+  "request_debt_in_out" :"Request Debt In/Out",
+  "debt_in" : "Debt In",
+  "debt_out" :"Debt Out",
+  "total_debt" : "Total Debt"
 }
