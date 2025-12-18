@@ -1,11 +1,15 @@
+import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/core/routes/routes.dart';
+import 'package:alalamia/features/auth/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/components/widgets/custom_svg_builder.dart';
+import '../../../../core/database/cache/cache_helper.dart';
+import '../../../../core/database/cache/cache_services.dart';
 import '../../../../generated/app_assets.dart';
 import 'widgets/calculator/currency_calculator_section.dart';
 import 'widgets/debts_and_expenses_section.dart';
@@ -78,12 +82,13 @@ class HomeView extends StatelessWidget {
   }
 
   AppBar _buildHomeAppBar(BuildContext context) {
+   final UserModel user = getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
     return AppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "${context.hello}, أحمد محمد",
+            "${context.hello}, ${user.userName}",
             style: context.textStyles.font14SemiBoldPrimaryColor.copyWith(
               color: Colors.white,
             ),
@@ -100,7 +105,7 @@ class HomeView extends StatelessWidget {
               ),
               4.horizontalSizedBox,
               Text(
-                "فرع طنطا",
+                user.branch?.name ?? "",
                 style: context.textStyles.font16SemiBoldWhiteColor,
               ),
             ],
