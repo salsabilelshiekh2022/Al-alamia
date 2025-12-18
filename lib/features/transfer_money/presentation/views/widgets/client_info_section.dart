@@ -13,28 +13,23 @@ import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 
 class ClientInfoSection extends StatefulWidget {
-  const ClientInfoSection({super.key});
+  const ClientInfoSection({
+    super.key,
+    required this.phoneController,
+    required this.nameController,
+  });
+
+  final TextEditingController phoneController;
+  final TextEditingController nameController;
 
   @override
   State<ClientInfoSection> createState() => _ClientInfoSectionState();
 }
 
 class _ClientInfoSectionState extends State<ClientInfoSection> {
-  late TextEditingController phoneController;
-  late TextEditingController nameController;
-
   @override
   void initState() {
-    phoneController = TextEditingController();
-    nameController = TextEditingController();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    phoneController.dispose();
-    nameController.dispose();
-    super.dispose();
   }
 
   @override
@@ -42,9 +37,9 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
     return BlocConsumer<GeneralCubit, GeneralState>(
       listener: (context, state) {
         if (state.getUserByPhoneStatus.isSuccess) {
-          nameController.text = state.userByPhone?.name ?? '';
+          widget.nameController.text = state.userByPhone?.name ?? '';
         } else if (state.getUserByPhoneStatus.isError) {
-          nameController.text = '';
+          widget.nameController.text = '';
         }
       },
       builder: (context, state) {
@@ -58,7 +53,7 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
               ),
               12.verticalSizedBox,
               CustomTextFieldWithLabel(
-                controller: phoneController,
+                controller: widget.phoneController,
                 label: context.phone,
                 hintText: context.phoneHint,
                 isRequired: true,
@@ -73,12 +68,12 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
               ),
               16.verticalSizedBox,
               CustomTextFieldWithLabel(
-                controller: nameController,
+                controller: widget.nameController,
                 label: context.clientName,
                 hintText: context.clientNameHint,
                 isRequired: true,
                 prefixWidget: AppAssets.svgsUser,
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.name,
                 validator: (val) => Validator.validateName(val, context),
               ),
             ],

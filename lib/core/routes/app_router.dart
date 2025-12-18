@@ -27,6 +27,8 @@ import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
 import '../../features/transactions/presentation/views/transactions_view.dart';
 import '../../features/transfer_money/presentation/views/transaction_recipt_view.dart';
+import '../../features/transfer_money/data/models/transfer_money_data_params.dart';
+import '../../features/transfer_money/presentation/cubit/transfer_money_cubit.dart';
 import '../di/dependency_injection.dart';
 import 'routes.dart';
 
@@ -134,15 +136,15 @@ abstract class AppRouter {
           ),
         );
       case Routes.addAmountByDenominationView:
-
+        final transferData = settings.arguments as TransferMoneyDataParams;
         return MaterialPageRoute(
-
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<GeneralCubit>()),
+              BlocProvider(create: (_) => getIt<TransferCurrencyCubit>()),
             ],
-            child:  AddAmountByDenominationView(
-          
+            child: AddAmountByDenominationView(
+              transferData: transferData,
             ),
           ),
         );

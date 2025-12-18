@@ -8,10 +8,12 @@ import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../core/general/data/models/fee_details_request_params.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../home/presentation/views/widgets/calculator/currency_calculator.dart';
 import '../../../send_money/presentation/views/widgets/fee_details_card.dart';
+import '../../data/models/transfer_money_data_params.dart';
 import 'widgets/amount_section.dart';
 import 'widgets/client_info_section.dart';
 import 'widgets/notes_section.dart';
@@ -27,8 +29,20 @@ class TransferMoneyView extends StatefulWidget {
 }
 
 class _TransferMoneyViewState extends State<TransferMoneyView> {
+  // Currency calculator controllers
   late TextEditingController _amountController;
   late TextEditingController _resultController;
+  
+  // Client info controllers
+  late TextEditingController _phoneController;
+  late TextEditingController _nameController;
+  
+  // Amount by char controller
+  late TextEditingController _amountByCharController;
+  
+  // Notes controller
+  late TextEditingController _notesController;
+  
   CurrencyModel? _fromCurrency;
   CurrencyModel? _toCurrency;
 
@@ -36,6 +50,10 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
   void initState() {
     _amountController = TextEditingController();
     _resultController = TextEditingController();
+    _phoneController = TextEditingController();
+    _nameController = TextEditingController();
+    _amountByCharController = TextEditingController();
+    _notesController = TextEditingController();
     context.read<HomeCubit>().getCurrencies();
     super.initState();
   }
@@ -44,6 +62,10 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
   void dispose() {
     _amountController.dispose();
     _resultController.dispose();
+    _phoneController.dispose();
+    _nameController.dispose();
+    _amountByCharController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
@@ -57,6 +79,59 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
         ),
       );
     }
+  }
+
+  /// Validate all required fields and navigate to denomination view
+  void _handleConfirm() {
+    // Validate required fields
+    if (_phoneController.text.trim().isEmpty) {
+      _showError('يرجى إدخال رقم الهاتف');
+      return;
+    }
+    if (_nameController.text.trim().isEmpty) {
+      _showError('يرجى إدخال اسم العميل');
+      return;
+    }
+    if (_amountController.text.trim().isEmpty) {
+      _showError('يرجى إدخال المبلغ');
+      return;
+    }
+    if (_amountByCharController.text.trim().isEmpty) {
+      _showError('يرجى إدخال المبلغ بالحروف');
+      return;
+    }
+    if (_fromCurrency == null || _toCurrency == null) {
+      _showError('يرجى اختيار العملات');
+      return;
+    }
+
+    // Create transfer data params
+    final transferData = TransferMoneyDataParams(
+      clientPhone: _phoneController.text.trim(),
+      clientName: _nameController.text.trim(),
+      fromCurrencyId: _fromCurrency!.id!,
+      toCurrencyId: _toCurrency!.id!,
+      amount: _amountController.text.trim(),
+      totalPrice: _resultController.text.trim(),
+      amountByChar: _amountByCharController.text.trim(),
+      note: _notesController.text.trim().isNotEmpty 
+          ? _notesController.text.trim() 
+          : null,
+    );
+
+    // Navigate to denomination view with data
+    context.pushNamed(
+      Routes.addAmountByDenominationView,
+      arguments: transferData,
+    );
+  }
+
+  void _showError(String message) {
+    AppSnackBar.showSnackBar(
+      context: context,
+      message: message,
+      state: SnackBarStates.error,
+    );
   }
 
   @override
@@ -83,7 +158,10 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClientInfoSection(),
+            ClientInfoSection(
+              phoneController: _phoneController,
+              nameController: _nameController,
+            ),
             20.verticalSizedBox,
             CurrencyCalculator(
               title: context.conversionData,
@@ -120,17 +198,19 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
               ),
             ),
             20.verticalSizedBox,
-            AmountSection(),
+            AmountSection(
+              amountByCharController: _amountByCharController,
+            ),
             20.verticalSizedBox,
-            NotesSection(),
+            NotesSection(
+              notesController: _notesController,
+            ),
             20.verticalSizedBox,
             FeeDetailsCard(),
             24.verticalSizedBox,
             MainButton(
               title: context.confirm,
-              onTap: () {
-               context.pushNamed(Routes.addAmountByDenominationView);
-              },
+              onTap: _handleConfirm,
             ),
             40.verticalSizedBox,
           ],

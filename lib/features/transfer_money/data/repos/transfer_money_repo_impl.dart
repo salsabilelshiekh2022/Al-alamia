@@ -22,7 +22,7 @@ class TransferMoneyRepoImpl extends TransferMoneyRepo {
         data: transferMoneyRequestParams.toJson(),
       ),
       onSuccess: (result) {
-        return result['message'] ?? 'Success';
+        return result['meta']['message'] ?? 'Success';
       },
     );
   }

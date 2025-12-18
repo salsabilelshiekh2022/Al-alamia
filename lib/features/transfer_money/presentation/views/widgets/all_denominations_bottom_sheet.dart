@@ -19,12 +19,19 @@ class AllDenominationsBottomSheet extends StatefulWidget {
   const AllDenominationsBottomSheet({
     required this.amount,
     required this.onConfirm,
-    super.key,  this.showTitle = true,
+    super.key,
+    this.showTitle = true,
+    this.showConfirmButton = true,
+    this.onAmountStatusChanged,
   });
-  
+
   final num amount;
   final Function(List<DenominationsRequestParams> denominations) onConfirm;
   final bool showTitle;
+  final bool showConfirmButton;
+  /// Callback triggered when the amount completion status changes.
+  /// Returns true when remaining amount equals 0, false otherwise.
+  final void Function(bool isComplete, List<DenominationsRequestParams> denominations)? onAmountStatusChanged;
 
   @override
   State<AllDenominationsBottomSheet> createState() =>
@@ -60,13 +67,16 @@ class _AllDenominationsBottomSheetState
       remainingAmount -= (denominationValue * countChange);
       amountController.text = _formatAmount(remainingAmount);
 
-      denominationCounts[denominationId] = 
+      denominationCounts[denominationId] =
           (denominationCounts[denominationId] ?? 0) + countChange;
 
       if (denominationCounts[denominationId] == 0) {
         denominationCounts.remove(denominationId);
       }
     });
+
+    // Notify parent about amount status change
+    widget.onAmountStatusChanged?.call(_isAmountComplete, _buildDenominationsList());
   }
 
   List<DenominationsRequestParams> _buildDenominationsList() {
@@ -136,15 +146,17 @@ class _AllDenominationsBottomSheetState
             ).onlyPadding(topPadding: 28);
           },
         ),
-      _isAmountComplete ?  24.verticalSizedBox : const SizedBox.shrink() ,
-        if (_isAmountComplete)
-          MainButton(
-            title: context.confirm,
-            onTap: _handleConfirm,
-          )
-        else
-          SizedBox(),
-        32.verticalSizedBox,
+        if (widget.showConfirmButton) ...[
+          _isAmountComplete ? 24.verticalSizedBox : const SizedBox.shrink(),
+          if (_isAmountComplete)
+            MainButton(
+              title: context.confirm,
+              onTap: _handleConfirm,
+            )
+          else
+            const SizedBox(),
+          32.verticalSizedBox,
+        ],
       ],
     );
   }

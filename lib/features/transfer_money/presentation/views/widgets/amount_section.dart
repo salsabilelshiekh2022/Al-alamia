@@ -8,8 +8,14 @@ import '../../../../../core/components/widgets/custom_text_field_with_label.dart
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 
+/// Section for entering the amount by character representation.
 class AmountSection extends StatelessWidget {
-  const AmountSection({super.key});
+  const AmountSection({
+    super.key,
+    required this.amountByCharController,
+  });
+
+  final TextEditingController amountByCharController;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,7 @@ class AmountSection extends StatelessWidget {
           ),
           12.verticalSizedBox,
           CustomTextFieldWithLabel(
-            controller: TextEditingController(),
+            controller: amountByCharController,
             label: context.amountByChar,
             hintText: context.amountHint,
             isRequired: true,
