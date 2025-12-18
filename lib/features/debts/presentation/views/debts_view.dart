@@ -31,13 +31,16 @@ class DebtsView extends StatefulWidget {
 }
 
 class _DebtsViewState extends State<DebtsView> {
+  CurrencyModel? selectedCurrency ;
+
 
   @override
   void initState() {
     super.initState();
+    selectedCurrency = context.read<HomeCubit>().state.currenciesList.first;
     context.read<DebtsCubit>().getDebtsTransactions(type: widget.debetType == DebetsTypeEnum.debt_inside ? "inside" : "outside");
+    context.read<DebtsCubit>().getDebtsByCurrency(id:selectedCurrency!.id! , params: GetDebtsByCurrencyRequestParams(debtsType: widget.debetType));
   }
-  CurrencyModel? selectedCurrency;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

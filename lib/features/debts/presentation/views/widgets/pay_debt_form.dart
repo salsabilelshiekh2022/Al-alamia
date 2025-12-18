@@ -105,6 +105,7 @@ class _PayDebtFormState extends State<PayDebtForm> {
                   message: state.message!,
                   state: SnackBarStates.success,
                 );
+                 context.read<DebtsCubit>().getDebtsTransactions(type: widget.debtType == DebetsTypeEnum.debt_inside ? "inside" : "outside");
                 context.pop();
               } else if (state.debtsStatus.isError) {
                 AppSnackBar.showSnackBar(

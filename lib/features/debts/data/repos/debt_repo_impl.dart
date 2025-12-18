@@ -27,7 +27,7 @@ class DebtRepoImpl extends DebtRepo {
         data: addDebtRequestParams.toJson(),
       ),
       onSuccess: (result) {
-        return result['message'] ?? 'Success';
+        return result['message'] ?? 'تمت العملية بنجاح';
       },
     );
   }
@@ -42,7 +42,7 @@ class DebtRepoImpl extends DebtRepo {
         data: payDebtRequestParams.toJson(),
       ),
       onSuccess: (result) {
-        return result['message'] ?? 'Success';
+        return result['message'] ?? 'تمت العملية بنجاح';
       },
     );
   }

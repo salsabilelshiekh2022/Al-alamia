@@ -154,10 +154,9 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
   Widget _buildUserData(BuildContext context) {
     return BlocListener<GeneralCubit, GeneralState>(
       listener: (context, state) {
-      if(state.getUserByPhoneStatus.isSuccess) {
-        nameController.text = state.userByPhone?.name ?? '';
-      
-      }
+        if (state.getUserByPhoneStatus.isSuccess) {
+          nameController.text = state.userByPhone?.name ?? '';
+        }
       },
       child: Column(
         children: [
@@ -179,7 +178,7 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
             keyboardType: TextInputType.text,
             controller: nameController,
             isRequired: true,
-              validator: (value) =>
+            validator: (value) =>
                 Validator.validateAnotherField(value, context),
           ),
           20.verticalSizedBox,

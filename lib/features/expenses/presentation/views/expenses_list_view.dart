@@ -28,12 +28,17 @@ class ExpensesListView extends StatefulWidget {
 }
 
 class _ExpensesListViewState extends State<ExpensesListView> {
+CurrencyModel? selectedCurrency;
+
   @override
   void initState() {
+    selectedCurrency = context.read<HomeCubit>().state.currenciesList.first;
+
     context.read<ExpensesCubit>().getExpenses();
+     context.read<ExpensesCubit>().getExpensesByCurrency(id: selectedCurrency!.id!);
+
     super.initState();
   }
-CurrencyModel? selectedCurrency;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
