@@ -135,6 +135,7 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
             state: SnackBarStates.success,
           );
           context.pop();
+          context.pop();
         } else if (state.debtsStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,

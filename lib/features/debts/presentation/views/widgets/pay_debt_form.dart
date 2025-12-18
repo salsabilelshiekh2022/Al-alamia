@@ -135,6 +135,7 @@ class _PayDebtFormState extends State<PayDebtForm> {
             type: widget.debtType == DebetsTypeEnum.debt_inside ? "inside" : "outside",
           );
           context.pop();
+          context.pop();
         } else if (state.debtsStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,

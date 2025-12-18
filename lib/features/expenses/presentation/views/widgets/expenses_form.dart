@@ -126,6 +126,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
             state: SnackBarStates.success,
           );
           context.pop();
+          context.pop();
         }
       },
       builder: (context, state) {
