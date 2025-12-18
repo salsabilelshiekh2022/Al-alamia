@@ -59,12 +59,12 @@ class DioConsumer extends ApiConsumer {
   }
 
   Future<Map<String, String>> _buildHeaders() async {
-    final user = cacheServices.getDataFromCache<UserModel?>(
+   final user = cacheServices.getDataFromCache<UserModel?>(
       boxName: CacheBoxes.userModelBox,
       key: 'user',
     );
-    // final token = user?.token ?? '';
-    final token = '4|BdhdYUnUoJEoVt6Sjr8Sq5EsI1ujsZsqynDRAx0k842e64fe';
+   final token = user?.token ?? '';
+   
     final locale =
         EasyLocalization.of(
           AppKeys.navigatorKey.currentContext!,

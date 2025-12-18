@@ -21,7 +21,7 @@ class Validator {
 
   static String? validateEmail(String? value, BuildContext context) {
     if (value!.isEmpty) {
-      return "S.of(context).field_is_required";
+      return context.fieldIsRequired;
     } else if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
       return " S.of(context).please_enter_valid_email";
     } else {
@@ -31,13 +31,13 @@ class Validator {
 
   static String? validateName(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return "context.fieldRequired";
+      return context.fieldIsRequired;
     } else if (value.length > 50) {
       return "S.of(context).max_characters_limit";
     } else if (!RegExp(
       r'^[\u0621-\u064A\u0660-\u0669a-zA-Z0-9\s]+$',
     ).hasMatch(value)) {
-      return "context.pleaseEnterValidName";
+      return "please Enter Valid Name";
     } else {
       return null;
     }
@@ -45,7 +45,7 @@ class Validator {
 
   static String? validatePassword(String? value, BuildContext context) {
     if (value!.isEmpty) {
-      return "Field is Required";
+      return context.fieldIsRequired;
     } else {
       bool result = passwordValidate(value);
       if (result) {
@@ -58,7 +58,8 @@ class Validator {
 
   static String? validatePhone(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return "Field is Required";
+      return context.fieldIsRequired;
+     
     }
     //egypt numbers
     final ksaLocalRegex = RegExp(r'^01[0125][0-9]{8}$');

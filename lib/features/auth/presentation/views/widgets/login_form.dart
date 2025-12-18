@@ -67,6 +67,7 @@ class _LoginFormState extends State<LoginForm> {
               label: context.phone,
               hintText: context.phoneHint,
               prefixWidget: AppAssets.svgsPhone,
+              keyboardType: TextInputType.phone,
               validator: (value) => Validator.validatePhone(value, context),
             ),
             20.verticalSpace,

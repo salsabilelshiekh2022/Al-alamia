@@ -1,7 +1,11 @@
+import 'package:alalamia/core/database/cache/cache_services.dart';
+import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
+import 'package:alalamia/features/auth/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/database/cache/cache_helper.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../generated/app_assets.dart';
 
@@ -16,7 +20,8 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 2), () {
-      context.pushReplacementNamed(Routes.mainNavigationView);
+   final UserModel? user = getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
+      context.pushReplacementNamed(user?.token == null ? Routes.loginView : Routes.mainNavigationView);
     });
     super.initState();
   }

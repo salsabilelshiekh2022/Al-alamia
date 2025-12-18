@@ -23,6 +23,8 @@ import '../../features/expenses/presentation/cubit/expenses_cubit.dart' as _i66;
 import '../../features/home/data/repo/home_repo.dart' as _i429;
 import '../../features/home/data/repo/home_repo_impl.dart' as _i1024;
 import '../../features/home/presentation/cubit/home_cubit.dart' as _i9;
+import '../../features/send_money/data/services/send_money_service.dart'
+    as _i470;
 import '../../features/send_money/presentation/cubit/send_money_cubit.dart'
     as _i397;
 import '../../features/transfer_money/data/repos/transfer_money_repo.dart'
@@ -45,6 +47,7 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.factory<_i470.SendMoneyFormService>(() => _i470.SendMoneyFormService());
     gh.factory<_i397.SendMoneyCubit>(() => _i397.SendMoneyCubit());
     gh.lazySingleton<_i408.CacheServices>(() => _i408.CacheServices());
     gh.lazySingleton<_i742.ApiConsumer>(

@@ -21,6 +21,7 @@ class AuthRepoImpl extends AuthRepo {
       request: () => apiConsumer.post(path: EndPoints.login,
           data: loginRequestParams.toJson()),
       onSuccess: (result) {
+        
         return UserModel.fromJson(result);
       },
     );

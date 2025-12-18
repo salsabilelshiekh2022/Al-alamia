@@ -1,12 +1,27 @@
+import 'package:hive_flutter/hive_flutter.dart';
+part 'user_model.g.dart';
+@HiveType(typeId: 1)
 class UserModel {
+  @HiveField(0)
   String? message;
+  @HiveField(8)
   String? token;
+  @HiveField(1)
   int? userId;
-  String? userName;
+  @HiveField(2)
+    String? userName;
+    @HiveField(3)
   String? userEmail;
+  @HiveField(4)
   String? userPhone;
+  @HiveField(5)
+
   String? userSalary;
+  @HiveField(6)
+
   String? userImage;
+  @HiveField(7)
+
   Branch? branch;
 
   UserModel({
@@ -34,8 +49,11 @@ class UserModel {
   }
 }
 
+@HiveType(typeId: 2)
 class Branch {
+  @HiveField(0)
   int? id;
+  @HiveField(1)
   String? name;
 
   Branch({required this.id, required this.name});
