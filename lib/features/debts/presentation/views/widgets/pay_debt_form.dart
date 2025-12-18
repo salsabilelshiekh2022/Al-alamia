@@ -12,13 +12,17 @@ import '../../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
+import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/enums/debets_enum.dart';
 import '../../../../../core/general/cubit/general_cubit.dart';
 import '../../../../../core/general/cubit/general_state.dart';
+import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../../home/presentation/cubit/home_state.dart';
+import '../../../../transfer_money/data/models/transfer_money_request_params.dart';
+import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/get_debts_by_currency_request_params.dart';
 import '../../../data/models/pay_debt_request_params.dart';
 
@@ -74,69 +78,98 @@ class _PayDebtFormState extends State<PayDebtForm> {
     });
   }
 
+  void _onDenominationsConfirmed(List<DenominationsRequestParams> denominations) {
+    final payDebtRequestParams = PayDebtRequestParams(
+      amount: amountController.text,
+      currencyId: selectedCurrencyId!,
+      name: nameController.text,
+      phone: phoneController.text,
+      denominations: denominations,
+    );
+    context.read<DebtsCubit>().payDebt(
+      payDebtRequestParams: payDebtRequestParams,
+    );
+  }
+
+  void _handleSendButton() {
+    if (formKey.currentState?.validate() ?? false) {
+      final amount = double.tryParse(amountController.text);
+      
+      if (amount == null || amount <= 0) {
+        AppSnackBar.showSnackBar(
+          context: context,
+          message: "pleaseEnterValidAmount",
+          state: SnackBarStates.error,
+        );
+        return;
+      }
+      
+      GlobalUiUtils.showBottomSheet(
+        context,
+        child: BlocProvider.value(
+          value: getIt<GeneralCubit>(),
+          child: AllDenominationsBottomSheet(
+            amount: amount,
+            onConfirm: _onDenominationsConfirmed,
+          ),
+        ),
+      );
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.always;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      autovalidateMode: autovalidateMode,
-      child: Column(
-        children: [
-             widget.debtType == DebetsTypeEnum.debt_outside
-              ? _buildUserData(context)
-              : SizedBox(),
-          _buildCurrencyField(context),
-          _buildTotalDebt(),
-          20.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            label: context.amount,
-            controller: amountController,
-            hintText: context.enterRequiredAmount,
-            isRequired: true,
-            keyboardType: TextInputType.number,
-            validator: (value) =>
-                Validator.validateAnotherField(value, context),
-          ),
-          40.verticalSizedBox,
-          BlocListener<DebtsCubit, DebtsState>(
-            listener: (context, state) {
-              if (state.debtsStatus.isSuccess) {
-                AppSnackBar.showSnackBar(
-                  context: context,
-                  message: state.message!,
-                  state: SnackBarStates.success,
-                );
-                 context.read<DebtsCubit>().getDebtsTransactions(type: widget.debtType == DebetsTypeEnum.debt_inside ? "inside" : "outside");
-                context.pop();
-              } else if (state.debtsStatus.isError) {
-                AppSnackBar.showSnackBar(
-                  context: context,
-                  message: state.message!,
-                  state: SnackBarStates.error,
-                );
-              }
-            },
-            child: MainButton(
-              title: context.send,
-              onTap: () {
-                if (formKey.currentState!.validate()) {
-                  final payDebtRequestParams = PayDebtRequestParams(
-                    amount: amountController.text,
-                    currencyId: selectedCurrencyId!,
-                    name: nameController.text,
-                    phone: phoneController.text,
-                  );
-                  context.read<DebtsCubit>().payDebt(
-                    payDebtRequestParams: payDebtRequestParams,
-                  );
-                } else {
-                  setState(() {
-                    autovalidateMode = AutovalidateMode.always;
-                  });
-                }
-              },
+    return BlocListener<DebtsCubit, DebtsState>(
+      listener: (context, state) {
+        if (state.debtsStatus.isSuccess) {
+          AppSnackBar.showSnackBar(
+            context: context,
+            message: state.message!,
+            state: SnackBarStates.success,
+          );
+          context.read<DebtsCubit>().getDebtsTransactions(
+            type: widget.debtType == DebetsTypeEnum.debt_inside ? "inside" : "outside",
+          );
+          context.pop();
+        } else if (state.debtsStatus.isError) {
+          AppSnackBar.showSnackBar(
+            context: context,
+            message: state.message!,
+            state: SnackBarStates.error,
+          );
+        }
+      },
+      child: Form(
+        key: formKey,
+        autovalidateMode: autovalidateMode,
+        child: Column(
+          children: [
+            widget.debtType == DebetsTypeEnum.debt_outside
+                ? _buildUserData(context)
+                : const SizedBox(),
+            _buildCurrencyField(context),
+            _buildTotalDebt(),
+            20.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              label: context.amount,
+              controller: amountController,
+              hintText: context.enterRequiredAmount,
+              isRequired: true,
+              keyboardType: TextInputType.number,
+              validator: (value) =>
+                  Validator.validateAnotherField(value, context),
             ),
-          ),
-        ],
+            40.verticalSizedBox,
+            MainButton(
+              title: context.send,
+              onTap: _handleSendButton,
+            ),
+          ],
+        ),
       ),
     );
   }

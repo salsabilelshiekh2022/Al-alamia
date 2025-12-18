@@ -1,9 +1,12 @@
+import 'package:alalamia/features/transfer_money/data/models/transfer_money_request_params.dart';
+
 class AddDebtRequestParams {
   final String? notes;
   final int currencyId;
   final String amount;
   final String? phone;
   final String? name;
+  final List<DenominationsRequestParams>? denominations;
 
   AddDebtRequestParams({
     this.notes,
@@ -11,6 +14,7 @@ class AddDebtRequestParams {
     required this.amount,
     this.phone,
     this.name,
+    this.denominations
   });
 
   Map<String, dynamic> toJson() => {
@@ -18,10 +22,11 @@ class AddDebtRequestParams {
     'currency_id': currencyId,
     'amount': amount,
     'phone': phone,
-    'name': name
+    'name': name,
+    'denominations': denominations
   };
 
   @override
   String toString() =>
-      'AddDebtRequestParams(notes: $notes, currencyId: $currencyId, amount: $amount, phone: $phone name: $name)';
+      'AddDebtRequestParams(notes: $notes, currencyId: $currencyId, amount: $amount, phone: $phone, name: $name, denominations: $denominations)';
 }

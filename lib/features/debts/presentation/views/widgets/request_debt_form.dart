@@ -14,11 +14,15 @@ import '../../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
+import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/enums/debets_enum.dart';
 import '../../../../../core/general/cubit/general_cubit.dart';
+import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
+import '../../../../transfer_money/data/models/transfer_money_request_params.dart';
+import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/add_debt_request_params.dart';
 
 class RequestDebtForm extends StatefulWidget {
@@ -72,81 +76,106 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
     });
   }
 
+  void _onDenominationsConfirmed(List<DenominationsRequestParams> denominations) {
+    final addDebtRequestParams = AddDebtRequestParams(
+      amount: amountController.text,
+      currencyId: selectedCurrencyId!,
+      notes: purposeController.text,
+      phone: widget.debetType == DebetsTypeEnum.debt_outside
+          ? phoneController.text
+          : '',
+      name: widget.debetType == DebetsTypeEnum.debt_outside
+          ? nameController.text
+          : '',
+      denominations: denominations,
+    );
+    context.read<DebtsCubit>().addDebt(
+      addDebtRequestParams: addDebtRequestParams,
+    );
+  }
+
+  void _handleSendButton() {
+    if (formKey.currentState?.validate() ?? false) {
+      final amount = double.tryParse(amountController.text);
+      
+      if (amount == null || amount <= 0) {
+        AppSnackBar.showSnackBar(
+          context: context,
+          message: "pleaseEnterValidAmount",
+          state: SnackBarStates.error,
+        );
+        return;
+      }
+      
+      GlobalUiUtils.showBottomSheet(
+        context,
+        child: BlocProvider.value(
+          value: getIt<GeneralCubit>(),
+          child: AllDenominationsBottomSheet(
+            amount: amount,
+            onConfirm: _onDenominationsConfirmed,
+          ),
+        ),
+      );
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.always;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      autovalidateMode: autovalidateMode,
-      child: Column(
-        children: [
-          widget.debetType == DebetsTypeEnum.debt_outside
-              ? _buildUserData(context)
-              : SizedBox(),
-          _buildCurrencyField(context),
-          20.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            label: context.amount,
-            controller: amountController,
-            hintText: context.enterRequiredAmount,
-            isRequired: true,
-            keyboardType: TextInputType.number,
-            validator: (value) =>
-                Validator.validateAnotherField(value, context),
-          ),
-          20.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            label: context.purpose,
-            hintText: context.purposeHint,
-            keyboardType: TextInputType.text,
-            controller: purposeController,
-          ),
-          40.verticalSizedBox,
-          BlocConsumer<DebtsCubit, DebtsState>(
-            listener: (context, state) {
-              if (state.debtsStatus.isSuccess) {
-                AppSnackBar.showSnackBar(
-                  context: context,
-                  message: state.message!,
-                  state: SnackBarStates.success,
-                );
-                context.pop();
-              } else if (state.debtsStatus.isError) {
-                AppSnackBar.showSnackBar(
-                  context: context,
-                  message: state.message!,
-                  state: SnackBarStates.error,
-                );
-              }
-            },
-            builder: (context, state) {
-              return MainButton(
-                title: context.send,
-                onTap: () {
-                  if (formKey.currentState!.validate()) {
-                    final addDebtRequestParams = AddDebtRequestParams(
-                      amount: amountController.text,
-                      currencyId: selectedCurrencyId!,
-                      notes: purposeController.text,
-                      phone: widget.debetType == DebetsTypeEnum.debt_outside
-                          ? phoneController.text
-                          : '',
-                      name: widget.debetType == DebetsTypeEnum.debt_outside
-                          ? nameController.text
-                          : '',
-                    );
-                    context.read<DebtsCubit>().addDebt(
-                      addDebtRequestParams: addDebtRequestParams,
-                    );
-                  } else {
-                    setState(() {
-                      autovalidateMode = AutovalidateMode.always;
-                    });
-                  }
-                },
-              );
-            },
-          ),
-        ],
+    return BlocListener<DebtsCubit, DebtsState>(
+      listener: (context, state) {
+        if (state.debtsStatus.isSuccess) {
+          AppSnackBar.showSnackBar(
+            context: context,
+            message: state.message!,
+            state: SnackBarStates.success,
+          );
+          context.pop();
+        } else if (state.debtsStatus.isError) {
+          AppSnackBar.showSnackBar(
+            context: context,
+            message: state.message!,
+            state: SnackBarStates.error,
+          );
+        }
+      },
+      child: Form(
+        key: formKey,
+        autovalidateMode: autovalidateMode,
+        child: Column(
+          children: [
+            widget.debetType == DebetsTypeEnum.debt_outside
+                ? _buildUserData(context)
+                : const SizedBox(),
+            _buildCurrencyField(context),
+            20.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              label: context.amount,
+              controller: amountController,
+              hintText: context.enterRequiredAmount,
+              isRequired: true,
+              keyboardType: TextInputType.number,
+              validator: (value) =>
+                  Validator.validateAnotherField(value, context),
+            ),
+            20.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              label: context.purpose,
+              hintText: context.purposeHint,
+              keyboardType: TextInputType.text,
+              controller: purposeController,
+            ),
+            40.verticalSizedBox,
+            MainButton(
+              title: context.send,
+              onTap: _handleSendButton,
+            ),
+          ],
+        ),
       ),
     );
   }
