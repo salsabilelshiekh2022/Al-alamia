@@ -45,16 +45,19 @@ class DenominationsListView extends StatelessWidget {
               ],
             ),
             Divider(color: context.colors.strokeColor).verticalPadding(14),
-            Skeletonizer(
-              enabled: isLoading,
-              child: Column(
-                children: (isLoading ? dummyDenominations : state.denominations)
-                    .map(
-                      (denomination) => DenominationListItem(
-                        denomination: denomination,
-                      ).onlyPadding(bottomPadding: 20),
-                    )
-                    .toList(),
+            Expanded(
+              child: Skeletonizer(
+                enabled: isLoading,
+                child: ListView.separated(
+                  itemCount: (isLoading ? dummyDenominations : state.denominations).length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 20),
+                  itemBuilder: (context, index) {
+                    final denominations = isLoading ? dummyDenominations : state.denominations;
+                    return DenominationListItem(
+                      denomination: denominations[index],
+                    );
+                  },
+                ),
               ),
             ),
           ],

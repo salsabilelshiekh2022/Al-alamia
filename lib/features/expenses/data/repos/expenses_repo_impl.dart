@@ -23,7 +23,7 @@ class ExpensesRepoImpl extends ExpensesRepo {
         data: expensesRequestParams.toJson(),
       ),
       onSuccess: (result) {
-        return result['message'] ?? 'Success';
+        return result['message'] ?? 'تمت العملية بنجاح';
       },
     );
   }

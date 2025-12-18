@@ -23,8 +23,12 @@ class WalletDetailsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.7,
+      ),
+      child: Column(
+        children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -53,12 +57,15 @@ class WalletDetailsBottomSheet extends StatelessWidget {
           ),
         ),
         32.verticalSizedBox,
-        BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            return DenominationsListView();
-          },
+        Expanded(
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              return DenominationsListView();
+            },
+          ),
         ),
-      ],
+        ],
+      ),
     );
   }
 }
