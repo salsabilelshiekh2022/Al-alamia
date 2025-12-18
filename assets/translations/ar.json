@@ -162,5 +162,8 @@
   "debt_out" : "دين خارجي",
   "total_debt" : "اجمالي الدين",
   "inside" : "داخلي",
-  "outside" : "خارجي"
+  "outside" : "خارجي",
+  "salary" : "الراتب",
+  "rewarded" : "المكافآة",
+  "penalized" : "الخصم"
 }

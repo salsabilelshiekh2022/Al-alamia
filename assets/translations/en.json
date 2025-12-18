@@ -162,5 +162,8 @@
   "debt_out" :"Debt Out",
   "total_debt" : "Total Debt",
   "inside" : "Inside",
-  "outside" : "Outside"
+  "outside" : "Outside",
+   "salary" : "Salary",
+  "rewarded" : "Rewarded",
+  "penalized" : "Penalized"
 }

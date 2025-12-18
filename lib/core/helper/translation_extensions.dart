@@ -168,4 +168,7 @@ extension TranslationExtension on BuildContext {
   String get totalDebt => tr("total_debt");
   String get inside => tr("inside");
   String get outside => tr("outside");
+  String get salary => tr("salary");
+  String get rewarded => tr("rewarded");
+  String get penalized => tr("penalized");
 }

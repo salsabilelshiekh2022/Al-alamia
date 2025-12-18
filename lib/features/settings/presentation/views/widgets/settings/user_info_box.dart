@@ -1,16 +1,19 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
-import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../../../core/components/widgets/custom_cache_network_image.dart';
+import '../../../../../../core/database/cache/cache_helper.dart';
+import '../../../../../../core/database/cache/cache_services.dart';
+import '../../../../../../core/di/dependency_injection.dart';
+import '../../../../../auth/data/models/user_model.dart';
 
 class UserInfoBox extends StatelessWidget {
   const UserInfoBox({super.key});
 
   @override
   Widget build(BuildContext context) {
+  final UserModel user =  getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
+
     return Container(
       padding: 15.allPadding,
       decoration: BoxDecoration(
@@ -27,35 +30,24 @@ class UserInfoBox extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: 25.allBorderRadius,
-            child: CustomCachedImageWidget(
-              path:
-                  "https://i.pinimg.com/736x/5f/94/15/5f9415114f1e9bf75b48d52221e15414.jpg",
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-            ),
-          ),
-          8.horizontalSpace,
-
+          
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "احمد محمد",
+                user.userName ?? "",
                 style: context.textStyles.font13SemiBoldPrimaryColor.copyWith(
                   color: context.colors.secondaryColor,
                 ),
               ),
               5.verticalSpace,
               Text(
-                context.egyptBranch,
+                user.branch?.name ?? "",
                 style: context.textStyles.font14RegularGrayColor,
               ),
               5.verticalSpace,
               Text(
-                "+20123456789",
+                user.userPhone ?? "",
                 style: context.textStyles.font14RegularGrayColor,
               ),
             ],
