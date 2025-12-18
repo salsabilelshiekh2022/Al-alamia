@@ -13,6 +13,8 @@ import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
 import '../../../../../core/enums/debets_enum.dart';
+import '../../../../../core/general/cubit/general_cubit.dart';
+import '../../../../../core/general/cubit/general_state.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
@@ -31,6 +33,9 @@ class PayDebtForm extends StatefulWidget {
 class _PayDebtFormState extends State<PayDebtForm> {
   late TextEditingController amountController;
   late TextEditingController currencyController;
+  late TextEditingController phoneController;
+  late TextEditingController nameController;
+
   final formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   bool isDropDownOpen = false;
@@ -39,6 +44,8 @@ class _PayDebtFormState extends State<PayDebtForm> {
   void initState() {
     amountController = TextEditingController();
     currencyController = TextEditingController();
+    phoneController = TextEditingController();
+    nameController = TextEditingController();
     super.initState();
   }
 
@@ -46,6 +53,8 @@ class _PayDebtFormState extends State<PayDebtForm> {
   void dispose() {
     amountController.dispose();
     currencyController.dispose();
+    phoneController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -56,7 +65,7 @@ class _PayDebtFormState extends State<PayDebtForm> {
     );
     context.read<DebtsCubit>().getDebtsByCurrency(
       id: selectedCurrency.id!,
-      params: GetDebtsByCurrencyRequestParams(debtsType: widget.debtType),
+      params: GetDebtsByCurrencyRequestParams(debtsType: widget.debtType, phone: phoneController.text),
     );
     setState(() {
       isDropDownOpen = false;
@@ -72,6 +81,9 @@ class _PayDebtFormState extends State<PayDebtForm> {
       autovalidateMode: autovalidateMode,
       child: Column(
         children: [
+             widget.debtType == DebetsTypeEnum.debt_outside
+              ? _buildUserData(context)
+              : SizedBox(),
           _buildCurrencyField(context),
           _buildTotalDebt(),
           20.verticalSizedBox,
@@ -109,6 +121,8 @@ class _PayDebtFormState extends State<PayDebtForm> {
                   final payDebtRequestParams = PayDebtRequestParams(
                     amount: amountController.text,
                     currencyId: selectedCurrencyId!,
+                    name: nameController.text,
+                    phone: phoneController.text,
                   );
                   context.read<DebtsCubit>().payDebt(
                     payDebtRequestParams: payDebtRequestParams,
@@ -129,8 +143,9 @@ class _PayDebtFormState extends State<PayDebtForm> {
   BlocBuilder<DebtsCubit, DebtsState> _buildTotalDebt() {
     return BlocBuilder<DebtsCubit, DebtsState>(
       builder: (context, state) {
-        return (currencyController.text.isEmpty ||
-                state.debtsAmountByCurrency == null)
+        return (widget.debtType == DebetsTypeEnum.debt_outside  ?(currencyController.text.isEmpty ||
+                state.debtsAmountByCurrency == null || phoneController.text.isEmpty) :(currencyController.text.isEmpty ||
+                state.debtsAmountByCurrency == null ) )
             ? SizedBox()
             : Column(
                 children: [
@@ -221,6 +236,46 @@ class _PayDebtFormState extends State<PayDebtForm> {
           ],
         );
       },
+    );
+  }
+
+   Widget _buildUserData(BuildContext context) {
+    return BlocListener<GeneralCubit, GeneralState>(
+      listener: (context, state) {
+      if(state.getUserByPhoneStatus.isSuccess) {
+        nameController.text = state.userByPhone?.name ?? '';
+      context.read<DebtsCubit>().getDebtsByCurrency(
+      id: selectedCurrencyId!,
+      params: GetDebtsByCurrencyRequestParams(debtsType: widget.debtType, phone: phoneController.text),
+    );
+      }
+      },
+      child: Column(
+        children: [
+          CustomTextFieldWithLabel(
+            label: context.phone,
+            controller: phoneController,
+            hintText: context.phoneHint,
+            isRequired: true,
+            keyboardType: TextInputType.phone,
+            onChanged: (val) {
+              context.read<GeneralCubit>().getUserByPhone(phone: val.trim());
+            },
+            validator: (value) => Validator.validatePhone(value, context),
+          ),
+          20.verticalSizedBox,
+          CustomTextFieldWithLabel(
+            label: context.clientName,
+            hintText: context.clientNameHint,
+            keyboardType: TextInputType.text,
+            controller: nameController,
+            isRequired: true,
+              validator: (value) =>
+                Validator.validateAnotherField(value, context),
+          ),
+          20.verticalSizedBox,
+        ],
+      ),
     );
   }
 }

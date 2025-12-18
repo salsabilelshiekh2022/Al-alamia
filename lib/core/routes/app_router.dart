@@ -101,24 +101,25 @@ abstract class AppRouter {
             child: MultiBlocProvider(
               providers: [
                 BlocProvider(create: (context) => getIt<DebtsCubit>()),
-                BlocProvider.value(value: getIt<HomeCubit>(),),
-                BlocProvider.value(value: getIt<GeneralCubit>(),),
+                BlocProvider.value(value: getIt<HomeCubit>()),
+                BlocProvider.value(value: getIt<GeneralCubit>()),
               ],
               child: RequestDebtView(debetType: debetsType),
             ),
           ),
         );
       case Routes.paymentDeptView:
-       final debtType = settings.arguments as DebetsTypeEnum;
+        final debtType = settings.arguments as DebetsTypeEnum;
         return MaterialPageRoute(
-          builder: (_) => BlocProvider.value(
-            value: getIt<HomeCubit>(),
-            child: BlocProvider(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<HomeCubit>()),
+              BlocProvider.value(value:getIt<GeneralCubit>()),
+               BlocProvider(
               create: (context) => getIt<DebtsCubit>(),
-              child:  PaymentDebtView(
-                debtType: debtType,
-              ),
             ),
+            ],
+              child: PaymentDebtView(debtType: debtType),
           ),
         );
       case Routes.addExpensesView:

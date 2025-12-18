@@ -53,7 +53,7 @@ class _DebtsBottomSheetState extends State<DebtsBottomSheet> {
           children: [
             Expanded(
               child: DebtCardWidget(
-                imagePath:AppAssets.svgsDebtIn ,
+                imagePath:AppAssets.svgsSendMoneyIcon ,
                 debets: DebetsTypeEnum.debt_inside,
                 isSelected: selectedDebt == DebetsTypeEnum.debt_inside,
                 onTap: () => _onDebtSelected(DebetsTypeEnum.debt_inside),
@@ -62,7 +62,7 @@ class _DebtsBottomSheetState extends State<DebtsBottomSheet> {
             16.horizontalSizedBox,
             Expanded(
               child: DebtCardWidget(
-                  imagePath:AppAssets.svgsDebtOut ,
+                  imagePath:AppAssets.svgsSendMoneyIcon ,
                 debets: DebetsTypeEnum.debt_outside,
                 isSelected: selectedDebt == DebetsTypeEnum.debt_outside,
                 onTap: () => _onDebtSelected(DebetsTypeEnum.debt_outside),
