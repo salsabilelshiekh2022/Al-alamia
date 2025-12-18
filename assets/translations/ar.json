@@ -160,5 +160,7 @@
   "request_debt_in_out" : "طلب دين داخلي/خارجي",
   "debt_in" : "دين داخلي",
   "debt_out" : "دين خارجي",
-  "total_debt" : "اجمالي الدين"
+  "total_debt" : "اجمالي الدين",
+  "inside" : "داخلي",
+  "outside" : "خارجي"
 }

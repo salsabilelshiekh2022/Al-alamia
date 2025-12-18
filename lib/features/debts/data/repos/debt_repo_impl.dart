@@ -2,6 +2,8 @@ import 'package:alalamia/core/database/network/api_consumer.dart';
 import 'package:alalamia/core/database/network/failure.dart';
 
 import 'package:alalamia/features/debts/data/models/add_debt_request_params.dart';
+import 'package:alalamia/features/debts/data/models/debt_model.dart';
+import 'package:alalamia/features/debts/data/models/get_debts_by_currency_request_params.dart';
 import 'package:alalamia/features/debts/data/models/pay_debt_request_params.dart';
 
 import 'package:dartz/dartz.dart';
@@ -41,6 +43,30 @@ class DebtRepoImpl extends DebtRepo {
       ),
       onSuccess: (result) {
         return result['message'] ?? 'Success';
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, int>> getDebtsByCurrency({required int id, required GetDebtsByCurrencyRequestParams params}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(
+        EndPoints.getDebtsByCurrency(id: id),
+        queryParameters: params.toJson(),
+      ),
+      onSuccess: (result) {
+        return result['data']['total_debt'] ?? '0';
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<DebtModel>>> getDebtsTransactions({required String type}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getDebtsTransactions(type: type)),
+      onSuccess: (result) {
+        final data = result['data'] as List;
+        return data.map((e) => DebtModel.fromJson(e)).toList();
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:alalamia/core/enums/request_status.dart';
+import 'package:alalamia/core/general/cubit/general_state.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -13,13 +14,16 @@ import '../../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
+import '../../../../../core/enums/debets_enum.dart';
+import '../../../../../core/general/cubit/general_cubit.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../data/models/add_debt_request_params.dart';
 
 class RequestDebtForm extends StatefulWidget {
-  const RequestDebtForm({super.key});
+  const RequestDebtForm({super.key, required this.debetType});
+  final DebetsTypeEnum debetType;
 
   @override
   State<RequestDebtForm> createState() => _RequestDebtFormState();
@@ -29,6 +33,9 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
   late TextEditingController amountController;
   late TextEditingController currencyController;
   late TextEditingController purposeController;
+  late TextEditingController phoneController;
+  late TextEditingController nameController;
+
   final formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   bool isDropDownOpen = false;
@@ -38,6 +45,8 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
     amountController = TextEditingController();
     currencyController = TextEditingController();
     purposeController = TextEditingController();
+    phoneController = TextEditingController();
+    nameController = TextEditingController();
     super.initState();
   }
 
@@ -46,6 +55,8 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
     amountController.dispose();
     currencyController.dispose();
     purposeController.dispose();
+    phoneController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -54,7 +65,6 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
     final selectedCurrency = homeCubit.state.currenciesList.firstWhere(
       (currency) => currency.name == selectedItem,
     );
-
     setState(() {
       isDropDownOpen = false;
       currencyController.text = selectedItem;
@@ -69,6 +79,9 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
       autovalidateMode: autovalidateMode,
       child: Column(
         children: [
+          widget.debetType == DebetsTypeEnum.debt_outside
+              ? _buildUserData(context)
+              : SizedBox(),
           _buildCurrencyField(context),
           20.verticalSizedBox,
           CustomTextFieldWithLabel(
@@ -114,6 +127,12 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
                       amount: amountController.text,
                       currencyId: selectedCurrencyId!,
                       notes: purposeController.text,
+                      phone: widget.debetType == DebetsTypeEnum.debt_outside
+                          ? phoneController.text
+                          : '',
+                      name: widget.debetType == DebetsTypeEnum.debt_outside
+                          ? nameController.text
+                          : '',
                     );
                     context.read<DebtsCubit>().addDebt(
                       addDebtRequestParams: addDebtRequestParams,
@@ -127,6 +146,43 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
               );
             },
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserData(BuildContext context) {
+    return BlocListener<GeneralCubit, GeneralState>(
+      listener: (context, state) {
+      if(state.getUserByPhoneStatus.isSuccess) {
+        nameController.text = state.userByPhone?.name ?? '';
+      
+      }
+      },
+      child: Column(
+        children: [
+          CustomTextFieldWithLabel(
+            label: context.phone,
+            controller: phoneController,
+            hintText: context.phoneHint,
+            isRequired: true,
+            keyboardType: TextInputType.phone,
+            onChanged: (val) {
+              context.read<GeneralCubit>().getUserByPhone(phone: val.trim());
+            },
+            validator: (value) => Validator.validatePhone(value, context),
+          ),
+          20.verticalSizedBox,
+          CustomTextFieldWithLabel(
+            label: context.clientName,
+            hintText: context.clientNameHint,
+            keyboardType: TextInputType.text,
+            controller: nameController,
+            isRequired: true,
+              validator: (value) =>
+                Validator.validateAnotherField(value, context),
+          ),
+          20.verticalSizedBox,
         ],
       ),
     );

@@ -12,14 +12,17 @@ import '../../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
+import '../../../../../core/enums/debets_enum.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../../home/presentation/cubit/home_state.dart';
+import '../../../data/models/get_debts_by_currency_request_params.dart';
 import '../../../data/models/pay_debt_request_params.dart';
 
 class PayDebtForm extends StatefulWidget {
-  const PayDebtForm({super.key});
+  const PayDebtForm({super.key, required this.debtType});
+  final DebetsTypeEnum debtType;
 
   @override
   State<PayDebtForm> createState() => _PayDebtFormState();
@@ -51,7 +54,10 @@ class _PayDebtFormState extends State<PayDebtForm> {
     final selectedCurrency = homeCubit.state.currenciesList.firstWhere(
       (currency) => currency.name == selectedItem,
     );
-
+    context.read<DebtsCubit>().getDebtsByCurrency(
+      id: selectedCurrency.id!,
+      params: GetDebtsByCurrencyRequestParams(debtsType: widget.debtType),
+    );
     setState(() {
       isDropDownOpen = false;
       currencyController.text = selectedItem;
@@ -67,6 +73,7 @@ class _PayDebtFormState extends State<PayDebtForm> {
       child: Column(
         children: [
           _buildCurrencyField(context),
+          _buildTotalDebt(),
           20.verticalSizedBox,
           CustomTextFieldWithLabel(
             label: context.amount,
@@ -116,6 +123,51 @@ class _PayDebtFormState extends State<PayDebtForm> {
           ),
         ],
       ),
+    );
+  }
+
+  BlocBuilder<DebtsCubit, DebtsState> _buildTotalDebt() {
+    return BlocBuilder<DebtsCubit, DebtsState>(
+      builder: (context, state) {
+        return (currencyController.text.isEmpty ||
+                state.debtsAmountByCurrency == null)
+            ? SizedBox()
+            : Column(
+                children: [
+                  6.verticalSizedBox,
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+                    decoration: BoxDecoration(
+                      color: context.colors.primaryColor.withValues(
+                        alpha: 0.03,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: context.colors.primaryColor.withValues(
+                          alpha: 0.30,
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.totalDebt,
+                          style: context.textStyles.font14MediumGrayColor,
+                        ),
+                        12.verticalSizedBox,
+                        Text(
+                          "${state.debtsAmountByCurrency ?? 0}",
+                          style:
+                              context.textStyles.font18SemiBoldSecondaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+      },
     );
   }
 

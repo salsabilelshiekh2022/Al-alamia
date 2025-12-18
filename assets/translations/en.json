@@ -160,5 +160,7 @@
   "request_debt_in_out" :"Request Debt In/Out",
   "debt_in" : "Debt In",
   "debt_out" :"Debt Out",
-  "total_debt" : "Total Debt"
+  "total_debt" : "Total Debt",
+  "inside" : "Inside",
+  "outside" : "Outside"
 }

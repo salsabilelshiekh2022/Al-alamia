@@ -2,14 +2,14 @@ import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 
 enum DebetsEnum {
-  requestDebt,
-  paymentDebt;
+  add_debt,
+  pay_debt;
 
   String translate(BuildContext context) {
     switch (this) {
-      case DebetsEnum.requestDebt:
+      case DebetsEnum.add_debt:
         return context.requestDebt;
-      case DebetsEnum.paymentDebt:
+      case DebetsEnum.pay_debt:
         return context.paymentDebt;
     }
   }

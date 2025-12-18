@@ -94,22 +94,30 @@ abstract class AppRouter {
           builder: (_) => const RegisturationMethodView(),
         );
       case Routes.requestDeptView:
+        final debetsType = settings.arguments as DebetsTypeEnum;
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<HomeCubit>(),
-            child: BlocProvider(
-              create: (context) => getIt<DebtsCubit>(),
-              child: const RequestDebtView(),
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (context) => getIt<DebtsCubit>()),
+                BlocProvider.value(value: getIt<HomeCubit>(),),
+                BlocProvider.value(value: getIt<GeneralCubit>(),),
+              ],
+              child: RequestDebtView(debetType: debetsType),
             ),
           ),
         );
       case Routes.paymentDeptView:
+       final debtType = settings.arguments as DebetsTypeEnum;
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<HomeCubit>(),
             child: BlocProvider(
               create: (context) => getIt<DebtsCubit>(),
-              child: const PaymentDebtView(),
+              child:  PaymentDebtView(
+                debtType: debtType,
+              ),
             ),
           ),
         );
@@ -148,18 +156,14 @@ abstract class AppRouter {
           ),
         );
       case Routes.debtsView:
-         final debtType = settings.arguments as DebetsTypeEnum;
+        final debtType = settings.arguments as DebetsTypeEnum;
         return MaterialPageRoute(
-          
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<HomeCubit>()),
               BlocProvider.value(value: getIt<DebtsCubit>()),
-              
             ],
-            child:  DebtsView(
-              debetType: debtType,
-            ),
+            child: DebtsView(debetType: debtType),
           ),
         );
       default:
