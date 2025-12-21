@@ -24,4 +24,5 @@ class EndPoints {
   static String getDebtsTransactions ({required String type}) => '/employee/transactions/debts?type=$type';
   static String getAllBranches = '/employee/general/get-all-branches';
   static String getPaymentMethods = '/employee/general/get-all-payment-methods';
+  static String sendMoney = '/employee/transactions/sending-money';
 }
