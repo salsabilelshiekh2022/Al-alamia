@@ -6,7 +6,6 @@ import 'package:alalamia/core/utils/global_ui_utils.dart';
 import 'package:alalamia/features/send_money/presentation/views/widgets/send_money_successfully_dialog.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/components/widgets/main_button.dart';
-import 'widgets/conversion_data_card.dart';
 import 'widgets/fee_details_card.dart';
 import 'widgets/notes_card.dart';
 import 'widgets/transaction_details_card.dart';
@@ -27,8 +26,6 @@ class SendMoneySecondStepView extends StatelessWidget {
           _progressBar(context),
           24.verticalSizedBox,
           TransactionDetailsCard(),
-          20.verticalSizedBox,
-          ConversionDatacard(),
           20.verticalSizedBox,
           NotesCard(),
           20.verticalSizedBox,

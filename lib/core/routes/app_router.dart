@@ -87,7 +87,13 @@ abstract class AppRouter {
         );
       case Routes.sendMoneySecondStepView:
         return MaterialPageRoute(
-          builder: (_) => const SendMoneySecondStepView(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<GeneralCubit>()),
+              BlocProvider.value(value: getIt<HomeCubit>()),
+            ],
+            child: const SendMoneySecondStepView(),
+          ),
         );
       case Routes.registerationMethodView:
         return MaterialPageRoute(
@@ -114,12 +120,10 @@ abstract class AppRouter {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<HomeCubit>()),
-              BlocProvider.value(value:getIt<GeneralCubit>()),
-               BlocProvider(
-              create: (context) => getIt<DebtsCubit>(),
-            ),
+              BlocProvider.value(value: getIt<GeneralCubit>()),
+              BlocProvider(create: (context) => getIt<DebtsCubit>()),
             ],
-              child: PaymentDebtView(debtType: debtType),
+            child: PaymentDebtView(debtType: debtType),
           ),
         );
       case Routes.addExpensesView:

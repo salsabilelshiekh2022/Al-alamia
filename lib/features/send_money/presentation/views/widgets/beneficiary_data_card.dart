@@ -48,7 +48,7 @@ class BeneficiaryDataCard extends StatelessWidget {
             label: context.address,
             hintText: context.addressHint,
             prefixWidget: AppAssets.svgsMapIcon,
-            isRequired: true,
+            isRequired: false,
           ),
         ],
       ),
