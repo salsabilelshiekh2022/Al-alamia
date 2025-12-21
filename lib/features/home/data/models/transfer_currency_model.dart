@@ -3,7 +3,7 @@ class TransferCurrencyModel {
   final int? toCurrencyId;
   final num? exchangePriceUsed;
   final num? amount;
-  final num? convertedAmount;
+  final String? convertedAmount;
 
   TransferCurrencyModel({
     this.fromCurrencyId,

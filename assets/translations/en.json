@@ -165,5 +165,16 @@
   "outside" : "Outside",
    "salary" : "Salary",
   "rewarded" : "Rewarded",
-  "penalized" : "Penalized"
+  "penalized" : "Penalized",
+   "delivery_type" :"Delivery Type",
+  "internal_delivery" : "Internal Delivery",
+  "external_delivery" : "External Delivery",
+  "delivery_method" :"Delivery Method",
+  "choose_delivery_method" :"Choose Delivery Method",
+  "added_value" : "Added Value",
+  "deducted_value" : "Deducted Value",
+  "none" : "No commission",
+    "converted_currency" : "The converted currency",
+  "converted_amount" : "The converted amount"
+  
 }

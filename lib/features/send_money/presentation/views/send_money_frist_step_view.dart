@@ -3,7 +3,9 @@ import 'package:alalamia/core/components/widgets/main_button.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/routes/routes.dart';
 import 'widgets/beneficiary_data_card.dart';
@@ -32,7 +34,7 @@ class SendMoneyFristStepView extends StatelessWidget {
           MainButton(
             title: context.next,
             onTap: () {
-              context.pushNamed(Routes.sendMoneySecondStepView);
+              context.pushNamed(Routes.sendMoneySecondStepView, arguments: context.read<SendMoneyCubit>());
             },
           ),
           32.verticalSizedBox,

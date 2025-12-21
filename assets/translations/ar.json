@@ -165,5 +165,17 @@
   "outside" : "خارجي",
   "salary" : "الراتب",
   "rewarded" : "المكافآة",
-  "penalized" : "الخصم"
+  "penalized" : "الخصم",
+  "delivery_type" : "نوع التسليم ",
+  "internal_delivery" : "تسليم داخلي",
+  "external_delivery" : "تسليم خارجي",
+  "delivery_method" :"طريقة التسليم",
+  "choose_delivery_method" : "اختر طريقة التسليم",
+  "added_value" : "القيمة المضافة",
+  "deducted_value" : "خصم من المبلغ",
+  "none" : "بدون عمولة",
+  "converted_currency" : "العملة المحول اليها",
+  "converted_amount" : "المبلغ المحول"
+
+
 }

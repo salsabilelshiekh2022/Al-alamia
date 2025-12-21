@@ -29,7 +29,7 @@ extension TranslationExtension on BuildContext {
   String get notReceivedMessage => tr('not_received_message');
   String get preseHere => tr('prese_here');
   String get createNewPassword => tr('create_new_password');
-  String get enterNewPasswordWithoutSharing =>
+  String get enterNewPasswordWithoutSharing => 
       tr('enter_new_password_without_sharing');
   String get newPassword => tr('new_password');
   String get newPasswordHint => tr('new_password_hint');
@@ -171,4 +171,14 @@ extension TranslationExtension on BuildContext {
   String get salary => tr("salary");
   String get rewarded => tr("rewarded");
   String get penalized => tr("penalized");
+  String get deliveryType => tr("delivery_type");
+  String get internalDelivery => tr("internal_delivery");
+  String get externalDelivery => tr("external_delivery");
+  String get deliveryMethod => tr("delivery_method");
+  String get chooseDeliveryMethod => tr("choose_delivery_method");
+  String get addedValue => tr("added_value");
+  String get deductedValue => tr("deducted_value");
+  String get none => tr("none");
+  String get convertedCurrency => tr("converted_currency");
+  String get convertedAmount => tr("converted_amount");
 }

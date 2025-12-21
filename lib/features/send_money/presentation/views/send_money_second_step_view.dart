@@ -12,6 +12,7 @@ import 'widgets/transaction_details_card.dart';
 
 class SendMoneySecondStepView extends StatelessWidget {
   const SendMoneySecondStepView({super.key});
+ 
 
   @override
   Widget build(BuildContext context) {

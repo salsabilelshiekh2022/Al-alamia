@@ -1,8 +1,8 @@
 class BranchModel {
   final int? id ;
   final String? name;
-  final double? transferFee;
-  final double? commissionRatePercentage;
+  final num? transferFee;
+  final String? commissionRatePercentage;
 
   BranchModel({required this.id, required this.name, required this.transferFee, required this.commissionRatePercentage});
 
@@ -10,8 +10,8 @@ class BranchModel {
     return BranchModel(
       id: json['id'] as int,
       name: json['name'] as String,
-      transferFee: json['transfer_fee'] as double,
-      commissionRatePercentage: json['commission_rate_percentage'] as double,
+      transferFee: json['transfer_fee'] as num,
+      commissionRatePercentage: json['commission_rate_percentage'] as String,
     );
   }
 

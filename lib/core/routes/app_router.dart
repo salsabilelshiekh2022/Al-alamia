@@ -86,13 +86,16 @@ abstract class AppRouter {
           ),
         );
       case Routes.sendMoneySecondStepView:
+        final cubit = getIt<SendMoneyCubit>();
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<GeneralCubit>()),
               BlocProvider.value(value: getIt<HomeCubit>()),
             ],
-            child: const SendMoneySecondStepView(),
+            child: BlocProvider.value(value: cubit, child: SendMoneySecondStepView(
+             
+            )),
           ),
         );
       case Routes.registerationMethodView:
