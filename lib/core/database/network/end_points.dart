@@ -22,4 +22,6 @@ class EndPoints {
   static String getExpensesByCurrency({required int id}) => '/employee/general/currencies/$id/expenses';
   static String getDebtsByCurrency({required int id}) => '/employee/general/currencies/$id/debts';
   static String getDebtsTransactions ({required String type}) => '/employee/transactions/debts?type=$type';
+  static String getAllBranches = '/employee/general/get-all-branches';
+  static String getPaymentMethods = '/employee/general/get-all-payment-methods';
 }

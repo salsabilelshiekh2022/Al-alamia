@@ -1,7 +1,9 @@
 import 'package:alalamia/core/database/network/api_consumer.dart';
+import 'package:alalamia/core/general/data/models/branch_model.dart';
 import 'package:alalamia/core/general/data/models/denomination_model.dart';
 import 'package:alalamia/core/general/data/models/fee_details_model.dart';
 import 'package:alalamia/core/general/data/models/fee_details_request_params.dart';
+import 'package:alalamia/core/general/data/models/payment_method_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
@@ -49,6 +51,30 @@ class GeneralRepoImpl extends GeneralRepo {
       onSuccess: (result) {
         return List<DenominationModel>.from(
           result['data'].map((x) => DenominationModel.fromJson(x)),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<BranchModel>>> getAllBranches() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getAllBranches),
+      onSuccess: (result) {
+        return List<BranchModel>.from(
+          result['data'].map((x) => BranchModel.fromJson(x)),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<PaymentMethodModel>>> getPaymentMethods() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getPaymentMethods),
+      onSuccess: (result) {
+        return List<PaymentMethodModel>.from(
+          result['data'].map((x) => PaymentMethodModel.fromJson(x)),
         );
       },
     );

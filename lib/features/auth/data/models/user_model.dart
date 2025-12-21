@@ -63,11 +63,17 @@ class Branch {
   int? id;
   @HiveField(1)
   String? name;
+  @HiveField(2)
+  int?transferFee;
+  @HiveField(3)
+  String? commissionRatePercentage;
 
-  Branch({required this.id, required this.name});
+  Branch({required this.id, required this.name, required this.transferFee, required this.commissionRatePercentage});
 
   Branch.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    transferFee = json['transfer_fee'];
+    commissionRatePercentage = json['commission_rate_percentage'];
   }
 }

@@ -1,7 +1,11 @@
+import 'package:alalamia/core/database/cache/cache_helper.dart';
+import 'package:alalamia/core/database/cache/cache_services.dart';
+import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/auth/data/models/user_model.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,20 +91,6 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                   ),
                 ),
               ),
-              // openCurrencyDropDown
-              //     ? BlocBuilder<HomeCubit, HomeState>(
-              //         builder: (context, state) {
-              //           return CustomDropDownCard(
-              //             dropDownItems: state.currenciesList
-              //                 .map((e) => e.name)
-              //                 .whereType<String>()
-              //                 .toList(),
-              //             selectedValue: currencyController.text,
-              //             onItemSelected: _onItemSelected,
-              //           );
-              //         },
-              //       ).onlyPadding(topPadding: 6)
-              //     : SizedBox(),
               14.horizontalSizedBox,
               Expanded(
                 child: CustomTextFieldWithLabel(
@@ -112,6 +102,19 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
               ),
             ],
           ),
+           if (openCurrencyDropDown)
+                      BlocBuilder<HomeCubit, HomeState>(
+                        builder: (context, state) {
+                          return CustomDropDownCard(
+                            dropDownItems: state.currenciesList
+                                .map((e) => e.name)
+                                .whereType<String>()
+                                .toList(),
+                            selectedValue: currencyController.text,
+                            onItemSelected: _onItemSelected,
+                          );
+                        },
+                      ).onlyPadding(topPadding: 6),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
             label: context.amountByChar,
@@ -126,6 +129,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
             hintText: context.recourseHint,
             prefixWidget: AppAssets.svgsBank,
             isRequired: true,
+            initialValue: getIt<CacheServices>().getDataFromCache<UserModel>(boxName: CacheBoxes.userModelBox, key: "user")?.branch?.name ?? "Sali",
+            isReadOnly: true,
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(

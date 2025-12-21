@@ -83,17 +83,23 @@ class BranchAdapter extends TypeAdapter<Branch> {
     return Branch(
       id: fields[0] as int?,
       name: fields[1] as String?,
+      transferFee: fields[2] as int?,
+      commissionRatePercentage: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Branch obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.transferFee)
+      ..writeByte(3)
+      ..write(obj.commissionRatePercentage);
   }
 
   @override

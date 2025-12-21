@@ -57,4 +57,34 @@ class GeneralCubit extends Cubit<GeneralState> {
       ),
     );
   }
+
+  Future<void> getAllBranches() async {
+    emit(state.copyWith(getAllBranchesStatus: RequestStatus.loading));
+    final result = await generalRepo.getAllBranches();
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(getAllBranchesStatus: RequestStatus.error)),
+      (branches) => emit(
+        state.copyWith(
+          getAllBranchesStatus: RequestStatus.success,
+          branches: branches,
+        ),
+      ),
+    );
+  } 
+
+  Future<void> getPaymentMethods() async {
+    emit(state.copyWith(getPaymentMethodsStatus: RequestStatus.loading));
+    final result = await generalRepo.getPaymentMethods();
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(getPaymentMethodsStatus: RequestStatus.error)),
+      (paymentMethods) => emit(
+        state.copyWith(
+          getPaymentMethodsStatus: RequestStatus.success,
+          paymentMethods: paymentMethods,
+        ),
+      ),
+    );
+  }
 }
