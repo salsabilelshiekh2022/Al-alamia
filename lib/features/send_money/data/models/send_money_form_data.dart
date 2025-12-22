@@ -1,5 +1,6 @@
 // features/send_money/domain/models/send_money_form_data.dart
 import 'package:alalamia/core/enums/commission_type_enum.dart';
+import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -22,8 +23,8 @@ class SendMoneyFormData extends Equatable {
   // Transaction Details
   final CurrencyModel? fromCurrency;
   final CurrencyModel? toCurrency;
-  final BranchModel? fromBranch;
-  final BranchModel? toBranch;
+  final int? fromBranch;
+  final int? toBranch;
   final String amount;
   final String totalPrice;
   final String amountByChar;
@@ -34,6 +35,9 @@ class SendMoneyFormData extends Equatable {
   final CommissionTypeEnum? commissionType;
   final double commissionAmount;
   final int? paymentMethodId;
+  
+  // Delivery Type
+  final DeliveryTypeEnum deliveryType;
 
   const SendMoneyFormData({
     // Sender Info
@@ -62,6 +66,9 @@ class SendMoneyFormData extends Equatable {
     this.commissionType,
     this.commissionAmount = 0.0,
     this.paymentMethodId,
+    
+    // Delivery Type
+    this.deliveryType = DeliveryTypeEnum.inside,
   });
 
   factory SendMoneyFormData.empty() => const SendMoneyFormData();
@@ -81,8 +88,8 @@ class SendMoneyFormData extends Equatable {
     // Transaction
     CurrencyModel? fromCurrency,
     CurrencyModel? toCurrency,
-    BranchModel? fromBranch,
-    BranchModel? toBranch,
+    int? fromBranch,
+    int? toBranch,
     String? amount,
     String? totalPrice,
     String? amountByChar,
@@ -93,6 +100,9 @@ class SendMoneyFormData extends Equatable {
     CommissionTypeEnum? commissionType,
     double? commissionAmount,
     int? paymentMethodId,
+    
+    // Delivery Type
+    DeliveryTypeEnum? deliveryType,
   }) {
     return SendMoneyFormData(
       // Sender Info
@@ -121,6 +131,9 @@ class SendMoneyFormData extends Equatable {
       commissionType: commissionType ?? this.commissionType,
       commissionAmount: commissionAmount ?? this.commissionAmount,
       paymentMethodId: paymentMethodId ?? this.paymentMethodId,
+      
+      // Delivery Type
+      deliveryType: deliveryType ?? this.deliveryType,
     );
   }
 
@@ -142,7 +155,9 @@ class SendMoneyFormData extends Equatable {
   
   bool get hasCommissionDetails => commissionType != null;
   
-  bool get hasPaymentMethod => paymentMethodId != null;
+  // Payment method is only required for outside delivery
+  bool get hasPaymentMethod => 
+      deliveryType == DeliveryTypeEnum.inside || paymentMethodId != null;
   
   bool get hasDenominations => denominations.isNotEmpty;
   
@@ -180,12 +195,13 @@ class SendMoneyFormData extends Equatable {
       receiverPhone: receiverPhone,
       receiverName: receiverName,
       receiverAddress: receiverAddress,
-      fromBranchId: fromBranch!.id!,
-      toBranchId: toBranch!.id!,
+      fromBranchId: fromBranch!,
+      toBranchId: toBranch!,
       commissionType: commissionType!,
       commissionAmount: commissionAmount,
-      paymentMethodId: paymentMethodId!,
+      paymentMethodId: paymentMethodId,
       receiverPhone2: receiverPhone2,
+      deliveryType: deliveryType,
     );
   }
 
@@ -210,5 +226,6 @@ class SendMoneyFormData extends Equatable {
     commissionType,
     commissionAmount,
     paymentMethodId,
+    deliveryType,
   ];
 }

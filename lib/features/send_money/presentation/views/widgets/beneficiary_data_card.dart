@@ -3,10 +3,13 @@ import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/utils/validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../generated/app_assets.dart';
+import '../../../data/models/send_money_form_data.dart';
+import '../../cubit/send_money_cubit.dart';
 
 class BeneficiaryDataCard extends StatefulWidget {
   const BeneficiaryDataCard({super.key});
@@ -16,19 +19,25 @@ class BeneficiaryDataCard extends StatefulWidget {
 }
 
 class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
-    late TextEditingController nameController ;
+  late TextEditingController nameController;
   late TextEditingController phoneController;
   late TextEditingController additionalController;
-  late TextEditingController addressController ;
+  late TextEditingController addressController;
+
   @override
   void initState() {
-    nameController = TextEditingController();
-    phoneController = TextEditingController();
-    additionalController = TextEditingController();
-    addressController = TextEditingController();
     super.initState();
-    
+    final cubit = context.read<SendMoneyCubit>();
+    nameController = TextEditingController(
+        text: cubit.state.formData?.receiverName ?? '');
+    phoneController = TextEditingController(
+        text: cubit.state.formData?.receiverPhone ?? '');
+    additionalController = TextEditingController(
+        text: cubit.state.formData?.receiverPhone2 ?? '');
+    addressController = TextEditingController(
+        text: cubit.state.formData?.receiverAddress ?? '');
   }
+
   @override
   void dispose() {
     nameController.dispose();
@@ -37,6 +46,22 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
     addressController.dispose();
     super.dispose();
   }
+
+  void _updateFormData() {
+    final cubit = context.read<SendMoneyCubit>();
+    final currentFormData = cubit.state.formData ?? SendMoneyFormData.empty();
+    cubit.updateFormData(
+      currentFormData.copyWith(
+        receiverPhone: phoneController.text,
+        receiverName: nameController.text,
+        receiverAddress: addressController.text,
+        receiverPhone2: additionalController.text.isEmpty
+            ? null
+            : additionalController.text,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CardWithPurpleShadow(
@@ -48,16 +73,14 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
             style: context.textStyles.font16SemiBoldSecondaryColor,
           ),
           12.verticalSizedBox,
-
           CustomTextFieldWithLabel(
             controller: nameController,
             label: context.name,
             hintText: context.fullNameHint,
             prefixWidget: AppAssets.svgsUser,
             isRequired: true,
-            validator: (value)=>
-              Validator.validateName(value, context)
-            
+            validator: (value) => Validator.validateName(value, context),
+            onChanged: (_) => _updateFormData(),
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
@@ -67,8 +90,8 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
             prefixWidget: AppAssets.svgsPhone,
             keyboardType: TextInputType.phone,
             isRequired: true,
-             validator: (value)=>
-              Validator.validatePhone(value, context)
+            validator: (value) => Validator.validatePhone(value, context),
+            onChanged: (_) => _updateFormData(),
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
@@ -77,6 +100,7 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
             hintText: context.additionalNumberHint,
             prefixWidget: AppAssets.svgsAdditionalPhoneIcon,
             keyboardType: TextInputType.phone,
+            onChanged: (_) => _updateFormData(),
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
@@ -84,7 +108,8 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
             label: context.address,
             hintText: context.addressHint,
             prefixWidget: AppAssets.svgsMapIcon,
-            isRequired: false,
+            isRequired: true,
+            onChanged: (_) => _updateFormData(),
           ),
         ],
       ),

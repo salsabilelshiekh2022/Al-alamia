@@ -1,4 +1,5 @@
 import 'package:alalamia/core/enums/commission_type_enum.dart';
+import 'package:alalamia/core/enums/delivery_type_enum.dart';
 
 import '../../../transfer_money/data/models/transfer_money_request_params.dart';
 
@@ -20,8 +21,9 @@ class SendMoneyRequestParams {
   final int toBranchId;
   final CommissionTypeEnum commissionType;
   final num commissionAmount;
-  final int paymentMethodId;
+  final int? paymentMethodId;
   final String? receiverPhone2;
+  final DeliveryTypeEnum deliveryType;
 
   SendMoneyRequestParams({
     required this.senderPhone,
@@ -41,31 +43,47 @@ class SendMoneyRequestParams {
     required this.toBranchId,
     required this.commissionType,
     required this.commissionAmount,
-    required this.paymentMethodId,
+    this.paymentMethodId,
     required this.receiverPhone2,
+    required this.deliveryType,
   });
 
-   Map<String, dynamic> toJson() {
-     final Map<String, dynamic> data = <String, dynamic>{};
-     data['sender_phone'] = senderPhone;
-     data['sender_name'] = senderName;
-     data['from_currency_id'] = fromCurrencyId;
-     data['to_currency_id'] = toCurrencyId;
-     data['amount'] = amount;
-     data['total_price'] = totalPrice;
-     data['amount_by_char'] = amountByChar;
-     data['denominations'] = denominations.map((v) => v.toJson()).toList();
-     data['note'] = note;
-     data['sender_address'] = senderAddress;
-     data['receiver_phone'] = receiverPhone;
-     data['receiver_name'] = receiverName;
-     data['receiver_address'] = receiverAddress;
-     data['from_branch_id'] = fromBranchId;
-     data['to_branch_id'] = toBranchId;
-     data['commission_type'] = commissionType.toString();
-     data['commission_amount'] = commissionAmount;
-     data['payment_method_id'] = paymentMethodId;
-     data['receiver_phone2'] = receiverPhone2;
-     return data;
-   }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['sender_phone'] = senderPhone;
+    data['sender_name'] = senderName;
+    data['from_currency_id'] = fromCurrencyId;
+    
+    // For inside delivery, to_currency_id should be same as from_currency_id
+    // For outside delivery, use the actual toCurrencyId
+    data['to_currency_id'] = deliveryType == DeliveryTypeEnum.inside 
+        ? fromCurrencyId 
+        : toCurrencyId;
+    
+    data['amount'] = amount;
+    data['total_price'] = totalPrice;
+    data['amount_by_char'] = amountByChar;
+    data['denominations'] = denominations.map((v) => v.toJson()).toList();
+    data['note'] = note;
+    data['sender_address'] = senderAddress;
+    data['reciever_phone'] = receiverPhone;
+    data['reciever_name'] = receiverName;
+    data['reciever_address'] = receiverAddress;
+    data['from_branch_id'] = fromBranchId;
+    data['to_branch_id'] = toBranchId;
+    data['commission_type'] = commissionType.name;
+    data['commission_amount'] = commissionAmount;
+    
+    // Only include payment_method_id for outside delivery
+    if (deliveryType == DeliveryTypeEnum.outside && paymentMethodId != null) {
+      data['payment_method_id'] = paymentMethodId;
+    }
+    
+    data['reciever_phone_2'] = receiverPhone2;
+    
+    // Send delivery type as receive_type to backend
+    data['receive_type'] = deliveryType == DeliveryTypeEnum.inside ? 'inside' : 'outside';
+    
+    return data;
+  }
 }

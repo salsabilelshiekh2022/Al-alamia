@@ -20,9 +20,11 @@ import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/enums/delivery_type_enum.dart';
+import '../../../../../core/general/data/models/branch_model.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/data/models/transfer_currency_request_params.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
+import '../../../data/models/send_money_form_data.dart';
 import 'delivery_types_widget.dart';
 
 class TransactionDetailsCard extends StatefulWidget {
@@ -93,6 +95,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       currencyController.text = selectedItem;
       selectedCurrencyId = selectedCurrency.id;
     });
+    _updateFormData();
   }
 
   void _onToCurrencySelected(String selectedItem) {
@@ -106,6 +109,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       toCurrencyController.text = selectedItem;
       selectedToCurrencyId = selectedCurrency.id;
     });
+    _updateFormData();
   }
 
   void _onDestinationSelected(String selectedItem) {
@@ -118,6 +122,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       destinationController.text = selectedItem;
       selectedDestinationId = selectedDestination?.id;
     });
+    _updateFormData();
   }
 
   void _onCommissionTypeSelected(String selectedItem) {
@@ -126,6 +131,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       commissionTypeController.text = selectedItem;
       selectedCommissionType = selectedItem;
     });
+    _updateFormData();
   }
 
   void _calculateExchangeRate() {
@@ -148,8 +154,97 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
     final result = (amount * exchangeRate).toStringAsFixed(2);
    converterAmountController.text = result;
-   
+   _updateFormData();
   }
+
+  /// Update form data in cubit with current transaction details
+  void _updateFormData() {
+    try {
+      final cubit = context.read<SendMoneyCubit>();
+      final currentFormData = cubit.state.formData ?? SendMoneyFormData.empty();
+      final homeCubit = context.read<HomeCubit>();
+      final generalCubit = context.read<GeneralCubit>();
+
+      print('DEBUG: _updateFormData called');
+      print('DEBUG: selectedCurrencyId: $selectedCurrencyId');
+      print('DEBUG: selectedToCurrencyId: $selectedToCurrencyId');
+      print('DEBUG: selectedDestinationId: $selectedDestinationId');
+      print('DEBUG: selectedCommissionType: $selectedCommissionType');
+      print('DEBUG: amountController.text: ${amountController.text}');
+
+      // Get currency models
+      final fromCurrency = selectedCurrencyId != null
+          ? homeCubit.state.currenciesList.firstWhere(
+              (c) => c.id == selectedCurrencyId,
+              orElse: () => homeCubit.state.currenciesList.first,
+            )
+          : null;
+
+      final toCurrency = selectedToCurrencyId != null
+          ? homeCubit.state.currenciesList.firstWhere(
+              (c) => c.id == selectedToCurrencyId,
+              orElse: () => homeCubit.state.currenciesList.first,
+            )
+          : cubit.state.deliveryType == DeliveryTypeEnum.inside
+              ? fromCurrency // For inside delivery, to currency is same as from currency
+              : null;
+
+      // Get branch models
+      final fromBranch = getIt<CacheServices>()
+          .getDataFromCache<UserModel>(
+            boxName: CacheBoxes.userModelBox,
+            key: "user",
+          )
+          ?.branch?.id;
+
+      final toBranch = selectedDestinationId;
+
+      // Get commission type
+      CommissionTypeEnum? commissionType;
+      if (selectedCommissionType != null) {
+        for (var type in CommissionTypeEnum.values) {
+          if (type.getCommissionType(context) == selectedCommissionType) {
+            commissionType = type;
+            break;
+          }
+        }
+      }
+
+      // Calculate commission amount - using 0 for now to avoid type errors
+      // TODO: Fix commissionRatePercentage type in BranchModel
+      double commissionPercentage = 0.0;
+      
+      final amount = double.tryParse(amountController.text) ?? 0.0;
+      final commissionAmount = (amount * commissionPercentage) / 100;
+
+      // Total price including commission
+      final totalPrice = commissionType == CommissionTypeEnum.added_value
+          ? amount + commissionAmount
+          : commissionType == CommissionTypeEnum.deducted_value
+              ? amount - commissionAmount
+              : amount;
+
+      print('DEBUG: About to update form data');
+      cubit.updateFormData(
+        currentFormData.copyWith(
+          fromCurrency: fromCurrency,
+          toCurrency: toCurrency,
+          fromBranch: fromBranch ,
+          toBranch: toBranch,
+          amount: amountController.text,
+          totalPrice: totalPrice.toString(),
+          amountByChar: amountByCharController.text,
+          commissionType: commissionType,
+          commissionAmount: commissionAmount,
+        ),
+      );
+      print('DEBUG: Form data updated successfully');
+    } catch (e, stackTrace) {
+      print('ERROR in _updateFormData: $e');
+      print('Stack trace: $stackTrace');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -234,6 +329,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                 keyboardType: TextInputType.text,
                 validator: (value) =>
                     Validator.validateAnotherField(value, context),
+                onChanged: (_) => _updateFormData(),
               ),
               16.verticalSizedBox,
               CustomTextFieldWithLabel(

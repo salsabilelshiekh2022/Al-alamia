@@ -86,16 +86,16 @@ abstract class AppRouter {
           ),
         );
       case Routes.sendMoneySecondStepView:
-        final cubit = getIt<SendMoneyCubit>();
+        // Use the cubit passed from step 1 to preserve form data
+        final cubit = settings.arguments as SendMoneyCubit;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<GeneralCubit>()),
               BlocProvider.value(value: getIt<HomeCubit>()),
+              BlocProvider.value(value: cubit), // Use passed cubit instance
             ],
-            child: BlocProvider.value(value: cubit, child: SendMoneySecondStepView(
-             
-            )),
+            child: SendMoneySecondStepView(),
           ),
         );
       case Routes.registerationMethodView:

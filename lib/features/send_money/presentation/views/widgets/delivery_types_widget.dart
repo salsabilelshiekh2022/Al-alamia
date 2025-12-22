@@ -12,6 +12,7 @@ import '../../../../../core/helper/number_extentions.dart';
 import '../../../../../core/helper/translation_extensions.dart';
 import '../../../../../core/helper/widget_extentions.dart';
 import '../../../../../generated/app_assets.dart';
+import '../../../data/models/send_money_form_data.dart';
 
 class DeliveryTypeWidget extends StatefulWidget {
   const DeliveryTypeWidget({super.key});
@@ -47,6 +48,13 @@ class _DeliveryTypeWidgetState extends State<DeliveryTypeWidget> {
       deliveryMethodController.text = selectedItem;
       selectedPaymentMethod = selectedDestination?.id;
     });
+    
+    // Update form data with payment method ID
+    final sendMoneyCubit = context.read<SendMoneyCubit>();
+    final currentFormData = sendMoneyCubit.state.formData ?? SendMoneyFormData.empty();
+    sendMoneyCubit.updateFormData(
+      currentFormData.copyWith(paymentMethodId: selectedPaymentMethod),
+    );
   }
 
   @override
