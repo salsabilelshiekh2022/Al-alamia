@@ -1,0 +1,115 @@
+import 'package:alalamia/features/transactions/data/models/transaction_model.dart';
+
+import '../../../../core/general/data/models/branch_model.dart';
+
+class TransactionDetailsModel {
+
+  TransactionDetailsModel({
+    required this.amountSent,
+    required this.currency,
+    required this.amountReceived,
+    required this.toCurrency,
+    required this.fromBranch,
+    required this.toBranch,
+    required this.sender,
+    required this.receiver,
+    required this.details,
+  });
+
+  final String amountSent;
+  final String currency;
+  final String amountReceived;
+  final String toCurrency;
+  final BranchModel fromBranch;
+  final BranchModel toBranch;
+  final ClientModel sender;
+  final ClientModel receiver;
+  final DetailModel details;
+
+  factory TransactionDetailsModel.fromJson(Map<String, dynamic> json) => TransactionDetailsModel(
+    amountSent: json["amount_sent"],
+    currency: json["currency"],
+    amountReceived: json["amount_received"],
+    toCurrency: json["ToCurrency"],
+    fromBranch: BranchModel.fromJson(json["from_branch"]),
+    toBranch: BranchModel.fromJson(json["to_branch"]),
+    sender: ClientModel.fromJson(json["sender"]),
+    receiver: ClientModel.fromJson(json["receiver"]),
+    details: DetailModel.fromJson(json["details"]),
+  );
+
+
+}
+
+
+class DetailModel {
+  DetailModel({
+    required this.transactionUuid,
+    required this.transactionType,
+    required this.totalCommissionValue,
+    required this.amountSent,
+    required this.amountCharacter,
+    required this.exchangeRate,
+    required this.transferFees,
+    required this.totalAmount,
+  });
+
+  final String transactionUuid;
+  final String transactionType;
+  final String totalCommissionValue;
+  final String amountSent;
+  final String amountCharacter;
+  final String exchangeRate;
+  final int transferFees;
+  final double totalAmount;
+
+  factory DetailModel.fromJson(Map<String, dynamic> json) => DetailModel(
+    transactionUuid: json["transaction_uuid"],
+    transactionType: json["transaction_type"],
+    totalCommissionValue: json["total_commission_value"],
+    amountSent: json["amount_sent"],
+    amountCharacter: json["amount_character"],
+    exchangeRate: json["exchange_rate"],
+    transferFees: json["transfer_fees"],
+    totalAmount: json["total_amount"].toDouble(),
+  );
+}
+
+
+TransactionDetailsModel dummyTransactionModel = TransactionDetailsModel(
+  amountSent: '9.20',
+  currency: 'USD',
+  amountReceived: '10.399999999999999',
+  toCurrency: 'الدولار الأمريكي',
+  fromBranch: dummyBranchModel,
+  toBranch: dummyBranchModel,
+  sender: ClientModel(
+    id: 16,
+    name: 'علي محمد',
+    phone: '010123456879',
+    address: 'طرابلس',
+  ),
+  receiver: ClientModel(
+    id: 17,
+    name: 'محمد علي',
+    phone: '010123456877',
+    address: 'بني غازي',
+  ),
+  details: DetailModel(
+    transactionUuid: 'code_204_120727',
+    transactionType: 'sending',
+    totalCommissionValue: '1.20',
+    amountSent: '9.20',
+    amountCharacter: 'خمسمائه وخمسه وخمسون',
+    exchangeRate: '0.0305',
+    transferFees: 0,
+    totalAmount: 10.399999999999999,
+  ),
+);
+
+BranchModel dummyBranchModel = BranchModel(
+  id: 1,
+  name: 'فرع زلتين',
+  transferFee: 0,
+  commissionRatePercentage: '10',
+);

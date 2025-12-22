@@ -184,6 +184,8 @@
   "recivedd" :"Received",
   "pendingg" : "Pending",
   "completed" : "Completed" ,
-  "canceled": "Canceled"
-  
+  "canceled": "Canceled",
+   "not_found_transactions":"No Transactions Found",
+  "not_found_transactions_description":"No transactions have been added yet."
+
 }

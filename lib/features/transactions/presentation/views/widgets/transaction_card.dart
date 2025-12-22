@@ -18,7 +18,7 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.pushNamed(Routes.transactionDetailsView),
+      onTap: () => context.pushNamed(Routes.transactionDetailsView, arguments: transactionModel.id),
       child: CardWithGrayBorder(
         child: Column(
           children: [

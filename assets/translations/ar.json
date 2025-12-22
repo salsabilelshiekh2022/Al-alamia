@@ -183,7 +183,9 @@
   "recivedd" :"مستلمة",
   "pendingg" : "معلقة",
   "completed" : "مكتملة" ,
-  "canceled": "ملغاة"
+  "canceled": "ملغاة",
+  "not_found_transactions":"لا توجد معاملات",
+  "not_found_transactions_description":"لم يتم إضافة أي معاملات بعد."
 
 
 }

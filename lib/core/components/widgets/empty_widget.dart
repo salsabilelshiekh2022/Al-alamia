@@ -22,16 +22,15 @@ class EmptyWidget extends StatelessWidget {
       children: [
         Image.asset(
           imagePath,
-          width: double.infinity,
-          height: 224.0.h,
+          width:200,
+          height: 200.0.h,
           fit: BoxFit.cover,
         ),
-        16.verticalSpace,
         Text(title, style: appTextStyles.font16MediumSecondaryColor),
-        6.verticalSpace,
+        8.verticalSpace,
         Text(
           description,
-          style: appTextStyles.font14MediumSecondaryColor,
+          style: appTextStyles.font14MediumGrayColor,
           textAlign: TextAlign.center,
         ),
       ],

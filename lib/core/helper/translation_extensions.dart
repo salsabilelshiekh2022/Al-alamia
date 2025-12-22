@@ -189,4 +189,6 @@ extension TranslationExtension on BuildContext {
   String get pendingg => tr("pendingg");
   String get completed => tr("completed");
   String get canceled => tr("canceled");
+  String get notFoundTransactions => tr("not_found_transactions");
+  String get notFoundTransactionsDescription => tr("not_found_transactions_description");
 }

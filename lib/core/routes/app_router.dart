@@ -16,6 +16,7 @@ import 'package:alalamia/features/send_money/presentation/views/send_money_secon
 import 'package:alalamia/features/settings/presentation/views/settings_view.dart';
 import 'package:alalamia/features/splash/presentations/views/splash_view.dart';
 import 'package:alalamia/features/support/presentation/views/support_view.dart';
+import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
 import 'package:alalamia/features/transactions/presentation/views/transactions_details_view.dart.dart';
 import 'package:alalamia/features/transfer_money/presentation/views/add_amount_by_denomination_view.dart';
 import 'package:alalamia/features/transfer_money/presentation/views/transfer_money_view.dart';
@@ -61,8 +62,12 @@ abstract class AppRouter {
       case Routes.transactionsView:
         return MaterialPageRoute(builder: (_) => const TransactionsView());
       case Routes.transactionDetailsView:
+        final id = settings.arguments as int;
         return MaterialPageRoute(
-          builder: (_) => const TransactionsDetailsView(),
+          builder: (_) => BlocProvider.value(
+            value: getIt<TransactionsCubit>(),
+            child: TransactionsDetailsView(id),
+          ),
         );
       case Routes.transferCurrencyView:
         return MaterialPageRoute(
@@ -181,7 +186,9 @@ abstract class AppRouter {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<HomeCubit>()),
-              BlocProvider.value(value: getIt<GeneralCubit>()..getAllBranches()),
+              BlocProvider.value(
+                value: getIt<GeneralCubit>()..getAllBranches(),
+              ),
               BlocProvider.value(value: getIt<InAndOutTransactionCubit>()),
             ],
             child: const InAndOutTransactionView(),

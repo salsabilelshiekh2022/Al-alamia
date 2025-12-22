@@ -31,4 +31,23 @@ class TransactionsCubit extends Cubit<TransactionsState>{
       ),
     );
   }
+
+  Future<void> showTransactionDetails({required String transactionId}) async {
+    emit(state.copyWith(transactionDetailsStatus: RequestStatus.loading));
+    final result = await transactionRepo.showTransactionDetails(transactionId: transactionId);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          transactionDetailsStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (transaction) => emit(
+        state.copyWith(
+          transactionDetailsStatus: RequestStatus.success,
+          transactionDetails: transaction,
+        ),
+      ),
+    );
+  }
 }

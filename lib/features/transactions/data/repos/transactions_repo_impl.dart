@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/database/network/end_points.dart';
 import '../../../../core/database/network/failure.dart';
 import '../../../../core/enums/transactions_enum.dart';
+import '../models/transaction_details_model.dart';
 import '../models/transaction_model.dart';
 import 'transactions_repo.dart';
 
@@ -22,6 +23,17 @@ final ApiConsumer apiConsumer;
       onSuccess: (result) {
         final data = result['data'] as List;
         return data.map((e) => TransactionModel.fromJson(e)).toList();
+      },
+    );
+  }
+  
+  @override
+  Future<Either<Failure, TransactionDetailsModel>> showTransactionDetails({required String transactionId}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.showTransactionDetails(transactionId: transactionId)),
+      onSuccess: (result) {
+        final data = result['data'];
+        return TransactionDetailsModel.fromJson(data);
       },
     );
   }

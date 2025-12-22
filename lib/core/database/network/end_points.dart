@@ -29,4 +29,5 @@ class EndPoints {
   static String sendMoney = '/employee/transactions/sending-money';
   static String inAndOutTransaction = '/employee/transactions/add-in-out';
   static String getTransactionList({required TransactionsEnum transaction}) => '/employee/transactions?type=${transaction.name}';
+  static String showTransactionDetails({required String transactionId}) => '/employee/transactions/$transactionId/client-transaction';
 }

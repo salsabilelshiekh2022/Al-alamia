@@ -61,6 +61,7 @@ class TransactionsView extends StatelessWidget {
                       TransactionsFilterType(),
                       16.verticalSizedBox,
                       TransactionsList(),
+                      80.verticalSizedBox,
                     ],
                   ),
                 ),
