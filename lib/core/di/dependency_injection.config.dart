@@ -23,6 +23,9 @@ import '../../features/expenses/presentation/cubit/expenses_cubit.dart' as _i66;
 import '../../features/home/data/repo/home_repo.dart' as _i429;
 import '../../features/home/data/repo/home_repo_impl.dart' as _i1024;
 import '../../features/home/presentation/cubit/home_cubit.dart' as _i9;
+import '../../features/send_money/data/repos/send_money_repo.dart' as _i372;
+import '../../features/send_money/data/repos/send_money_repo_impl.dart'
+    as _i699;
 import '../../features/send_money/data/services/send_money_service.dart'
     as _i470;
 import '../../features/send_money/presentation/cubit/send_money_cubit.dart'
@@ -48,7 +51,6 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i470.SendMoneyFormService>(() => _i470.SendMoneyFormService());
-    gh.factory<_i397.SendMoneyCubit>(() => _i397.SendMoneyCubit());
     gh.lazySingleton<_i408.CacheServices>(() => _i408.CacheServices());
     gh.lazySingleton<_i742.ApiConsumer>(
       () => _i1062.DioConsumer(cacheServices: gh<_i408.CacheServices>()),
@@ -58,6 +60,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i429.HomeRepo>(
       () => _i1024.HomeRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.lazySingleton<_i372.SendMoneyRepo>(
+      () => _i699.SendMoneyRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
     gh.lazySingleton<_i434.TransferMoneyRepo>(
       () => _i960.TransferMoneyRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
@@ -73,6 +78,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i649.TransferCurrencyCubit>(
       () => _i649.TransferCurrencyCubit(gh<_i434.TransferMoneyRepo>()),
+    );
+    gh.factory<_i397.SendMoneyCubit>(
+      () => _i397.SendMoneyCubit(sendMoneyRepo: gh<_i372.SendMoneyRepo>()),
     );
     gh.lazySingleton<_i507.AuthRepo>(
       () => _i152.AuthRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),

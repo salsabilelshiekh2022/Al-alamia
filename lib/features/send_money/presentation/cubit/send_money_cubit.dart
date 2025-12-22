@@ -19,7 +19,7 @@ class SendMoneyCubit extends Cubit<SendMoneyState> {
     emit(state.copyWith(sendMoneyStatus: RequestStatus.loading));
     final result = await sendMoneyRepo.sendMoney(
       params: sendMoneyRequestParams,
-    );
+    );  
     result.fold(
       (failure) => emit(
         state.copyWith(
