@@ -1,33 +1,5 @@
-//  {
-//             "id": 204,
-//             "transaction_uuid": "code_204_120727",
-//             "date_time": "2025-12-22 12:07:27",
-//             "status": "approved",
-//             "client": {
-//                 "from_client": {
-//                     "id": 16,
-//                     "name": "علي محمد",
-//                     "phone": "010123456879",
-//                     "address": "طرابلس"
-//                 },
-//                 "to_client": {
-//                     "id": 17,
-//                     "name": "محمد علي",
-//                     "phone": "010123456877",
-//                     "address": "بني غازي"
-//                 }
-//             },
-//             "currency": {
-//                 "id": 2,
-//                 "name": "الدولار الأمريكي",
-//                 "code": "USD",
-//                 "image": "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg"
-//             },
-//             "amount_recieved": "0.24"
-//         },
 
-import 'package:alalamia/core/enums/status_enum.dart';
-
+import '../../../../core/enums/status_enum.dart';
 import '../../../home/data/models/currency_model.dart';
 
 class TransactionModel {
@@ -35,7 +7,7 @@ class TransactionModel {
   String? transactionUuid;
   String? dateTime;
   StatusEnum? status;
-  ClientModel? client;
+  ClientsFromTo? client;
   CurrencyModel? currency;
   String? amountReceived;
 
@@ -54,13 +26,31 @@ class TransactionModel {
       id: json['id'],
       transactionUuid: json['transaction_uuid'],
       dateTime: json['date_time'],
-      status: StatusEnum.values.firstWhere((element) => element.name == json['status']),
-      client: json['client'] != null ? ClientModel.fromJson(json['client']) : null,
+      status:StatusEnum.values.firstWhere((e) => e.name == json['status']),
+      client: json['client'] != null ? ClientsFromTo.fromJson(json['client']) : null,
       currency: json['currency'] != null ? CurrencyModel.fromJson(json['currency']) : null,
       amountReceived: json['amount_recieved'],
     );
   }
+
 }
+
+
+class ClientsFromTo {
+  ClientModel? fromClient;
+  ClientModel? toClient;
+
+  ClientsFromTo({this.fromClient, this.toClient});
+
+  factory ClientsFromTo.fromJson(Map<String, dynamic> json) {
+    return ClientsFromTo(
+      fromClient: json['from_client'] != null ? ClientModel.fromJson(json['from_client']) : null,
+      toClient: json['to_client'] != null ? ClientModel.fromJson(json['to_client']) : null,
+    );
+  }
+}
+
+
 
 class ClientModel {
   int? id;
@@ -84,3 +74,31 @@ class ClientModel {
     );
   }
 }
+
+TransactionModel dummyTransactionModel = TransactionModel(
+  id: 1,
+  transactionUuid: '1234567890',
+  dateTime: DateTime.now().toString(),
+  status: StatusEnum.completed,
+ client: ClientsFromTo(
+    fromClient: ClientModel(
+      id: 1,
+      name: 'John Doe',
+      phone: '+1 234 567 890',
+      address: '123 Main St, Cityville',
+    ),
+    toClient: ClientModel(
+      id: 2,
+      name: 'Jane Smith',
+      phone: '+1 987 654 321',
+      address: '456 Elm St, Townsville',
+    ),
+  ),
+  currency: CurrencyModel(
+    id: 1,
+    name: 'US Dollar',
+    code: 'USD',
+    image: "assets/images/currencies/usd.png",
+  ),
+  amountReceived: '100.00',
+);

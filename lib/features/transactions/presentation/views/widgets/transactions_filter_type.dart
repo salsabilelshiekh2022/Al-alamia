@@ -1,6 +1,8 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
+import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/enums/transactions_enum.dart';
@@ -33,6 +35,7 @@ class _TransactionsFilterTypeState extends State<TransactionsFilterType> {
               onTap: () {
                 setState(() {
                   selectedIndex = index;
+                  context.read<TransactionsCubit>().getTransactionList(transaction: TransactionsEnum.values[index]);
                 });
               },
               child: Container(
@@ -42,7 +45,7 @@ class _TransactionsFilterTypeState extends State<TransactionsFilterType> {
                   color: selectedIndex == index
                       ? context.colors.whiteColor
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10.r), 
                 ),
                 child: Center(
                   child: Text(

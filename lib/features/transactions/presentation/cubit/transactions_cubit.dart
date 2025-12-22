@@ -1,11 +1,13 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../core/enums/request_status.dart';
 import '../../../../core/enums/transactions_enum.dart';
 import '../../data/repos/transactions_repo.dart';
 import 'transactions_state.dart';
 
+@injectable
 class TransactionsCubit extends Cubit<TransactionsState>{
 
   TransactionsCubit({required this.transactionRepo}) : super(const TransactionsState());

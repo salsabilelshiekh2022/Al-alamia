@@ -1,3 +1,4 @@
+import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/translation_extensions.dart';
@@ -27,6 +28,25 @@ enum StatusEnum {
         return context.completed;
       case StatusEnum.canceled:
         return context.canceled;
+    }
+  }
+
+   Color chooseColor(BuildContext context) {
+    switch (this) {
+      case StatusEnum.approved:
+        return context.colors.greenColor;
+      case StatusEnum.waiting_approved:
+        return context.colors.yellowColor;
+      case StatusEnum.waiting_recieval:
+        return context.colors.yellowColor;
+      case StatusEnum.recieved:
+        return context.colors.greenColor;
+      case StatusEnum.pending:
+        return context.colors.yellowColor;
+      case StatusEnum.completed:
+        return context.colors.greenColor;
+      case StatusEnum.canceled:
+        return context.colors.redColor;
     }
   }
 

@@ -36,6 +36,11 @@ import '../../features/send_money/data/services/send_money_service.dart'
     as _i470;
 import '../../features/send_money/presentation/cubit/send_money_cubit.dart'
     as _i397;
+import '../../features/transactions/data/repos/transactions_repo.dart' as _i150;
+import '../../features/transactions/data/repos/transactions_repo_impl.dart'
+    as _i398;
+import '../../features/transactions/presentation/cubit/transactions_cubit.dart'
+    as _i598;
 import '../../features/transfer_money/data/repos/transfer_money_repo.dart'
     as _i434;
 import '../../features/transfer_money/data/repos/transfer_money_repo_impl.dart'
@@ -67,6 +72,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i87.DebtRepo>(
       () => _i311.DebtRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
+    gh.lazySingleton<_i150.TransactionsRepo>(
+      () => _i398.TransactionsRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
     gh.lazySingleton<_i429.HomeRepo>(
       () => _i1024.HomeRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
@@ -75,6 +83,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i434.TransferMoneyRepo>(
       () => _i960.TransferMoneyRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.factory<_i598.TransactionsCubit>(
+      () => _i598.TransactionsCubit(
+        transactionRepo: gh<_i150.TransactionsRepo>(),
+      ),
     );
     gh.factory<_i784.DebtsCubit>(
       () => _i784.DebtsCubit(debtRepo: gh<_i87.DebtRepo>()),

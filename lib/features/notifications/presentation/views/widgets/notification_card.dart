@@ -1,10 +1,10 @@
+import 'package:alalamia/core/enums/status_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/components/widgets/card_with_gray_border.dart';
 import '../../../../../core/components/widgets/custom_svg_builder.dart';
-import '../../../../../core/enums/transactions_status_enum.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../transactions/presentation/views/widgets/transaction_status_box.dart';
 
@@ -31,7 +31,7 @@ class NotificationCard extends StatelessWidget {
       35.verticalSpace  ,
       Column(
         children: [
-          TransactionStatusBox(status: TransactionsStatusEnum.pending),
+          TransactionStatusBox(status: StatusEnum.pending),
          22.verticalSpace,
           Text("منذ ساعتين", style: context.textStyles.font14MediumGrayColor.copyWith(
             fontSize: 13
