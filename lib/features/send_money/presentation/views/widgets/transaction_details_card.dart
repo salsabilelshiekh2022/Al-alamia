@@ -360,7 +360,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                 ).onlyPadding(topPadding: 6),
 
               context.read<SendMoneyCubit>().state.deliveryType ==
-                      DeliveryTypeEnum.externalDelivery
+                      DeliveryTypeEnum.outside
                   ? Column(
                       children: [
                         16.verticalSizedBox,

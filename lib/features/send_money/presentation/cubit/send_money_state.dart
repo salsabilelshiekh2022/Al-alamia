@@ -12,7 +12,7 @@ class SendMoneyState extends Equatable {
    final SendMoneyRequestParams? sendMoneyRequestParams;
     final ValidationResult? validationResult;
      final DeliveryTypeEnum deliveryType;
-   const SendMoneyState({ this.sendMoneyStatus = RequestStatus.initial, this.message, this.sendMoneyRequestParams ,  this.formData, this.validationResult,  this.deliveryType  = DeliveryTypeEnum.internalDelivery});
+   const SendMoneyState({ this.sendMoneyStatus = RequestStatus.initial, this.message, this.sendMoneyRequestParams ,  this.formData, this.validationResult,  this.deliveryType  = DeliveryTypeEnum.inside});
   static SendMoneyState initial() => SendMoneyState(
         sendMoneyStatus: RequestStatus.initial,
         formData: SendMoneyFormData.empty(),

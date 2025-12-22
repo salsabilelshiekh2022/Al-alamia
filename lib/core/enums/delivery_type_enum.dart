@@ -2,14 +2,14 @@ import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 
 enum DeliveryTypeEnum {
-  internalDelivery,
-  externalDelivery; 
+  inside,
+  outside; 
 
   String translate(BuildContext context) {
     switch (this) {
-      case DeliveryTypeEnum.internalDelivery:
+      case DeliveryTypeEnum.inside:
         return context.internalDelivery;
-      case DeliveryTypeEnum.externalDelivery:
+      case DeliveryTypeEnum.outside:
         return context.externalDelivery;
     }
   }
