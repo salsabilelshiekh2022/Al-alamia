@@ -20,7 +20,6 @@ import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/enums/delivery_type_enum.dart';
-import '../../../../../core/general/data/models/branch_model.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/data/models/transfer_currency_request_params.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
@@ -163,14 +162,6 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       final cubit = context.read<SendMoneyCubit>();
       final currentFormData = cubit.state.formData ?? SendMoneyFormData.empty();
       final homeCubit = context.read<HomeCubit>();
-      final generalCubit = context.read<GeneralCubit>();
-
-      print('DEBUG: _updateFormData called');
-      print('DEBUG: selectedCurrencyId: $selectedCurrencyId');
-      print('DEBUG: selectedToCurrencyId: $selectedToCurrencyId');
-      print('DEBUG: selectedDestinationId: $selectedDestinationId');
-      print('DEBUG: selectedCommissionType: $selectedCommissionType');
-      print('DEBUG: amountController.text: ${amountController.text}');
 
       // Get currency models
       final fromCurrency = selectedCurrencyId != null

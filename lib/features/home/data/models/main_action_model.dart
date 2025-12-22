@@ -35,6 +35,8 @@ List<MainActionModel> mainActionsList({required BuildContext context}) => [
   MainActionModel(
     title: context.inOut,
     iconPath: AppAssets.svgsInOut,
-    onTap: () {},
+    onTap: () {
+      context.pushNamed(Routes.inAndOutTransactionView);
+    },
   ),
 ];

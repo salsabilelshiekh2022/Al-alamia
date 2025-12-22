@@ -181,4 +181,5 @@ extension TranslationExtension on BuildContext {
   String get none => tr("none");
   String get convertedCurrency => tr("converted_currency");
   String get convertedAmount => tr("converted_amount");
+  String get note => tr("note");
 }

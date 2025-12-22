@@ -175,6 +175,7 @@
   "deducted_value" : "Deducted Value",
   "none" : "No commission",
     "converted_currency" : "The converted currency",
-  "converted_amount" : "The converted amount"
+  "converted_amount" : "The converted amount",
+  "note" : "Note"
   
 }

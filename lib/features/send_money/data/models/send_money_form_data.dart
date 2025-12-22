@@ -4,7 +4,6 @@ import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/general/data/models/branch_model.dart';
 import '../../../transfer_money/data/models/transfer_money_request_params.dart';
 import 'send_money_request_params.dart';
 

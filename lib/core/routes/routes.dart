@@ -23,4 +23,5 @@ abstract class Routes {
   static const String expensesListView = '/expensesListView';
   static const String addAmountByDenominationView = '/addAmountByDenominationView';
   static const String debtsView = '/debtsView';
+  static const String inAndOutTransactionView = '/InAndOutTransactionView';
 }

@@ -175,7 +175,8 @@
   "deducted_value" : "خصم من المبلغ",
   "none" : "بدون عمولة",
   "converted_currency" : "العملة المحول اليها",
-  "converted_amount" : "المبلغ المحول"
+  "converted_amount" : "المبلغ المحول",
+  "note" : "ملاحظة"
 
 
 }

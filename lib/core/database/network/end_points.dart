@@ -25,4 +25,5 @@ class EndPoints {
   static String getAllBranches = '/employee/general/get-all-branches';
   static String getPaymentMethods = '/employee/general/get-all-payment-methods';
   static String sendMoney = '/employee/transactions/sending-money';
+  static String inAndOutTransaction = '/employee/transactions/add-in-out';
 }

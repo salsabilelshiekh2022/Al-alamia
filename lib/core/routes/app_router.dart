@@ -9,6 +9,7 @@ import 'package:alalamia/features/debts/presentation/views/request_debt_view.dar
 import 'package:alalamia/features/expenses/presentation/cubit/expenses_cubit.dart';
 import 'package:alalamia/features/expenses/presentation/views/expenses_list_view.dart';
 import 'package:alalamia/features/expenses/presentation/views/add_expenses_view.dart';
+import 'package:alalamia/features/in_and_out_transaction/presentation/views/in_and_out_transaction_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
 import 'package:alalamia/features/send_money/presentation/views/send_money_second_step_view.dart';
@@ -24,6 +25,7 @@ import '../../features/auth/data/repos/auth_repo.dart';
 import '../../features/auth/presentation/views/login_view.dart';
 import '../../features/debts/presentation/views/debts_view.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/in_and_out_transaction/presentation/cubit/in_and_out_transaction_cubit.dart';
 import '../../features/send_money/presentation/views/send_money_frist_step_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
@@ -172,6 +174,17 @@ abstract class AppRouter {
               BlocProvider.value(value: getIt<DebtsCubit>()),
             ],
             child: DebtsView(debetType: debtType),
+          ),
+        );
+      case Routes.inAndOutTransactionView:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<HomeCubit>()),
+              BlocProvider.value(value: getIt<GeneralCubit>()..getAllBranches()),
+              BlocProvider.value(value: getIt<InAndOutTransactionCubit>()),
+            ],
+            child: const InAndOutTransactionView(),
           ),
         );
       default:

@@ -23,6 +23,12 @@ import '../../features/expenses/presentation/cubit/expenses_cubit.dart' as _i66;
 import '../../features/home/data/repo/home_repo.dart' as _i429;
 import '../../features/home/data/repo/home_repo_impl.dart' as _i1024;
 import '../../features/home/presentation/cubit/home_cubit.dart' as _i9;
+import '../../features/in_and_out_transaction/data/repos/in_and_out_repo.dart'
+    as _i411;
+import '../../features/in_and_out_transaction/data/repos/in_and_out_repo_impl.dart'
+    as _i598;
+import '../../features/in_and_out_transaction/presentation/cubit/in_and_out_transaction_cubit.dart'
+    as _i112;
 import '../../features/send_money/data/repos/send_money_repo.dart' as _i372;
 import '../../features/send_money/data/repos/send_money_repo_impl.dart'
     as _i699;
@@ -54,6 +60,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i408.CacheServices>(() => _i408.CacheServices());
     gh.lazySingleton<_i742.ApiConsumer>(
       () => _i1062.DioConsumer(cacheServices: gh<_i408.CacheServices>()),
+    );
+    gh.lazySingleton<_i411.InAndOutRepo>(
+      () => _i598.InAndOutRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
     gh.lazySingleton<_i87.DebtRepo>(
       () => _i311.DebtRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
@@ -87,6 +96,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i505.ExpensesRepo>(
       () => _i731.ExpensesRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.factory<_i112.InAndOutTransactionCubit>(
+      () => _i112.InAndOutTransactionCubit(
+        inAndOutRepo: gh<_i411.InAndOutRepo>(),
+      ),
     );
     gh.factory<_i360.GeneralCubit>(
       () => _i360.GeneralCubit(generalRepo: gh<_i287.GeneralRepo>()),
