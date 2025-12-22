@@ -176,6 +176,14 @@
   "none" : "No commission",
     "converted_currency" : "The converted currency",
   "converted_amount" : "The converted amount",
-  "note" : "Note"
+  "note" : "Note",
+
+    "approved" : "Approved",
+  "waiting_approved" : "Waiting for Approval",
+  "waiting_recieval" : "Waiting for Receipt",
+  "recivedd" :"Received",
+  "pendingg" : "Pending",
+  "completed" : "Completed" ,
+  "canceled": "Canceled"
   
 }

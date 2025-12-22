@@ -176,7 +176,14 @@
   "none" : "بدون عمولة",
   "converted_currency" : "العملة المحول اليها",
   "converted_amount" : "المبلغ المحول",
-  "note" : "ملاحظة"
+  "note" : "ملاحظة",
+  "approved" : "مقبولة",
+  "waiting_approved" : "في انتظار القبول",
+  "waiting_recieval" : "في انتظار الاستلام",
+  "recivedd" :"مستلمة",
+  "pendingg" : "معلقة",
+  "completed" : "مكتملة" ,
+  "canceled": "ملغاة"
 
 
 }

@@ -1,3 +1,5 @@
+import 'package:alalamia/core/enums/transactions_enum.dart';
+
 import '../../utils/app_config.dart';
 
 class EndPoints {
@@ -26,4 +28,5 @@ class EndPoints {
   static String getPaymentMethods = '/employee/general/get-all-payment-methods';
   static String sendMoney = '/employee/transactions/sending-money';
   static String inAndOutTransaction = '/employee/transactions/add-in-out';
+  static String getTransactionList({required TransactionsEnum transaction}) => '/employee/transactions?type=${transaction.name}';
 }

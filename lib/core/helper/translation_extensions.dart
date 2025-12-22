@@ -182,4 +182,11 @@ extension TranslationExtension on BuildContext {
   String get convertedCurrency => tr("converted_currency");
   String get convertedAmount => tr("converted_amount");
   String get note => tr("note");
+  String get approved => tr("approved");
+  String get waitingApproved => tr("waiting_approved");
+  String get waitingRecieval => tr("waiting_recieval");
+  String get recivedd => tr("recivedd");
+  String get pendingg => tr("pendingg");
+  String get completed => tr("completed");
+  String get canceled => tr("canceled");
 }

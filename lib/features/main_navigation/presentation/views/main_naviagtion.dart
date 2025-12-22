@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/dependency_injection.dart';
+import '../../../../core/enums/transactions_enum.dart';
+import '../../../transactions/presentation/cubit/transactions_cubit.dart';
 
 class MainNavigationView extends StatefulWidget {
   const MainNavigationView({super.key});
@@ -35,7 +37,7 @@ class _MainNavigationViewState extends State<MainNavigationView> {
   final List<Widget> bottomBarPages = [
     SettingsView(),
     NotificationsView(),
-    TransactionsView(),
+    BlocProvider(create: (context) => getIt<TransactionsCubit>()..getTransactionList(transaction: TransactionsEnum.recieving), child: TransactionsView()),
     BlocProvider.value(
       value: getIt<HomeCubit>()
         ..getBranchCurrencies()
@@ -54,7 +56,6 @@ class _MainNavigationViewState extends State<MainNavigationView> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-
       // 👇 PageView holds all your main pages
       body: PageView(
         controller: _pageController,
