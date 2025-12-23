@@ -28,7 +28,7 @@ class _ReportsFilterTypeState extends State<ReportsFilterType> {
       child: Row(
         children: List.generate(
           ReportsEnum.values.length,
-          
+
           (index) => Expanded(
             child: InkWell(
               onTap: () {
@@ -50,9 +50,8 @@ class _ReportsFilterTypeState extends State<ReportsFilterType> {
                     ReportsEnum.values[index].translate(context),
                     style: selectedIndex == index
                         ? context.textStyles.font16MediumPrimaryColor
-                        : context.textStyles.font16MediumSecondaryColor.copyWith(
-                              color: context.colors.grayColor,
-                        ),
+                        : context.textStyles.font16MediumSecondaryColor
+                              .copyWith(color: context.colors.grayColor),
                     textAlign: TextAlign.center,
                   ),
                 ),
