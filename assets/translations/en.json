@@ -189,6 +189,19 @@
   "not_found_transactions_description":"No transactions have been added yet.",
   "amount_sent":"Amount Sent",
   "transaction_type": "Transaction Type",
-  "fee": "Transfer Fee"
+  "fee": "Transfer Fee",
+  "reports": "Reports",
+  "today_account" : "Today Account",
+  "monthly_account" : "Monthly Account",
+  "wallet" :"Wallet",
+  "transfer": "Transfer",
+  "outgoing": "Outgoing",
+  "no_transaction_today" : "No transaction today",
+  "daily_debt" : "Daily Debt",
+  "internal_debt" : "Internal Debt",
+  "external_debt" : "External Debt",
+  "total_expenses" : "Total Expenses",
+  "inability": "Inability",
+  "surplus": "Surplus"
 
 }

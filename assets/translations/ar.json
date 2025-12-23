@@ -188,7 +188,18 @@
   "not_found_transactions_description":"لم يتم إضافة أي معاملات بعد.",
   "amount_sent":"المبلغ المرسل",
   "transaction_type": "نوع المعاملة",
-  "fee": "رسوم التحويل"
-
-
+  "fee": "رسوم التحويل",
+  "reports": "التقارير",
+  "today_account" : "حساب اليوم",
+  "monthly_account" : "حساب الشهر",
+  "wallet" :"الخزينة",
+  "transfer": "الوراد",
+  "outgoing": "الصادر",
+  "no_transaction_today" : "لاتوجد حركة لهذا اليوم",
+  "daily_debt" : "الديون اليومية",
+  "internal_debt" : "الديون الداخلية",
+  "external_debt" : "الديون الخارجية",
+  "total_expenses" : "اجمالي المصاريف",
+  "inability": "العجز",
+  "surplus": "الفائض"
 }

@@ -194,4 +194,19 @@ extension TranslationExtension on BuildContext {
   String get amountSent => tr("amount_sent");
   String get transactionType => tr("transaction_type");
   String get fee => tr("fee");
+
+  String get reports => tr("reports");
+  String get todayAccount => tr("today_account");
+  String get monthlyAccount => tr("monthly_account");
+  String get wallet => tr("wallet");
+  String get transfer => tr("transfer");
+  String get outgoing => tr("outgoing");
+  String get noTransactionToday => tr("no_transaction_today");
+  String get dailyDebt => tr("daily_debt");
+  String get internalDebt => tr("internal_debt");
+  String get externalDebt => tr("external_debt");
+  String get totalExpenses => tr("total_expenses");
+  String get inability => tr("inability");
+  String get surplus => tr("surplus");
+
 }
