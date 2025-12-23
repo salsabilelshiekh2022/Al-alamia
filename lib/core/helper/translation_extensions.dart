@@ -191,4 +191,7 @@ extension TranslationExtension on BuildContext {
   String get canceled => tr("canceled");
   String get notFoundTransactions => tr("not_found_transactions");
   String get notFoundTransactionsDescription => tr("not_found_transactions_description");
+  String get amountSent => tr("amount_sent");
+  String get transactionType => tr("transaction_type");
+  String get fee => tr("fee");
 }

@@ -85,7 +85,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                             child: Column(
                               children: [
                                 25.verticalSizedBox,
-                                TransferedAmountInfoWidget(),
+                                TransferredAmountInfoWidget(),
                                 20.verticalSizedBox,
                                 SenderInfoCard(),
                                 20.verticalSizedBox,
@@ -96,7 +96,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                 MainButton(
                                   title: context.receivedDone,
                                   onTap: () {
-                                    context.pop();
+                                    context.pop(); 
                                   },
                                 ),
                               ],

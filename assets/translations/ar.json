@@ -76,7 +76,7 @@
   "id": "رقم بطاقة الهوية",
   "address": "العنوان",
   "transaction_info": "بيانات المعاملة",
-  "transaction_code": "كود المعاملة",
+  "transaction_code": "رقم المعاملة",
   "commission": "العموله",
   "exchange_rate": "سعر الصرف",
   "total": "الاجمالي",
@@ -185,7 +185,10 @@
   "completed" : "مكتملة" ,
   "canceled": "ملغاة",
   "not_found_transactions":"لا توجد معاملات",
-  "not_found_transactions_description":"لم يتم إضافة أي معاملات بعد."
+  "not_found_transactions_description":"لم يتم إضافة أي معاملات بعد.",
+  "amount_sent":"المبلغ المرسل",
+  "transaction_type": "نوع المعاملة",
+  "fee": "رسوم التحويل"
 
 
 }

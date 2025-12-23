@@ -1,13 +1,15 @@
-
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../../../generated/app_assets.dart';
+import '../../../cubit/transactions_state.dart';
 import 'card_with_shadow.dart';
 import 'total_section.dart';
 
@@ -16,50 +18,101 @@ class TransactionInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  CardWithShadow(child: Column(
+    return CardWithShadow(
+      child: BlocBuilder<TransactionsCubit, TransactionsState>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              Row(
+                children: [
+                  CustomSvgBuilder(
+                    path: AppAssets.svgsTransactionInfoIcon,
+                    width: 24,
+                    height: 24,
+                    fit: BoxFit.scaleDown,
+                  ),
+                  10.horizontalSpace,
+                  Text(
+                    context.transactionInfo,
+                    style: context.textStyles.font16MediumSecondaryColor,
+                  ),
+                ],
+              ),
+              17.verticalSizedBox,
+              _buildInfoRow(
+                context: context,
+                title: context.transactionCode,
+                value: state.transactionDetails?.details.transactionUuid ?? '--',
+              ),
+              14.verticalSizedBox,
+               _buildInfoRow(
+                context: context,
+                title: context.transactionType,
+                value: state.transactionDetails?.details.transactionType ?? '--',
+              ),
+              Divider(color: context.colors.strokeColor).verticalPadding(14),
+                _buildInfoRow(
+                context: context,
+                title: context.commission,
+                value: state.transactionDetails?.details.totalCommissionValue ?? '--',
+              ),
+            
+              _buildInfoRow(
+                context: context,
+                title: context.commissionType,
+                value: '--',
+              ),
+              14.verticalSizedBox,
+              _buildInfoRow(
+                context: context,
+                title: context.amountSent,
+                value: state.transactionDetails?.details.amountSent ?? '--',
+              ),
+              14.verticalSizedBox,
+               _buildInfoRow(
+                context: context,
+                title: context.amountByChar,
+                value: state.transactionDetails?.details.amountCharacter ?? '--',
+              ),
+              14.verticalSizedBox,
+               _buildInfoRow(
+                context: context,
+                title: context.exchangeRate,
+                value: state.transactionDetails?.details.exchangeRate ?? '--',
+              ),
+              14.verticalSizedBox,
+               _buildInfoRow(
+                context: context,
+                title: context.fee,
+                value: state.transactionDetails?.details.transferFees.toString() ?? '--',
+              ),
+             Divider(color: context.colors.strokeColor).verticalPadding(14),
+              TotalSection(
+                value: state.transactionDetails?.details.totalAmount.toStringAsFixed(2) ?? '--',
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Row _buildInfoRow({
+    required BuildContext context,
+    required String title,
+    required String value,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            CustomSvgBuilder(path: AppAssets.svgsTransactionInfoIcon, width: 24, height: 24, fit: BoxFit.scaleDown,),
-            10.horizontalSpace,
-            Text(context.transactionInfo, style: context.textStyles.font16MediumSecondaryColor,),
-          ],
+        Text(
+          title,
+          style: context.textStyles.font16MediumSecondaryColor.copyWith(
+            color: context.colors.grayColor,
+          ),
         ),
-        17.verticalSizedBox,
-       Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(context.transactionCode, style: context.textStyles.font16MediumSecondaryColor.copyWith(
-            color: context.colors.grayColor
-          ),),
-           Text("#12345678", style: context.textStyles.font16MediumSecondaryColor),
-        ],
-       ),
-       14.verticalSizedBox,
-              Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(context.commission, style: context.textStyles.font16MediumSecondaryColor.copyWith(
-            color: context.colors.grayColor
-          ),),
-           Text("\$0.00", style: context.textStyles.font16MediumSecondaryColor),
-        ],
-       ),
-       14.verticalSizedBox,
-              Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(context.exchangeRate, style: context.textStyles.font16MediumSecondaryColor.copyWith(
-            color: context.colors.grayColor
-          ),),
-           Text("\$0.00", style: context.textStyles.font16MediumSecondaryColor),
-        ],
-       ),
-       Divider(
-        color: context.colors.strokeColor,
-       ).verticalPadding(14),
-       TotalSection(),
+        Text(value, style: context.textStyles.font16MediumSecondaryColor),
       ],
-    ));
+    );
   }
 }

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TotalSection extends StatelessWidget {
-  const TotalSection({super.key});
+  const TotalSection({super.key, required this.value});
+  final String value ;
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +22,14 @@ class TotalSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(context.total, style: context.textStyles.font14MediumGrayColor,),
-              Text("\$1,250.30", style: context.textStyles.font18BoldSecondaryColor,),
-            ],
-          ),
-          14.verticalSizedBox,
-           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(context.currencyType, style: context.textStyles.font14MediumGrayColor,),
-              Text("${context.dollar} (USD)", style: context.textStyles.font13RegularPrimaryColor.copyWith(
-                color: Color(0xff2C9CDB),
-                fontWeight: FontWeight.w500
+              Text(context.total, style: context.textStyles.font14MediumPrimaryColor,),
+              Text(value, style: context.textStyles.font15SemiBoldSecondaryColor.copyWith(
+                color: context.colors.primaryColor,
               ),),
             ],
           ),
+        
+          
 
         ],
       ),

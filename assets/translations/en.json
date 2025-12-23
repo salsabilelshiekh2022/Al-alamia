@@ -186,6 +186,9 @@
   "completed" : "Completed" ,
   "canceled": "Canceled",
    "not_found_transactions":"No Transactions Found",
-  "not_found_transactions_description":"No transactions have been added yet."
+  "not_found_transactions_description":"No transactions have been added yet.",
+  "amount_sent":"Amount Sent",
+  "transaction_type": "Transaction Type",
+  "fee": "Transfer Fee"
 
 }
