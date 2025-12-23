@@ -12,7 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/dependency_injection.dart';
+import '../../../../core/enums/reports_enum.dart';
 import '../../../../core/enums/transactions_enum.dart';
+import '../../../reports/presentation/cubit/reports_cubit.dart';
 import '../../../reports/presentation/views/reports_view.dart';
 import '../../../transactions/presentation/cubit/transactions_cubit.dart';
 
@@ -38,8 +40,13 @@ class _MainNavigationViewState extends State<MainNavigationView> {
   final List<Widget> bottomBarPages = [
     SettingsView(),
     NotificationsView(),
-     ReportsView(),
-    BlocProvider(create: (context) => getIt<TransactionsCubit>()..getTransactionList(transaction: TransactionsEnum.recieving), child: TransactionsView()),
+    BlocProvider(create: (context) => getIt<ReportsCubit>()..getReports(type: ReportsEnum.day), child: ReportsView()),
+    BlocProvider(
+      create: (context) =>
+          getIt<TransactionsCubit>()
+            ..getTransactionList(transaction: TransactionsEnum.recieving),
+      child: TransactionsView(),
+    ),
     BlocProvider.value(
       value: getIt<HomeCubit>()
         ..getBranchCurrencies()
@@ -85,7 +92,7 @@ class _MainNavigationViewState extends State<MainNavigationView> {
         removeMargins: true,
         notchBottomBarController: _controller,
 
-        /// 👇 When a tab is tapped, animate PageView to that page
+        // When a tab is tapped, animate PageView to that page
         onTap: (index) {
           _controller.index = index;
           _pageController.animateToPage(
@@ -94,7 +101,6 @@ class _MainNavigationViewState extends State<MainNavigationView> {
             curve: Curves.easeInOut,
           );
         },
-
         bottomBarItems: [
           BottomBarItem(
             inActiveItem: CustomSvgBuilder(
@@ -118,7 +124,7 @@ class _MainNavigationViewState extends State<MainNavigationView> {
             ),
             itemLabel: context.notifications,
           ),
-           BottomBarItem(
+          BottomBarItem(
             inActiveItem: CustomSvgBuilder(
               path: AppAssets.svgsReports,
               color: context.colors.grayColor,

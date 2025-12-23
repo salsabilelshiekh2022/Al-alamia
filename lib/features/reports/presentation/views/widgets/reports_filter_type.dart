@@ -28,6 +28,7 @@ class _ReportsFilterTypeState extends State<ReportsFilterType> {
       child: Row(
         children: List.generate(
           ReportsEnum.values.length,
+          
           (index) => Expanded(
             child: InkWell(
               onTap: () {

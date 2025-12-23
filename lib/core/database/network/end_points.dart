@@ -1,5 +1,6 @@
 import 'package:alalamia/core/enums/transactions_enum.dart';
 
+import '../../enums/reports_enum.dart';
 import '../../utils/app_config.dart';
 
 class EndPoints {
@@ -30,4 +31,5 @@ class EndPoints {
   static String inAndOutTransaction = '/employee/transactions/add-in-out';
   static String getTransactionList({required TransactionsEnum transaction}) => '/employee/transactions?type=${transaction.name}';
   static String showTransactionDetails({required String transactionId}) => '/employee/transactions/$transactionId/client-transaction';
+  static String getReports({required ReportsEnum type}) => '/employee/reports?type=${type.name}';
 }

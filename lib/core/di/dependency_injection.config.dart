@@ -29,6 +29,9 @@ import '../../features/in_and_out_transaction/data/repos/in_and_out_repo_impl.da
     as _i598;
 import '../../features/in_and_out_transaction/presentation/cubit/in_and_out_transaction_cubit.dart'
     as _i112;
+import '../../features/reports/data/repos/reports_repo.dart' as _i666;
+import '../../features/reports/data/repos/reports_repo_impl.dart' as _i1069;
+import '../../features/reports/presentation/cubit/reports_cubit.dart' as _i671;
 import '../../features/send_money/data/repos/send_money_repo.dart' as _i372;
 import '../../features/send_money/data/repos/send_money_repo_impl.dart'
     as _i699;
@@ -101,6 +104,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i649.TransferCurrencyCubit>(
       () => _i649.TransferCurrencyCubit(gh<_i434.TransferMoneyRepo>()),
     );
+    gh.lazySingleton<_i666.ReportsRepo>(
+      () => _i1069.ReportsRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
     gh.factory<_i397.SendMoneyCubit>(
       () => _i397.SendMoneyCubit(sendMoneyRepo: gh<_i372.SendMoneyRepo>()),
     );
@@ -114,6 +120,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i112.InAndOutTransactionCubit(
         inAndOutRepo: gh<_i411.InAndOutRepo>(),
       ),
+    );
+    gh.factory<_i671.ReportsCubit>(
+      () => _i671.ReportsCubit(reportsRepo: gh<_i666.ReportsRepo>()),
     );
     gh.factory<_i360.GeneralCubit>(
       () => _i360.GeneralCubit(generalRepo: gh<_i287.GeneralRepo>()),
