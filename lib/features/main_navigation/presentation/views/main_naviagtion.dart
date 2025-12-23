@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/enums/transactions_enum.dart';
+import '../../../reports/presentation/views/reports_view.dart';
 import '../../../transactions/presentation/cubit/transactions_cubit.dart';
 
 class MainNavigationView extends StatefulWidget {
@@ -23,20 +24,21 @@ class MainNavigationView extends StatefulWidget {
 }
 
 class _MainNavigationViewState extends State<MainNavigationView> {
-  final PageController _pageController = PageController(initialPage: 3);
+  final PageController _pageController = PageController(initialPage: 4);
 
   /// Controller to handle bottom nav bar and also handles initial page
   final NotchBottomBarController _controller = NotchBottomBarController(
-    index: 3,
+    index: 4,
   );
 
   /// Total number of navigation items
-  final int maxCount = 4;
+  final int maxCount = 5;
 
   /// 👇 Your navigation pages (replace with your real views)
   final List<Widget> bottomBarPages = [
     SettingsView(),
     NotificationsView(),
+     ReportsView(),
     BlocProvider(create: (context) => getIt<TransactionsCubit>()..getTransactionList(transaction: TransactionsEnum.recieving), child: TransactionsView()),
     BlocProvider.value(
       value: getIt<HomeCubit>()
@@ -115,6 +117,17 @@ class _MainNavigationViewState extends State<MainNavigationView> {
               color: context.colors.whiteColor,
             ),
             itemLabel: context.notifications,
+          ),
+           BottomBarItem(
+            inActiveItem: CustomSvgBuilder(
+              path: AppAssets.svgsReports,
+              color: context.colors.grayColor,
+            ),
+            activeItem: CustomSvgBuilder(
+              path: AppAssets.svgsReports,
+              color: context.colors.whiteColor,
+            ),
+            itemLabel: context.reports,
           ),
           BottomBarItem(
             inActiveItem: CustomSvgBuilder(

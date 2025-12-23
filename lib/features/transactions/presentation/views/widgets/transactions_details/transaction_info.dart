@@ -56,11 +56,11 @@ class TransactionInfoCard extends StatelessWidget {
                 title: context.commission,
                 value: state.transactionDetails?.details.totalCommissionValue ?? '--',
               ),
-            
+            14.verticalSizedBox,
               _buildInfoRow(
                 context: context,
                 title: context.commissionType,
-                value: '--',
+                value: state.transactionDetails?.details.commissionType.getCommissionType(context) ?? '--',
               ),
               14.verticalSizedBox,
               _buildInfoRow(

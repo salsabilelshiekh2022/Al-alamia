@@ -1,3 +1,4 @@
+import 'package:alalamia/core/enums/commission_type_enum.dart';
 import 'package:alalamia/features/transactions/data/models/transaction_model.dart';
 
 import '../../../../core/general/data/models/branch_model.dart';
@@ -52,6 +53,7 @@ class DetailModel {
     required this.exchangeRate,
     required this.transferFees,
     required this.totalAmount,
+    required this.commissionType,
   });
 
   final String transactionUuid;
@@ -62,6 +64,7 @@ class DetailModel {
   final String exchangeRate;
   final int transferFees;
   final double totalAmount;
+  final CommissionTypeEnum commissionType ;
 
   factory DetailModel.fromJson(Map<String, dynamic> json) => DetailModel(
     transactionUuid: json["transaction_uuid"],
@@ -72,6 +75,7 @@ class DetailModel {
     exchangeRate: json["exchange_rate"],
     transferFees: json["transfer_fees"],
     totalAmount: json["total_amount"].toDouble(),
+    commissionType: CommissionTypeEnum.values.firstWhere((e) => e.name == json['commission_type']),
   );
 }
 
@@ -104,6 +108,7 @@ TransactionDetailsModel dummyTransactionModel = TransactionDetailsModel(
     exchangeRate: '0.0305',
     transferFees: 0,
     totalAmount: 10.399999999999999,
+    commissionType: CommissionTypeEnum.none,
   ),
 );
 

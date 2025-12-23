@@ -10,8 +10,9 @@ enum StatusEnum {
   recieved,
   pending,
   completed,
+  in_progress,
   canceled;
-
+  
   String translate(BuildContext context) {
     switch (this) {
       case StatusEnum.approved:
@@ -28,6 +29,8 @@ enum StatusEnum {
         return context.completed;
       case StatusEnum.canceled:
         return context.canceled;
+      case StatusEnum.in_progress:
+        return context.pendingg;   
     }
   }
 
@@ -47,6 +50,8 @@ enum StatusEnum {
         return context.colors.greenColor;
       case StatusEnum.canceled:
         return context.colors.redColor;
+        case StatusEnum.in_progress:
+        return context.colors.yellowColor;
     }
   }
 

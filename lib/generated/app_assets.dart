@@ -22,6 +22,8 @@ class AppAssets {
 
   static const String imagesBackground = "assets/images/background.png";
 
+  static const String imagesCalendar = "assets/images/calendar.png";
+
   static const String imagesCheck = "assets/images/check.png";
 
   static const String imagesEmptyTransaction = "assets/images/empty_transaction.png";
@@ -105,6 +107,8 @@ class AppAssets {
   static const String svgsPurpleTransfarIcon = "assets/svgs/purple_transfar_icon.svg";
 
   static const String svgsPurpleUsersIcon = "assets/svgs/purple_users_icon.svg";
+
+  static const String svgsReports = "assets/svgs/reports.svg";
 
   static const String svgsSearchIcon = "assets/svgs/search_icon.svg";
 
