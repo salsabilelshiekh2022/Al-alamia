@@ -15,6 +15,7 @@ abstract class AppColorsSchemes {
     redColor: Color(0xffD76969),
     greenColor: Color(0xff00840F),
     yellowColor: Color(0xffDAB900),
+    orangeColor : Color(0xffDB7500),
     buttonGradientColor: const LinearGradient(
       begin: Alignment(0.05, 0.51),
       end: Alignment(1.00, 0.51),

@@ -10,6 +10,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color redColor;
   final Color greenColor;
   final Color yellowColor;
+  final Color orangeColor;
   final Gradient buttonGradientColor;
   final Gradient backGroundGradientColor;
   final Gradient navigationGradientColor;
@@ -25,6 +26,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.redColor,
     required this.greenColor,
     required this.yellowColor,
+    required this.orangeColor,
     required this.buttonGradientColor,
     required this.backGroundGradientColor,
     required this.navigationGradientColor,
@@ -71,6 +73,7 @@ class AppColors extends ThemeExtension<AppColors> {
           other.buttonGradientColor,
           t,
         )!,
+        orangeColor: Color.lerp(orangeColor, other.orangeColor, t)!,
         backGroundGradientColor: Gradient.lerp(
           backGroundGradientColor,
           other.backGroundGradientColor,

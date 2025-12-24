@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/components/widgets/custom_app_bar.dart';
+import '../../../../core/enums/status_enum.dart';
 import '../../../../generated/app_assets.dart';
 import '../cubit/transactions_state.dart';
 import 'widgets/transactions_details/beneficiary_info_card.dart';
@@ -106,7 +107,9 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                             top: -10,
                             start: 16,
                             end: 16,
-                            child: StatusBox(),
+                            child: StatusBox(
+                              status: state.transactionDetails?.details.status ?? StatusEnum.pending,
+                            ),
                           ),
                         ],
                       ),

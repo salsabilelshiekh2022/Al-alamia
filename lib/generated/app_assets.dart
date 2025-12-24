@@ -50,6 +50,8 @@ class AppAssets {
 
   static const String svgsCalcIcon = "assets/svgs/calc_icon.svg";
 
+  static const String svgsCancelled = "assets/svgs/cancelled.svg";
+
   static const String svgsCash = "assets/svgs/cash.svg";
 
   static const String svgsCheckUserIcon = "assets/svgs/check_user_icon.svg";
@@ -120,6 +122,8 @@ class AppAssets {
 
   static const String svgsShareIcon = "assets/svgs/share_icon.svg";
 
+  static const String svgsSuccess = "assets/svgs/success.svg";
+
   static const String svgsSupportBtn = "assets/svgs/support_btn.svg";
 
   static const String svgsSupportIcon = "assets/svgs/support_icon.svg";
@@ -131,6 +135,8 @@ class AppAssets {
   static const String svgsUser = "assets/svgs/user.svg";
 
   static const String svgsUserIcon = "assets/svgs/user_icon.svg";
+
+  static const String svgsWaiting = "assets/svgs/waiting.svg";
 
   static const String svgsWallet = "assets/svgs/wallet.svg";
 

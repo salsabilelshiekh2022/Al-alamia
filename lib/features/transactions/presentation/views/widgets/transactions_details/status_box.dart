@@ -1,6 +1,6 @@
+import 'package:alalamia/core/enums/status_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
-import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,8 +9,9 @@ import '../../../../../../generated/app_assets.dart';
 
 class StatusBox extends StatelessWidget {
   const StatusBox({
-    super.key,
+    super.key, required this.status,
   });
+  final StatusEnum status ;
 
   @override
   Widget build(BuildContext context) {
@@ -61,18 +62,18 @@ class StatusBox extends StatelessWidget {
       child: Row(
         children: [
           CustomSvgBuilder(
-            path: AppAssets.svgsPending,
+            path: status.chooseImage(),
             width: 36,
             height: 36,
             fit: BoxFit.scaleDown,
           ),
           12.horizontalSpace,
           Text(
-            context.pending,
+            status.translate(context),
             style: context
                 .textStyles
                 .font18SemiBoldSecondaryColor
-                .copyWith(color: context.colors.yellowColor),
+                .copyWith(color:status.chooseColor(context)),
           ),
         ],
       ),
