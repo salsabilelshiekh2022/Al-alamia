@@ -4,6 +4,7 @@ import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/enums/commission_type_enum.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/core/general/cubit/general_state.dart';
+import 'package:alalamia/core/general/data/models/fee_details_request_params.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -94,6 +95,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       selectedCurrencyId = selectedCurrency.id;
     });
     _updateFormData();
+    _getFeeDetails();
   }
 
   void _onToCurrencySelected(String selectedItem) {
@@ -108,6 +110,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       selectedToCurrencyId = selectedCurrency.id;
     });
     _updateFormData();
+    _getFeeDetails();
   }
 
   void _onDestinationSelected(String selectedItem) {
@@ -130,6 +133,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       selectedCommissionType = selectedItem;
     });
     _updateFormData();
+    _getFeeDetails();
   }
 
   void _calculateExchangeRate() {
@@ -168,6 +172,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       commissionController.text = commissionAmount.toStringAsFixed(2);
 
     _updateFormData();
+    _getFeeDetails();
   }
 
   /// Update form data in cubit with current transaction details
@@ -255,6 +260,39 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       print('ERROR in _updateFormData: $e');
       print('Stack trace: $stackTrace');
     }
+  }
+
+  void _getFeeDetails() {
+    if (amountController.text.isEmpty ||
+        selectedCurrencyId == null) return;
+
+    final sendMoneyCubit = context.read<SendMoneyCubit>();
+    int? toCurrencyId = selectedToCurrencyId;
+
+    if (sendMoneyCubit.state.deliveryType == DeliveryTypeEnum.inside) {
+      toCurrencyId = selectedCurrencyId;
+    }
+
+    if (toCurrencyId == null) return;
+
+    CommissionTypeEnum commissionType = CommissionTypeEnum.none;
+    if (selectedCommissionType != null) {
+      for (var type in CommissionTypeEnum.values) {
+        if (type.getCommissionType(context) == selectedCommissionType) {
+          commissionType = type;
+          break;
+        }
+      }
+    }
+
+    context.read<GeneralCubit>().getFeeDetails(
+          params: FeeDetailsRequestParams(
+            fromCurrencyId: selectedCurrencyId!,
+            toCurrencyId: toCurrencyId,
+            amount: amountController.text,
+            commissionType: commissionType,
+          ),
+        );
   }
 
 

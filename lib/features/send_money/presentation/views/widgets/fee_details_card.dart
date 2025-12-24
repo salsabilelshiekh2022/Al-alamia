@@ -4,8 +4,6 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
-import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
-import 'package:alalamia/features/home/presentation/cubit/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,22 +35,16 @@ class FeeDetailsCard extends StatelessWidget {
                 title: context.commission,
                 value: state.feeDetails?.commissionAmount?.toString() ?? "0.00",
               ),
-              BlocBuilder<HomeCubit, HomeState>(
-                builder: (context, state) {
-                  return _buildInfo(
+             _buildInfo(
                     context,
                     title: context.exchangeRate,
                     value:
-                        context
-                            .read<HomeCubit>()
-                            .state
-                            .transferCurrency
-                            ?.exchangePriceUsed
-                            ?.toStringAsFixed(2) ??
+                       state.feeDetails?.exchangePrice?.toString()
+                             ??
                         "0.00",
-                  );
-                },
-              ),
+                  ),
+                
+              
               Divider(color: context.colors.grayColor.withValues(alpha: 0.35)),
               12.verticalSizedBox,
               Container(
