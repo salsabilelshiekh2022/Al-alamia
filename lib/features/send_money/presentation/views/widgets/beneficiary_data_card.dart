@@ -108,7 +108,7 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
             label: context.address,
             hintText: context.addressHint,
             prefixWidget: AppAssets.svgsMapIcon,
-            isRequired: true,
+            
             onChanged: (_) => _updateFormData(),
           ),
         ],

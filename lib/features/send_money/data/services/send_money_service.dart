@@ -16,7 +16,7 @@ class SendMoneyFormService {
     // Validate receiver info
     _validatePhone(formData.receiverPhone, 'Receiver phone', errors);
     _validateName(formData.receiverName, 'Receiver name', errors);
-    _validateRequired(formData.receiverAddress, 'Receiver address', errors);
+ 
 
     // Validate amount details
     _validateRequired(formData.amount, 'Amount', errors);

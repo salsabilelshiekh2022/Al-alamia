@@ -11,8 +11,15 @@ import '../../../../core/routes/routes.dart';
 import 'widgets/beneficiary_data_card.dart';
 import 'widgets/sender_data_card.dart';
 
-class SendMoneyFristStepView extends StatelessWidget {
+class SendMoneyFristStepView extends StatefulWidget {
   const SendMoneyFristStepView({super.key});
+
+  @override
+  State<SendMoneyFristStepView> createState() => _SendMoneyFristStepViewState();
+}
+
+class _SendMoneyFristStepViewState extends State<SendMoneyFristStepView> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,24 +28,30 @@ class SendMoneyFristStepView extends StatelessWidget {
       hasActions: false,
       isBack: true,
       padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-      body: Column(
-        children: [
-          _stepHeader(context),
-          12.verticalSizedBox,
-          _progressBar(context),
-          24.verticalSizedBox,
-          SenderDataCard(),
-          20.verticalSizedBox,
-          BeneficiaryDataCard(),
-          24.verticalSizedBox,
-          MainButton(
-            title: context.next,
-            onTap: () {
-              context.pushNamed(Routes.sendMoneySecondStepView, arguments: context.read<SendMoneyCubit>());
-            },
-          ),
-          32.verticalSizedBox,
-        ],
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            _stepHeader(context),
+            12.verticalSizedBox,
+            _progressBar(context),
+            24.verticalSizedBox,
+            SenderDataCard(),
+            20.verticalSizedBox,
+            BeneficiaryDataCard(),
+            24.verticalSizedBox,
+            MainButton(
+              title: context.next,
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  context.pushNamed(Routes.sendMoneySecondStepView,
+                      arguments: context.read<SendMoneyCubit>());
+                }
+              },
+            ),
+            32.verticalSizedBox,
+          ],
+        ),
       ),
     );
   }

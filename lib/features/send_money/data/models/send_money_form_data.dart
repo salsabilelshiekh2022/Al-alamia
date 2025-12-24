@@ -16,7 +16,7 @@ class SendMoneyFormData extends Equatable {
   // Receiver Information
   final String receiverPhone;
   final String receiverName;
-  final String receiverAddress;
+  final String? receiverAddress;
   final String? receiverPhone2;
   
   // Transaction Details
@@ -90,14 +90,12 @@ class SendMoneyFormData extends Equatable {
     int? fromBranch,
     int? toBranch,
     String? amount,
-    String? totalPrice,
+
     String? amountByChar,
     List<Map<String, dynamic>>? denominations,
     String? note,
-    
     // Commission & Payment
     CommissionTypeEnum? commissionType,
-    double? commissionAmount,
     int? paymentMethodId,
     
     // Delivery Type
@@ -121,14 +119,13 @@ class SendMoneyFormData extends Equatable {
       fromBranch: fromBranch ?? this.fromBranch,
       toBranch: toBranch ?? this.toBranch,
       amount: amount ?? this.amount,
-      totalPrice: totalPrice ?? this.totalPrice,
+
       amountByChar: amountByChar ?? this.amountByChar,
       denominations: denominations ?? this.denominations,
       note: note ?? this.note,
       
       // Commission & Payment
       commissionType: commissionType ?? this.commissionType,
-      commissionAmount: commissionAmount ?? this.commissionAmount,
       paymentMethodId: paymentMethodId ?? this.paymentMethodId,
       
       // Delivery Type
@@ -141,8 +138,7 @@ class SendMoneyFormData extends Equatable {
   
   bool get hasReceiverInfo => 
       receiverPhone.isNotEmpty && 
-      receiverName.isNotEmpty && 
-      receiverAddress.isNotEmpty;
+      receiverName.isNotEmpty;
   
   bool get hasAmountDetails => 
       amount.isNotEmpty && 
@@ -187,7 +183,6 @@ class SendMoneyFormData extends Equatable {
       fromCurrencyId: fromCurrency!.id!,
       toCurrencyId: toCurrency!.id!,
       amount: double.parse(amount),
-      totalPrice: double.parse(totalPrice),
       amountByChar: amountByChar,
       denominations: denominationParams,
       note: note,
@@ -197,7 +192,6 @@ class SendMoneyFormData extends Equatable {
       fromBranchId: fromBranch!,
       toBranchId: toBranch!,
       commissionType: commissionType!,
-      commissionAmount: commissionAmount,
       paymentMethodId: paymentMethodId,
       receiverPhone2: receiverPhone2,
       deliveryType: deliveryType,

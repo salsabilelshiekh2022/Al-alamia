@@ -9,18 +9,16 @@ class SendMoneyRequestParams {
   final int fromCurrencyId;
   final int toCurrencyId;
   final double amount;
-  final double totalPrice;
   final String amountByChar;
   final List<DenominationsRequestParams> denominations;
   final String note;
   final String? senderAddress;
   final String receiverPhone;
   final String receiverName;
-  final String receiverAddress;
+  final String? receiverAddress;
   final int fromBranchId;
   final int toBranchId;
   final CommissionTypeEnum commissionType;
-  final num commissionAmount;
   final int? paymentMethodId;
   final String? receiverPhone2;
   final DeliveryTypeEnum deliveryType;
@@ -31,7 +29,6 @@ class SendMoneyRequestParams {
     required this.fromCurrencyId,
     required this.toCurrencyId,
     required this.amount,
-    required this.totalPrice,
     required this.amountByChar,
     required this.denominations,
     required this.note,
@@ -42,7 +39,6 @@ class SendMoneyRequestParams {
     required this.fromBranchId,
     required this.toBranchId,
     required this.commissionType,
-    required this.commissionAmount,
     this.paymentMethodId,
     required this.receiverPhone2,
     required this.deliveryType,

@@ -220,28 +220,6 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
         }
       }
 
-      // Calculate commission amount
-      final branch = getIt<CacheServices>()
-          .getDataFromCache<UserModel>(
-            boxName: CacheBoxes.userModelBox,
-            key: "user",
-          )
-          ?.branch;
-
-      final double commissionPercentage = 
-          double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
-      
-      final amount = double.tryParse(amountController.text) ?? 0.0;
-      final commissionAmount = (amount * commissionPercentage) / 100;
-
-      // Total price including commission
-      final totalPrice = commissionType == CommissionTypeEnum.added_value
-          ? amount + commissionAmount
-          : commissionType == CommissionTypeEnum.deducted_value
-              ? amount - commissionAmount
-              : amount;
-
-      print('DEBUG: About to update form data');
       cubit.updateFormData(
         currentFormData.copyWith(
           fromCurrency: fromCurrency,
@@ -249,10 +227,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
           fromBranch: fromBranch ,
           toBranch: toBranch,
           amount: amountController.text,
-          totalPrice: totalPrice.toString(),
           amountByChar: amountByCharController.text,
           commissionType: commissionType,
-          commissionAmount: commissionAmount,
         ),
       );
       print('DEBUG: Form data updated successfully');
