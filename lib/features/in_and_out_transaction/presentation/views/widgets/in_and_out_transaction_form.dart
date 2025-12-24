@@ -135,7 +135,7 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
     final cubit = context.read<InAndOutTransactionCubit>();
     cubit.inAndOutTransaction(
       params: InAndOutRequestParams(
-        // branchId: selectedDestinationId ?? 0,
+        toBranchId: selectedDestinationId ?? 0,
         currencyId: selectedCurrencyId ?? 0,
         amount: double.tryParse(amountController.text) ?? 0,
         notes: noteController.text,

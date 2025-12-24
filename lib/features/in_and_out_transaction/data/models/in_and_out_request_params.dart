@@ -5,12 +5,14 @@ class InAndOutRequestParams {
   final double amount;
   final String notes;
   final List<DenominationsRequestParams> denominations;
+  final int? toBranchId;
 
   InAndOutRequestParams({
     required this.currencyId,
     required this.amount,
     required this.notes,
     required this.denominations,
+    required this.toBranchId,
   });
 
   Map<String, dynamic> toJson() {
@@ -18,6 +20,7 @@ class InAndOutRequestParams {
     data['currency_id'] = currencyId;
     data['amount'] = amount;
     data['notes'] = notes;
+    data['to_branch_id'] = toBranchId;
     data['denominations'] = denominations.map((denom) => denom.toJson()).toList();
     return data;
   }
