@@ -6,7 +6,7 @@ class ExpensesState extends Equatable {
   final RequestStatus expensesStatus;
   final String? message;
   final List<ExpenseModel?>? expenses ;
-  final String? expensesAmountByCurrency;
+  final dynamic expensesAmountByCurrency;
 
   const ExpensesState({
     this.expensesStatus = RequestStatus.initial,
@@ -15,7 +15,7 @@ class ExpensesState extends Equatable {
     this.expensesAmountByCurrency
   });
 
-  ExpensesState copyWith({RequestStatus? expensesStatus, String? message , List<ExpenseModel?>? expenses, String? expensesAmountByCurrency}) {
+  ExpensesState copyWith({RequestStatus? expensesStatus, String? message , List<ExpenseModel?>? expenses, dynamic expensesAmountByCurrency}) {
     return ExpensesState(
       expensesStatus: expensesStatus ?? this.expensesStatus,
       message: message ?? this.message,

@@ -40,7 +40,7 @@ class ExpensesRepoImpl extends ExpensesRepo {
   }
   
   @override
-  Future<Either<Failure, String>> getExpensesByCurrency({required int id}) {
+  Future<Either<Failure, dynamic>> getExpensesByCurrency({required int id}) {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.get(EndPoints.getExpensesByCurrency(id: id)),
       onSuccess: (result) {

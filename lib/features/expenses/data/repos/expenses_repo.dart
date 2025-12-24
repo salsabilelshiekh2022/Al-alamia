@@ -10,5 +10,5 @@ abstract class ExpensesRepo {
   });
 
   Future<Either<Failure, List<ExpenseModel>>> getExpenses();
-  Future<Either<Failure, String>> getExpensesByCurrency({required int id});
+  Future<Either<Failure, dynamic>> getExpensesByCurrency({required int id});
 }
