@@ -159,19 +159,73 @@ class DebtsOutside {
 }
 
 class BranchCurrency {
-  double? incoming;
-  double? outgoing;
-  double? balance;
+  String? name;
+  String? code;
 
   BranchCurrency({
-    this.incoming,
-    this.outgoing,
-    this.balance,
+    this.name,
+    this.code,
   });
 
   factory BranchCurrency.fromJson(Map<String, dynamic> json) => BranchCurrency(
-        incoming: json["incoming"]?.toDouble(),
-        outgoing: json["outgoing"]?.toDouble(),
-        balance: json["balance"]?.toDouble(),
+        name: json["name"],
+        code: json["code"],
       );
 }
+
+ReportsModel dummyReportsModel = ReportsModel(
+  period: "2022-01",
+  date: "2022-01-01",
+  disk: [
+    Disk(
+      currencyId: 1,
+      currencyName: "US Dollar",
+      currencyCode: "USD",
+      incoming: 1000.0,
+      outgoing: 500.0,
+      balance: 500.0,
+    ),
+    Disk(
+      currencyId: 2,
+      currencyName: "Euro",
+      currencyCode: "EUR",
+      incoming: 2000.0,
+      outgoing: 1500.0,
+      balance: 500.0,
+    ),
+  ],
+  expenses: Expenses(
+    total: 1000.0,
+    items: [
+      ExpenseItem(
+        id: 1,
+        amount: "500.0",
+        notes: "Office Supplies",
+      ),
+      ExpenseItem(
+        id: 2,
+        amount: "500.0",
+        notes: "Travel Expenses",
+      ),
+    ]
+  ),
+  debts: Debts(
+    inside: DebtsInside(
+      add: 2000.0,
+      paid: 1500.0,
+      balance: 500.0,
+    ),
+    outside: DebtsOutside(
+      add: 3000.0,
+      paid: 1000.0,
+      balance: 2000.0,
+    ),
+  ),
+  branchCurrency:
+    BranchCurrency(
+      name: "Libyan Dinar",
+      code: "LYD",
+    ),
+   
+  
+);

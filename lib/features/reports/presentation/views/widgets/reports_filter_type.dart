@@ -1,9 +1,11 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/enums/reports_enum.dart';
+import '../../cubit/reports_cubit.dart';
 
 class ReportsFilterType extends StatefulWidget {
   const ReportsFilterType({super.key});
@@ -34,6 +36,7 @@ class _ReportsFilterTypeState extends State<ReportsFilterType> {
               onTap: () {
                 setState(() {
                   selectedIndex = index;
+                  context.read<ReportsCubit>().getReports(type: ReportsEnum.values[index]);
                 });
               },
               child: Container(

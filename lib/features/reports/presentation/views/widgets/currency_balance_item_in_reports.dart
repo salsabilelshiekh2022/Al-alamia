@@ -1,4 +1,5 @@
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/reports/data/models/reports_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -7,7 +8,8 @@ import '../../../../../core/helper/number_extentions.dart';
 import '../../../../../core/helper/translation_extensions.dart';
 
 class CurrencyBalanceItemInReports extends StatefulWidget {
-  const CurrencyBalanceItemInReports({super.key});
+  const CurrencyBalanceItemInReports({super.key,required this.diskModel});
+  final Disk diskModel;
 
   @override
   State<CurrencyBalanceItemInReports> createState() => _CurrencyBalanceItemInReportsState();
@@ -44,9 +46,9 @@ class _CurrencyBalanceItemInReportsState extends State<CurrencyBalanceItemInRepo
           children: [
             Row(
                   children: [
-            Text("الدينار الليبي", style: context.textStyles.font14MediumGrayColor,),
+            Text(widget.diskModel.currencyName ?? "", style: context.textStyles.font14MediumGrayColor,),
             Spacer(),
-            Text("45,000 د.ل", style: context.textStyles.font17SemiBoldSecondaryColor.copyWith(
+            Text("${widget.diskModel.balance?.toString() ?? "0"} ${widget.diskModel.currencyCode ?? ""}", style: context.textStyles.font17SemiBoldSecondaryColor.copyWith(
               fontWeight: FontWeight.w500,
             ),
             ),
@@ -74,7 +76,7 @@ class _CurrencyBalanceItemInReportsState extends State<CurrencyBalanceItemInRepo
                   ),
                   Spacer(),
                   Text(
-                    "3,000 دولار",
+                    "${widget.diskModel.incoming?.toString() ?? "0"} ${widget.diskModel.currencyName ?? ""}",
                     style: context.textStyles.font16SemiBoldSecondaryColor.copyWith(
                       color: Color(0xff3EB655),
                     ),
@@ -90,7 +92,7 @@ class _CurrencyBalanceItemInReportsState extends State<CurrencyBalanceItemInRepo
                   ),
                   Spacer(),
                   Text(
-                    "1,500 دولار",
+                    "${widget.diskModel.outgoing?.toString() ?? "0"} ${widget.diskModel.currencyName ?? ""}",
                     style: context.textStyles.font16SemiBoldSecondaryColor.copyWith(
                       color: context.colors.redColor,
                     ),

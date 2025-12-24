@@ -15,8 +15,8 @@ class ReportsRepoImpl implements ReportsRepo {
   @override
   Future<Either<Failure, ReportsModel>> getReports({required ReportsEnum type}) {
      return apiConsumer.handleRequest(
-      request: () => apiConsumer.post(
-        path: EndPoints.getReports(type: type),
+      request: () => apiConsumer.get(
+         EndPoints.getReports(type: type),
       
       ),
       onSuccess: (result) {
