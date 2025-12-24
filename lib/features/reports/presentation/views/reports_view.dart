@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/helper/app_extention.dart';
 import 'widgets/debts_in_reports.dart';
-import 'widgets/deficit_and_surplus_widget.dart';
 import 'widgets/expenses_in_reports.dart';
 import 'widgets/wallet_in_reports.dart';
 
@@ -51,8 +50,8 @@ class ReportsView extends StatelessWidget {
           ExpensesInReports(),
           4.verticalSizedBox,
           DebtsInReports(),
-          14.verticalSizedBox,
-          DeficitAndSurplusWidget(),
+          // 14.verticalSizedBox,
+          // DeficitAndSurplusWidget(),
           100.verticalSizedBox,
         ],
       ),
