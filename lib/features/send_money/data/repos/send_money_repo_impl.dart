@@ -20,6 +20,7 @@ class SendMoneyRepoImpl extends SendMoneyRepo {
       request: () => apiConsumer.post(
         path: EndPoints.sendMoney,
         data: params.toJson(),
+        isFromData: true,
       ),
       onSuccess: (result) {
         return result['meta']['message'] ?? 'Success';

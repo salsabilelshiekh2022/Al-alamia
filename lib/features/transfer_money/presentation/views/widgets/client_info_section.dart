@@ -38,9 +38,7 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
       listener: (context, state) {
         if (state.getUserByPhoneStatus.isSuccess) {
           widget.nameController.text = state.userByPhone?.name ?? '';
-        } else if (state.getUserByPhoneStatus.isError) {
-          widget.nameController.text = '';
-        }
+        } 
       },
       builder: (context, state) {
         return CardWithPurpleShadow(
