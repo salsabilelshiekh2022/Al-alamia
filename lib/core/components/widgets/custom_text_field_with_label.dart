@@ -62,8 +62,13 @@ class CustomTextFieldWithLabel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(label, style: context.textStyles.font16MediumSecondaryColor),
+              FittedBox(
+                alignment: AlignmentDirectional.centerStart,
+                fit: BoxFit.scaleDown,
+                child: Text(label, style: context.textStyles.font14MediumSecondaryColor),
+              ),
               if (isRequired)
                 Text(
                   '  *',

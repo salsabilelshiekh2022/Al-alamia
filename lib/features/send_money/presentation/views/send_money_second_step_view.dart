@@ -10,6 +10,7 @@ import 'package:alalamia/features/send_money/presentation/cubit/send_money_state
 import 'package:alalamia/features/send_money/presentation/views/widgets/send_money_successfully_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../../../../core/components/widgets/main_button.dart';
 import 'widgets/fee_details_card.dart';
 import 'widgets/notes_card.dart';
@@ -48,35 +49,38 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
           );
         }
       },
-      child: CustomPage(
-        title: context.sendMoney,
-        hasActions: false,
-        isBack: true,
-        body: Column(
-          children: [
-            _stepHeader(context),
-            12.verticalSizedBox,
-            _progressBar(context),
-            24.verticalSizedBox,
-            TransactionDetailsCard(),
-            20.verticalSizedBox,
-            NotesCard(),
-            20.verticalSizedBox,
-            FeeDetailsCard(),
-            24.verticalSizedBox,
-            BlocBuilder<SendMoneyCubit, SendMoneyState>(
-              builder: (context, state) {
-                return MainButton(
-                  title: context.confirm,
-                  // isLoading: state.sendMoneyStatus.isLoading,
-                  onTap: state.sendMoneyStatus.isLoading
-                      ? (){}
-                      : () => _handleConfirm(context),
-                );
-              },
-            ),
-            32.verticalSizedBox,
-          ],
+      child: ModalProgressHUD(
+        inAsyncCall: context.watch<SendMoneyCubit>().state.sendMoneyStatus.isLoading,
+        child: CustomPage(
+          title: context.sendMoney,
+          hasActions: false,
+          isBack: true,
+          body: Column(
+            children: [
+              _stepHeader(context),
+              12.verticalSizedBox,
+              _progressBar(context),
+              24.verticalSizedBox,
+              TransactionDetailsCard(),
+              20.verticalSizedBox,
+              NotesCard(),
+              20.verticalSizedBox,
+              FeeDetailsCard(),
+              24.verticalSizedBox,
+              BlocBuilder<SendMoneyCubit, SendMoneyState>(
+                builder: (context, state) {
+                  return MainButton(
+                    title: context.confirm,
+                    // isLoading: state.sendMoneyStatus.isLoading,
+                    onTap: state.sendMoneyStatus.isLoading
+                        ? (){}
+                        : () => _handleConfirm(context),
+                  );
+                },
+              ),
+              32.verticalSizedBox,
+            ],
+          ),
         ),
       ),
     );
@@ -87,25 +91,6 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
     final cubit = context.read<SendMoneyCubit>();
     final formData = cubit.state.formData;
 
-    // DEBUG: Print form data to see what we have
-    print('=== FORM DATA DEBUG ===');
-    print('FormData is null: ${formData == null}');
-    if (formData != null) {
-      print('Sender Phone: ${formData.senderPhone}');
-      print('Sender Name: ${formData.senderName}');
-      print('Receiver Phone: ${formData.receiverPhone}');
-      print('Receiver Name: ${formData.receiverName}');
-      print('Amount: ${formData.amount}');
-      print('From Currency: ${formData.fromCurrency?.name}');
-      print('To Currency: ${formData.toCurrency?.name}');
-      print('From Branch: ${formData.fromBranch}');
-      print('To Branch: ${formData.toBranch}');
-      print('Commission Type: ${formData.commissionType}');
-      print('Payment Method ID: ${formData.paymentMethodId}');
-      print('Denominations count: ${formData.denominations.length}');
-      print('Delivery Type: ${formData.deliveryType}');
-    }
-    print('======================');
 
     // Validate that we have all required data
     if (formData == null) {
