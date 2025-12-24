@@ -24,7 +24,6 @@ import '../../../../../generated/app_assets.dart';
 import '../../../../home/data/models/transfer_currency_request_params.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../data/models/send_money_form_data.dart';
-import 'delivery_types_widget.dart';
 
 class TransactionDetailsCard extends StatefulWidget {
   const TransactionDetailsCard({super.key});
@@ -152,8 +151,23 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     final double amount = double.tryParse(value) ?? 0;
     final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
     final result = (amount * exchangeRate).toStringAsFixed(2);
-   converterAmountController.text = result;
-   _updateFormData();
+    converterAmountController.text = result;
+
+    // Calculate commission
+      final branch = getIt<CacheServices>()
+          .getDataFromCache<UserModel>(
+            boxName: CacheBoxes.userModelBox,
+            key: "user",
+          )
+          ?.branch;
+      
+      final double commissionPercentage = 
+          double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
+      
+      final double commissionAmount = (amount * commissionPercentage) / 100;
+      commissionController.text = commissionAmount.toStringAsFixed(2);
+
+    _updateFormData();
   }
 
   /// Update form data in cubit with current transaction details
@@ -201,9 +215,16 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
         }
       }
 
-      // Calculate commission amount - using 0 for now to avoid type errors
-      // TODO: Fix commissionRatePercentage type in BranchModel
-      double commissionPercentage = 0.0;
+      // Calculate commission amount
+      final branch = getIt<CacheServices>()
+          .getDataFromCache<UserModel>(
+            boxName: CacheBoxes.userModelBox,
+            key: "user",
+          )
+          ?.branch;
+
+      final double commissionPercentage = 
+          double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
       
       final amount = double.tryParse(amountController.text) ?? 0.0;
       final commissionAmount = (amount * commissionPercentage) / 100;
@@ -340,9 +361,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                 isReadOnly: true,
               ),
               16.verticalSizedBox,
-              DeliveryTypeWidget(),
-              16.verticalSizedBox,
-
+              // DeliveryTypeWidget(),
+              // 16.verticalSizedBox,
               CustomTextFieldWithLabel(
                 onTap: () {
                   setState(() {
@@ -392,20 +412,20 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: CustomTextFieldWithLabel(
-                      onTap: () {
-                        setState(() {
-                          openCommissionTypesDropDown =
-                              !openCommissionTypesDropDown;
-                        });
-                      },
-                      label: context.commission,
-                      initialValue: "${getIt<CacheServices>().getDataFromCache<UserModel>(boxName: CacheBoxes.userModelBox, key: "user")?.branch?.commissionRatePercentage} %",
-                      hintText: "\$20",
-                      enabled: false,
-                      prefixWidget: AppAssets.svgsCoinsIcon,
-                      isRequired: true,
-                    ),
+                      child: CustomTextFieldWithLabel(
+                        onTap: () {
+                          setState(() {
+                            openCommissionTypesDropDown =
+                                !openCommissionTypesDropDown;
+                          });
+                        },
+                        controller: commissionController,
+                        label: context.commission,
+                        hintText: "\$0.00",
+                        enabled: false,
+                        prefixWidget: AppAssets.svgsCoinsIcon,
+                        isRequired: true,
+                      ),
                   ),
                   14.horizontalSizedBox,
                   Expanded(
