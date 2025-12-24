@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/components/widgets/custom_svg_builder.dart';
-import '../../../../../../generated/app_assets.dart';
 
 class StatusBox extends StatelessWidget {
   const StatusBox({

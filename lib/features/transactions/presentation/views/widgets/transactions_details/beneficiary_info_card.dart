@@ -52,7 +52,7 @@ class BeneficiaryInfoCard extends StatelessWidget {
               24.verticalSizedBox,
               InfoWidget(
                 title: context.phone2,
-                value: state.transactionDetails?.receiver.phone ?? '--',
+                value: state.transactionDetails?.receiver.phone_2 ?? '--',
                 icon: AppAssets.svgsAdditionalPhoneIcon,
               ),
               24.verticalSizedBox,

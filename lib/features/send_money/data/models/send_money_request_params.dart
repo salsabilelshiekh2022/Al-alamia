@@ -59,9 +59,7 @@ class SendMoneyRequestParams {
     data['to_currency_id'] = deliveryType == DeliveryTypeEnum.inside 
         ? fromCurrencyId 
         : toCurrencyId;
-    
     data['amount'] = amount;
-    data['total_price'] = totalPrice;
     data['amount_by_char'] = amountByChar;
     data['denominations'] = denominations.map((v) => v.toJson()).toList();
     data['note'] = note;
@@ -72,7 +70,6 @@ class SendMoneyRequestParams {
     data['from_branch_id'] = fromBranchId;
     data['to_branch_id'] = toBranchId;
     data['commission_type'] = commissionType.name;
-    data['commission_amount'] = commissionAmount;
     
     // Only include payment_method_id for outside delivery
     if (deliveryType == DeliveryTypeEnum.outside && paymentMethodId != null) {

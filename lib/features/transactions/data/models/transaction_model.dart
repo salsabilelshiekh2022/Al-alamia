@@ -57,12 +57,14 @@ class ClientModel {
   String? name;
   String? phone;
   String? address;
+  String? phone_2;
 
   ClientModel({
     this.id,
     this.name,
     this.phone,
     this.address,
+    this.phone_2,
   });
 
   factory ClientModel.fromJson(Map<String, dynamic> json) {
@@ -71,6 +73,7 @@ class ClientModel {
       name: json['name'],
       phone: json['phone'],
       address: json['address'],
+      phone_2: json['phone_2'],
     );
   }
 }
@@ -85,12 +88,14 @@ TransactionModel dummyTransactionModel = TransactionModel(
       id: 1,
       name: 'John Doe',
       phone: '+1 234 567 890',
+      phone_2: '+1 234 567 891',
       address: '123 Main St, Cityville',
     ),
     toClient: ClientModel(
       id: 2,
       name: 'Jane Smith',
       phone: '+1 987 654 321',
+      phone_2: '+1 987 654 322',
       address: '456 Elm St, Townsville',
     ),
   ),
