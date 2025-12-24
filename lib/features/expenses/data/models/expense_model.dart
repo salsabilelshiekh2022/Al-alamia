@@ -1,3 +1,4 @@
+import 'package:alalamia/core/enums/status_enum.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 
 class ExpenseModel {
@@ -5,7 +6,7 @@ class ExpenseModel {
   int? id;
   String? uuid;
   String? amount;
-  String? status;
+  StatusEnum? status;
   DateTime? createdAt;
   String? note;
   CurrencyModel? currency;
@@ -17,7 +18,7 @@ class ExpenseModel {
     id = json['id'];
     uuid = json['uuid'];
     amount = json['amount'];
-    status = json['status'];
+    status = StatusEnum.values.firstWhere((e) => e.name == json['status']);
     createdAt = json['created_at'] != null ? DateTime.parse(json['created_at']) : null;
     note = json['notes'];
     currency = json['currency'] != null ? CurrencyModel.fromJson(json['currency']) : null;
@@ -44,7 +45,7 @@ class EmployeeModel {
     id: 1,
     uuid: "uuid",
     amount: "amount",
-    status: "status",
+    status: StatusEnum.completed,
     createdAt: DateTime.now(),
     note: "note",
     currency: CurrencyModel(

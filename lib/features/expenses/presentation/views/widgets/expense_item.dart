@@ -18,16 +18,7 @@ class ExpenseItem extends StatelessWidget {
       children: [
         Row(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: context.colors.greenColor.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child:Text("مقبولة",style: context.textStyles.font14MediumGrayColor.copyWith(
-                color: context.colors.greenColor
-              ),),
-            ),
+            _buildStatusBox(context),
             Spacer(),
             Text(DateFormat('d MMMM yyyy', EasyLocalization.of(context)!.locale.languageCode).format(expenseModel.createdAt ?? DateTime.now()),style: context.textStyles.font14MediumGrayColor,),
           ],
@@ -58,5 +49,18 @@ class ExpenseItem extends StatelessWidget {
       ],
     ),
     );
+  }
+
+  Container _buildStatusBox(BuildContext context) {
+    return Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: expenseModel.status?.chooseColor(context).withValues(alpha: 0.08) ?? context.colors.grayColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(6.r),
+            ),
+            child:Text(expenseModel.status?.translate(context) ?? "",style: context.textStyles.font14MediumGrayColor.copyWith(
+              color: expenseModel.status?.chooseColor(context) ?? context.colors.grayColor,
+            ),),
+          );
   }
 }
