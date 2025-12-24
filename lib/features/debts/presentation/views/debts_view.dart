@@ -12,6 +12,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/components/widgets/custom_app_bar.dart';
 import '../../../../core/components/widgets/custom_currency_dropdown.dart';
+import '../../../../core/components/widgets/empty_widget.dart';
 import '../../../../core/components/widgets/main_button.dart';
 import '../../../../core/enums/request_status.dart';
 import '../../../../core/helper/app_extention.dart';
@@ -140,9 +141,16 @@ class _DebtsViewState extends State<DebtsView> {
                       BlocBuilder<DebtsCubit, DebtsState>(
                         builder: (context, state) {
                           bool isLoading = state.debtsStatus.isLoading && state.debtsTransactions == null;
+                          bool isEmpty = !isLoading && (state.debtsTransactions == null || state.debtsTransactions!.isEmpty);
                           return Skeletonizer(
                             enabled: isLoading,
-                            child: ListView.separated(
+                            child: isEmpty ?Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              65.verticalSizedBox,
+              EmptyWidget(imagePath: AppAssets.imagesEmptyTransaction, title: context.notFoundTransactions, description: context.notFoundTransactionsDescription).center(),
+            ],
+          ) : ListView.separated(
                               shrinkWrap: true,
                               padding: EdgeInsets.zero,
                               physics: const NeverScrollableScrollPhysics(),

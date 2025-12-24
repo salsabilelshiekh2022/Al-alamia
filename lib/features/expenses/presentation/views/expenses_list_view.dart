@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/components/widgets/custom_app_bar.dart';
+import '../../../../core/components/widgets/empty_widget.dart';
 import '../../../../core/enums/request_status.dart';
 import '../../../../core/helper/app_extention.dart';
 import '../../../../core/helper/translation_extensions.dart';
@@ -28,17 +29,20 @@ class ExpensesListView extends StatefulWidget {
 }
 
 class _ExpensesListViewState extends State<ExpensesListView> {
-CurrencyModel? selectedCurrency;
+  CurrencyModel? selectedCurrency;
 
   @override
   void initState() {
     selectedCurrency = context.read<HomeCubit>().state.currenciesList.first;
 
     context.read<ExpensesCubit>().getExpenses();
-     context.read<ExpensesCubit>().getExpensesByCurrency(id: selectedCurrency!.id!);
+    context.read<ExpensesCubit>().getExpensesByCurrency(
+      id: selectedCurrency!.id!,
+    );
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,10 +73,12 @@ CurrencyModel? selectedCurrency;
                     items: context.read<HomeCubit>().state.currenciesList,
                     selectedItem: selectedCurrency,
                     onChanged: (val) {
-                    setState(() {
+                      setState(() {
                         selectedCurrency = val;
-                      context.read<ExpensesCubit>().getExpensesByCurrency(id: val!.id!);
-                    });
+                        context.read<ExpensesCubit>().getExpensesByCurrency(
+                          id: val!.id!,
+                        );
+                      });
                     },
                     color: Colors.white,
                     displayImageCurrency: false,
@@ -114,24 +120,46 @@ CurrencyModel? selectedCurrency;
                       18.verticalSizedBox,
                       BlocBuilder<ExpensesCubit, ExpensesState>(
                         builder: (context, state) {
-                          bool isLoading = state.expensesStatus.isLoading && state.expenses == null;
+                          bool isLoading =
+                              state.expensesStatus.isLoading &&
+                              state.expenses == null;
+                          bool isEmpty =
+                              !isLoading &&
+                              (state.expenses == null ||
+                                  state.expenses!.isEmpty);
                           return Skeletonizer(
                             enabled: isLoading,
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) =>
-                                  16.verticalSizedBox,
-                              itemCount: isLoading
-                                  ? 3
-                                  : state.expenses?.length ?? 0,
-                              itemBuilder: (context, index) => ExpenseItem(
-                                expenseModel: isLoading
-                                    ? dummyExpenseModel
-                                    : state.expenses![index]!,
-                              ),
-                            ),
+                            child: isEmpty
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      65.verticalSizedBox,
+                                      EmptyWidget(
+                                        imagePath:
+                                            AppAssets.imagesEmptyTransaction,
+                                        title: context.notFoundTransactions,
+                                        description: context
+                                            .notFoundTransactionsDescription,
+                                      ).center(),
+                                    ],
+                                  )
+                                : ListView.separated(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    separatorBuilder: (context, index) =>
+                                        16.verticalSizedBox,
+                                    itemCount: isLoading
+                                        ? 3
+                                        : state.expenses?.length ?? 0,
+                                    itemBuilder: (context, index) =>
+                                        ExpenseItem(
+                                          expenseModel: isLoading
+                                              ? dummyExpenseModel
+                                              : state.expenses![index]!,
+                                        ),
+                                  ),
                           );
                         },
                       ),
