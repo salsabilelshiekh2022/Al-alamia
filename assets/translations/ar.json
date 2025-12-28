@@ -201,5 +201,7 @@
   "external_debt" : "الديون الخارجية",
   "total_expenses" : "اجمالي المصاريف",
   "inability": "العجز",
-  "surplus": "الفائض"
+  "surplus": "الفائض",
+  "not_found_notifications":"لا توجد إشعارات",
+  "not_found_notifications_description":"ليس لديك اى اشعارات جديدة حالياً يمكنك العودة لاحقاً"
 }

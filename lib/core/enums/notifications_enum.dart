@@ -11,3 +11,4 @@ enum NotificationsEnum { public, transactions;
         return context.transactions;
     }
   } }
+

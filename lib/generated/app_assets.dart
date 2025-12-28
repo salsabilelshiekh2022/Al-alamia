@@ -26,6 +26,8 @@ class AppAssets {
 
   static const String imagesCheck = "assets/images/check.png";
 
+  static const String imagesEmptyNotification = "assets/images/empty_notification.png";
+
   static const String imagesEmptyTransaction = "assets/images/empty_transaction.png";
 
   static const String imagesFlag = "assets/images/flag.png";

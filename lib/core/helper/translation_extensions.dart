@@ -208,5 +208,7 @@ extension TranslationExtension on BuildContext {
   String get totalExpenses => tr("total_expenses");
   String get inability => tr("inability");
   String get surplus => tr("surplus");
+  String get notFoundNotifications => tr("not_found_notifications");
+  String get notFoundNotificationsDescription => tr("not_found_notifications_description");
 
 }

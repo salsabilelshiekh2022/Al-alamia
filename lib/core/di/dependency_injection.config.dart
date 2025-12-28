@@ -29,6 +29,12 @@ import '../../features/in_and_out_transaction/data/repos/in_and_out_repo_impl.da
     as _i598;
 import '../../features/in_and_out_transaction/presentation/cubit/in_and_out_transaction_cubit.dart'
     as _i112;
+import '../../features/notifications/data/repos/notifications_repo.dart'
+    as _i1065;
+import '../../features/notifications/data/repos/notifications_repo_impl.dart'
+    as _i70;
+import '../../features/notifications/presentation/cubit/notification_cubit.dart'
+    as _i459;
 import '../../features/reports/data/repos/reports_repo.dart' as _i666;
 import '../../features/reports/data/repos/reports_repo_impl.dart' as _i1069;
 import '../../features/reports/presentation/cubit/reports_cubit.dart' as _i671;
@@ -78,6 +84,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i150.TransactionsRepo>(
       () => _i398.TransactionsRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
+    gh.lazySingleton<_i1065.NotificationsRepo>(
+      () => _i70.NotificationsRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
     gh.lazySingleton<_i429.HomeRepo>(
       () => _i1024.HomeRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
     );
@@ -90,6 +99,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i598.TransactionsCubit>(
       () => _i598.TransactionsCubit(
         transactionRepo: gh<_i150.TransactionsRepo>(),
+      ),
+    );
+    gh.factory<_i459.NotificationCubit>(
+      () => _i459.NotificationCubit(
+        notificationsRepo: gh<_i1065.NotificationsRepo>(),
       ),
     );
     gh.factory<_i784.DebtsCubit>(

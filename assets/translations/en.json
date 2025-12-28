@@ -202,6 +202,8 @@
   "external_debt" : "External Debt",
   "total_expenses" : "Total Expenses",
   "inability": "Inability",
-  "surplus": "Surplus"
+  "surplus": "Surplus",
+  "not_found_notifications":"No Notifications Found",
+  "not_found_notifications_description":"You have no new notifications at the moment, you can check back later"
 
 }

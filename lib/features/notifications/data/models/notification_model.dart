@@ -39,3 +39,13 @@
       );
     }
   }
+
+  NotificationModel dummyNotificationModel = NotificationModel(
+    id: 0,
+    title: 'Sample Notification',
+    body: 'This is a sample notification body for testing purposes.',
+    type: null,
+    status: 'info',
+    createdAt:  '2023-01-01 00:00:00',
+    isSeen: false,
+  );

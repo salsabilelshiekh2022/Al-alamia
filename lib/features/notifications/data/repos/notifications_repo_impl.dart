@@ -6,6 +6,9 @@ import '../../../../core/database/network/failure.dart';
 import '../models/notification_model.dart';
 import 'notifications_repo.dart';
 
+import 'package:injectable/injectable.dart';
+
+@LazySingleton(as: NotificationsRepo)
 class NotificationsRepoImpl extends NotificationsRepo {
   final ApiConsumer apiConsumer;
   NotificationsRepoImpl({required this.apiConsumer});
