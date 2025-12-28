@@ -70,7 +70,7 @@ class DioConsumer extends ApiConsumer {
           AppKeys.navigatorKey.currentContext!,
         )?.locale.languageCode ??
         'ar';
-    // final deviceId = await _getDeviceToken() ?? '';
+     final deviceId = await _getDeviceToken() ?? '';
 
     return {
       'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ class DioConsumer extends ApiConsumer {
       'lang': locale,
       'client-type': Platform.isIOS ? 'ios' : 'android',
       'client-version': AppConstants.appVersion,
-      //'Device-ID': deviceId,
+      'Device-ID': deviceId,
       if (token.isNotEmpty)
         AppConstants.authorizationKey: '${AppConstants.bearerKey} $token',
     };
