@@ -29,6 +29,8 @@ class EndPoints {
   static String getPaymentMethods = '/employee/general/get-all-payment-methods';
   static String sendMoney = '/employee/transactions/sending-money';
   static String inAndOutTransaction = '/employee/transactions/add-in-out';
+
+  static String getNotifications = '/employee/notifications';
   static String getTransactionList({required TransactionsEnum transaction}) => '/employee/transactions?type=${transaction.name}';
   static String showTransactionDetails({required String transactionId}) => '/employee/transactions/$transactionId/client-transaction';
   static String getReports({required ReportsEnum type}) => '/employee/reports?type=${type.name}';
