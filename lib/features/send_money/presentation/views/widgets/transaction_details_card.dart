@@ -240,7 +240,9 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
 
   void _getFeeDetails() {
     if (amountController.text.isEmpty ||
-        selectedCurrencyId == null) return;
+        selectedCurrencyId == null) {
+      return;
+    }
 
     final sendMoneyCubit = context.read<SendMoneyCubit>();
     int? toCurrencyId = selectedToCurrencyId;
