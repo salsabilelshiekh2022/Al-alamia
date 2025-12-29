@@ -204,6 +204,7 @@
   "inability": "Inability",
   "surplus": "Surplus",
   "not_found_notifications":"No Notifications Found",
-  "not_found_notifications_description":"You have no new notifications at the moment, you can check back later"
+  "not_found_notifications_description":"You have no new notifications at the moment, you can check back later",
+  "type": "Type your inquiry......"
 
 }

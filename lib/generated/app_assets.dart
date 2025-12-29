@@ -116,6 +116,8 @@ class AppAssets {
 
   static const String svgsSearchIcon = "assets/svgs/search_icon.svg";
 
+  static const String svgsSend = "assets/svgs/send.svg";
+
   static const String svgsSendIcon = "assets/svgs/send_icon.svg";
 
   static const String svgsSendMoneyIcon = "assets/svgs/send_money_icon.svg";

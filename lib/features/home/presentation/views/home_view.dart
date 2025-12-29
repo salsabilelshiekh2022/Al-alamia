@@ -115,7 +115,7 @@ class HomeView extends StatelessWidget {
       actions: [
         InkWell(
           onTap: () {
-            context.pushNamed(Routes.supportView);
+            context.pushNamed(Routes.chatSupportView);
           },
           child: CustomSvgBuilder(
             path: AppAssets.svgsSupportBtn,

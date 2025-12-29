@@ -11,7 +11,7 @@ class CustomPage extends StatelessWidget {
     required this.title,
     required this.hasActions,
     required this.isBack,
-    required this.body, this.padding, this.topMargin,
+    required this.body, this.padding, this.topMargin, this.bottomSheet,
   });
 
   final String title;
@@ -20,10 +20,12 @@ class CustomPage extends StatelessWidget {
   final Widget body;
   final EdgeInsetsGeometry? padding;
   final double? topMargin;
+  final Widget? bottomSheet;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: bottomSheet,
       body: Stack(
         children: [
           Image.asset(

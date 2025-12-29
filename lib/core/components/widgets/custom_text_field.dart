@@ -28,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.initialValue,
     this.onChanged,
     this.textStyle,
+    this.minLines,
   });
 
   final String hintText;
@@ -49,6 +50,7 @@ class CustomTextField extends StatefulWidget {
   final TextAlign? textAlign;
   final void Function(String)? onChanged;
   final TextStyle? textStyle;
+  final int? minLines;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -62,6 +64,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       initialValue: widget.initialValue,
       textAlign: widget.textAlign ?? TextAlign.start,
       maxLines: widget.maxLines,
+      minLines: widget.minLines,
       enabled: widget.enabled,
       readOnly: widget.isReadOnly ?? false,
       inputFormatters: widget.inputFormatters,

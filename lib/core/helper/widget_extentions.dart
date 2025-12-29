@@ -22,7 +22,7 @@ extension WidgetExtension on Widget {
       bottom: bottomPadding.h,
       left: leftPadding.w,
       right: rightPadding.w,
-      top: topPadding.h,
+      top: topPadding.h,  
     ),
     child: this,
   );
@@ -30,4 +30,4 @@ extension WidgetExtension on Widget {
 
   Widget clipRRect({BorderRadius borderRadius = BorderRadius.zero}) =>
       ClipRRect(borderRadius: borderRadius, child: this);
-}
+}  

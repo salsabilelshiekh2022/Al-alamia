@@ -203,5 +203,6 @@
   "inability": "العجز",
   "surplus": "الفائض",
   "not_found_notifications":"لا توجد إشعارات",
-  "not_found_notifications_description":"ليس لديك اى اشعارات جديدة حالياً يمكنك العودة لاحقاً"
+  "not_found_notifications_description":"ليس لديك اى اشعارات جديدة حالياً يمكنك العودة لاحقاً",
+  "type": "اكتب استفسارك......"
 }
