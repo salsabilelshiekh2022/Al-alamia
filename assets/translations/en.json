@@ -207,6 +207,7 @@
   "not_found_notifications_description":"You have no new notifications at the moment, you can check back later",
   "type": "Type your inquiry......",
     "not_found_messages" : "Do you need help?",
-  "not_found_messages_description" : "Start a new conversation with our support team and we will respond to you as soon as possible."
+  "not_found_messages_description" : "Start a new conversation with our support team and we will respond to you as soon as possible.",
+  "password_not_match" : "Password does not match"
 
 }

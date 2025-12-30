@@ -19,7 +19,7 @@ class ReportsView extends StatelessWidget {
     return CustomPage(
       title: context.reports,
       hasActions: false,
-      isBack: true,
+      isBack: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -36,4 +36,5 @@ class EndPoints {
   static String getReports({required ReportsEnum type}) => '/employee/reports?type=${type.name}';
   static String sendMessage = '/employee/ticket-messages';
   static String getMessages = '/employee/ticket-messages';
+  static String changePassword = '/employee/auth/change-password';
 }

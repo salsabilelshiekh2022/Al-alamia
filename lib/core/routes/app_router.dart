@@ -58,7 +58,12 @@ abstract class AppRouter {
       case Routes.settingsView:
         return MaterialPageRoute(builder: (_) => const SettingsView());
       case Routes.changePasswordView:
-        return MaterialPageRoute(builder: (_) => const ChangePasswordView());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<AuthCubit>(),
+            child: const ChangePasswordView(),
+          ),
+        );
       case Routes.profileSettingsView:
         return MaterialPageRoute(builder: (_) => const ProfileSettingView());
       case Routes.transactionsView:

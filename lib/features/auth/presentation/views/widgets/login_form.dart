@@ -53,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
         } else if (state.authStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,
-            message: state.errorMessage!,
+            message: state.message!,
             state: SnackBarStates.error,
           );
         }

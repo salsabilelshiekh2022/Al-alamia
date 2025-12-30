@@ -14,6 +14,7 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/auth/data/repos/auth_repo.dart' as _i507;
 import '../../features/auth/data/repos/auth_repo_impl.dart' as _i152;
+import '../../features/auth/presentation/cubit/auth_cubit.dart' as _i117;
 import '../../features/debts/data/repos/debt_repo.dart' as _i87;
 import '../../features/debts/data/repos/debt_repo_impl.dart' as _i311;
 import '../../features/debts/presentation/cubit/debts_cubit.dart' as _i784;
@@ -146,6 +147,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i671.ReportsCubit>(
       () => _i671.ReportsCubit(reportsRepo: gh<_i666.ReportsRepo>()),
+    );
+    gh.factory<_i117.AuthCubit>(
+      () => _i117.AuthCubit(authRepo: gh<_i507.AuthRepo>()),
     );
     gh.factory<_i360.GeneralCubit>(
       () => _i360.GeneralCubit(generalRepo: gh<_i287.GeneralRepo>()),

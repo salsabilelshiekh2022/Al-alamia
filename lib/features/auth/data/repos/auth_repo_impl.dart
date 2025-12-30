@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/database/network/api_consumer.dart';
 import '../../../../core/database/network/end_points.dart';
+import '../models/change_pass_request_model.dart';
 import '../models/user_model.dart';
 
 @LazySingleton(as: AuthRepo)
@@ -23,6 +24,21 @@ class AuthRepoImpl extends AuthRepo {
       onSuccess: (result) {
         
         return UserModel.fromJson(result);
+      },
+    );
+  }
+  
+  @override
+  Future<Either<Failure, String>> changePassword({
+    required ChangePassRequestModel changePassRequestModel,
+  }) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.changePassword,
+        data: changePassRequestModel.toJson(),
+      ),
+      onSuccess: (result) {
+        return result['message'] ?? 'Success';
       },
     );
   }

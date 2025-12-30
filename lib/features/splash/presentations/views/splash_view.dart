@@ -21,7 +21,7 @@ class _SplashViewState extends State<SplashView> {
   void initState() {
     Future.delayed(const Duration(seconds: 2), () {
    final UserModel? user = getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
-      context.pushReplacementNamed(user?.token == null ? Routes.loginView : Routes.loginView);
+      context.pushReplacementNamed(user?.token == null ? Routes.loginView : Routes.mainNavigationView);
     });
     super.initState();
   }

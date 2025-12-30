@@ -3,26 +3,27 @@ part of 'auth_cubit.dart';
 
 class AuthState extends Equatable {
   final RequestStatus authStatus;
-  final String? errorMessage;
+  
+  final String? message;
 
   const AuthState({
     this.authStatus = RequestStatus.initial,
-    this.errorMessage,
+    this.message,
   });
 
   AuthState copyWith({
     RequestStatus? authStatus,
-    String? errorMessage,
+    String?message,
   }) {
     return AuthState(
       authStatus: authStatus ?? this.authStatus,
-      errorMessage: errorMessage ?? this.errorMessage,
+     message: message ?? this.message,
     );
   }
 
   @override
   List<Object?> get props => [
     authStatus,
-    errorMessage,
+   message,
   ];
 }
