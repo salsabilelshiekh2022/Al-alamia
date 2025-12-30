@@ -21,7 +21,7 @@ class EndPoints {
   static String getFeeDetails = '/employee/transactions/get-fee-details';
   static String getAllDenominations = '/employee/general/get-all-denominations';
   static String transferMoney = '/employee/transactions/transfering-money';
-  static  String getExpenses = '/employee/transactions/expenses';
+  static  String getExpenses = '/employee/transactions/expenses'; 
   static String getExpensesByCurrency({required int id}) => '/employee/general/currencies/$id/expenses';
   static String getDebtsByCurrency({required int id}) => '/employee/general/currencies/$id/debts';
   static String getDebtsTransactions ({required String type}) => '/employee/transactions/debts?type=$type';
@@ -34,4 +34,6 @@ class EndPoints {
   static String getTransactionList({required TransactionsEnum transaction}) => '/employee/transactions?type=${transaction.name}';
   static String showTransactionDetails({required String transactionId}) => '/employee/transactions/$transactionId/client-transaction';
   static String getReports({required ReportsEnum type}) => '/employee/reports?type=${type.name}';
+  static String sendMessage = '/employee/ticket-messages';
+  static String getMessages = '/employee/ticket-messages';
 }

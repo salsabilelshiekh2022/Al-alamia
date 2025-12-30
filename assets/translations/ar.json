@@ -204,5 +204,8 @@
   "surplus": "الفائض",
   "not_found_notifications":"لا توجد إشعارات",
   "not_found_notifications_description":"ليس لديك اى اشعارات جديدة حالياً يمكنك العودة لاحقاً",
-  "type": "اكتب استفسارك......"
+  "type": "اكتب استفسارك......",
+  "not_found_messages" : "هل تحتاج إلى مساعدة؟",
+  "not_found_messages_description" : "ابدأ محادثة جديدة مع فريق الدعم الفني وسنقوم بالرد عليك في أقرب وقت."
+
 }

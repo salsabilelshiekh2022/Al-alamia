@@ -30,6 +30,7 @@ import '../../features/in_and_out_transaction/presentation/cubit/in_and_out_tran
 import '../../features/send_money/presentation/views/send_money_frist_step_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
+import '../../features/support/presentation/cubit/support_cubit.dart';
 import '../../features/support/presentation/views/chat_support_view.dart';
 import '../../features/transactions/presentation/views/transactions_view.dart';
 import '../../features/transfer_money/presentation/views/transaction_recipt_view.dart';
@@ -195,8 +196,13 @@ abstract class AppRouter {
             child: const InAndOutTransactionView(),
           ),
         );
-        case Routes.chatSupportView:
-        return MaterialPageRoute(builder: (_) => const ChatSupportView());
+      case Routes.chatSupportView:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<SupportCubit>(),
+            child: const ChatSupportView(),
+          ),
+        );
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());
     }

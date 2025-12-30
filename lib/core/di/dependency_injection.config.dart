@@ -45,6 +45,9 @@ import '../../features/send_money/data/services/send_money_service.dart'
     as _i470;
 import '../../features/send_money/presentation/cubit/send_money_cubit.dart'
     as _i397;
+import '../../features/support/data/repos/support_repo.dart' as _i651;
+import '../../features/support/data/repos/support_repo_impl.dart' as _i173;
+import '../../features/support/presentation/cubit/support_cubit.dart' as _i196;
 import '../../features/transactions/data/repos/transactions_repo.dart' as _i150;
 import '../../features/transactions/data/repos/transactions_repo_impl.dart'
     as _i398;
@@ -74,6 +77,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i408.CacheServices>(() => _i408.CacheServices());
     gh.lazySingleton<_i742.ApiConsumer>(
       () => _i1062.DioConsumer(cacheServices: gh<_i408.CacheServices>()),
+    );
+    gh.lazySingleton<_i651.SupportRepo>(
+      () => _i173.SupportRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),
+    );
+    gh.factory<_i196.SupportCubit>(
+      () => _i196.SupportCubit(gh<_i651.SupportRepo>()),
     );
     gh.lazySingleton<_i411.InAndOutRepo>(
       () => _i598.InAndOutRepoImpl(apiConsumer: gh<_i742.ApiConsumer>()),

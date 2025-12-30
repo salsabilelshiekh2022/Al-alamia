@@ -211,4 +211,6 @@ extension TranslationExtension on BuildContext {
   String get notFoundNotifications => tr("not_found_notifications");
   String get notFoundNotificationsDescription => tr("not_found_notifications_description");
   String get type => tr("type");
+  String get notFoundMessages => tr("not_found_messages");
+  String get notFoundMessagesDescription => tr("not_found_messages_description");
 }

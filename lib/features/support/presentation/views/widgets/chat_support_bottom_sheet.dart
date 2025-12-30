@@ -1,5 +1,6 @@
 import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -7,6 +8,7 @@ import '../../../../../core/components/widgets/custom_text_field.dart';
 import '../../../../../core/helper/app_extention.dart';
 import '../../../../../core/helper/number_extentions.dart';
 import '../../../../../core/helper/translation_extensions.dart';
+import '../../cubit/support_cubit.dart';
 
 
 class ChatSupportBottomSheet extends StatefulWidget {
@@ -47,6 +49,9 @@ class _ChatSupportBottomSheetState extends State<ChatSupportBottomSheet> {
           InkWell(  
             onTap: () {
               if (controller.text.isNotEmpty) {
+                context.read<SupportCubit>().sendMessage(
+                  message: controller.text,
+                );
                 controller.clear();
               } else {}
             },
