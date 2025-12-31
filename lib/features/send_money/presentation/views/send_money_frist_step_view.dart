@@ -1,5 +1,6 @@
 import 'package:alalamia/core/components/widgets/custom_page.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
+import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -12,7 +13,8 @@ import 'widgets/beneficiary_data_card.dart';
 import 'widgets/sender_data_card.dart';
 
 class SendMoneyFristStepView extends StatefulWidget {
-  const SendMoneyFristStepView({super.key});
+  const SendMoneyFristStepView({super.key, required this.deliveryType});
+  final DeliveryTypeEnum deliveryType;
 
   @override
   State<SendMoneyFristStepView> createState() => _SendMoneyFristStepViewState();

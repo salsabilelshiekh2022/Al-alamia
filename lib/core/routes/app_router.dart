@@ -1,4 +1,5 @@
 import 'package:alalamia/core/enums/debets_enum.dart';
+import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:alalamia/features/auth/presentation/views/registuration_method_view.dart';
@@ -89,6 +90,7 @@ abstract class AppRouter {
       case Routes.transactionReciptView:
         return MaterialPageRoute(builder: (_) => const TransactionReciptView());
       case Routes.sendMoneyFristStepView:
+       final deliveryType = settings.arguments as DeliveryTypeEnum;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
@@ -96,7 +98,9 @@ abstract class AppRouter {
               BlocProvider.value(value: getIt<GeneralCubit>()),
               BlocProvider.value(value: getIt<SendMoneyCubit>()),
             ],
-            child: const SendMoneyFristStepView(),
+            child:  SendMoneyFristStepView(
+              deliveryType: deliveryType,
+            ),
           ),
         );
       case Routes.sendMoneySecondStepView:

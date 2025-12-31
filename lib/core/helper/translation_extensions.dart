@@ -214,4 +214,5 @@ extension TranslationExtension on BuildContext {
   String get notFoundMessages => tr("not_found_messages");
   String get notFoundMessagesDescription => tr("not_found_messages_description");
   String get passwordNotMatch => tr("password_not_match");
+  String get internalExternalDelivery => tr("internal_external_delivery");
 }

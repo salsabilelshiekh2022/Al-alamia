@@ -35,7 +35,7 @@ class AuthRepoImpl extends AuthRepo {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.post(
         path: EndPoints.changePassword,
-        data: changePassRequestModel.toJson(),
+        data: changePassRequestModel.toJson(), 
       ),
       onSuccess: (result) {
         return result['message'] ?? 'Success';

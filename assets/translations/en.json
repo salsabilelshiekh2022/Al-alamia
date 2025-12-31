@@ -208,6 +208,7 @@
   "type": "Type your inquiry......",
     "not_found_messages" : "Do you need help?",
   "not_found_messages_description" : "Start a new conversation with our support team and we will respond to you as soon as possible.",
-  "password_not_match" : "Password does not match"
+  "password_not_match" : "Password does not match",
+  "internal_external_delivery" :"Internal/External Delivery"
 
 }

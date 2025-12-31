@@ -3,7 +3,9 @@ import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/routes/routes.dart';
+import '../../../../core/utils/global_ui_utils.dart';
 import '../../../../generated/app_assets.dart';
+import '../../../send_money/presentation/views/widgets/send_money_bottom_sheet.dart';
 
 class MainActionModel {
   final String title;
@@ -22,7 +24,7 @@ List<MainActionModel> mainActionsList({required BuildContext context}) => [
     title: context.sendMoney,
     iconPath: AppAssets.svgsSendMoneyIcon,
     onTap: () {
-      context.pushNamed(Routes.sendMoneyFristStepView);
+      GlobalUiUtils.showBottomSheet(context, child: SendMoneyBottomSheet());
     },
   ),
   MainActionModel(
