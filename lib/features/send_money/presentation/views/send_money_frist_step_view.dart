@@ -46,8 +46,15 @@ class _SendMoneyFristStepViewState extends State<SendMoneyFristStepView> {
               title: context.next,
               onTap: () {
                 if (_formKey.currentState!.validate()) {
-                  context.pushNamed(Routes.sendMoneySecondStepView,
-                      arguments: context.read<SendMoneyCubit>());
+                  widget.deliveryType == DeliveryTypeEnum.inside
+                      ? context.pushNamed(
+                          Routes.sendMoneySecondStepView,
+                          arguments: context.read<SendMoneyCubit>(),
+                        )
+                      : context.pushNamed(
+                          Routes.externalSendMoneySecoundStepView,
+                          arguments: context.read<SendMoneyCubit>(),
+                        );
                 }
               },
             ),

@@ -13,6 +13,7 @@ import 'package:alalamia/features/expenses/presentation/views/add_expenses_view.
 import 'package:alalamia/features/in_and_out_transaction/presentation/views/in_and_out_transaction_view.dart';
 import 'package:alalamia/features/main_navigation/presentation/views/main_naviagtion.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
+import 'package:alalamia/features/send_money/presentation/views/external_send_money_secound_step_view.dart';
 import 'package:alalamia/features/send_money/presentation/views/send_money_second_step_view.dart';
 import 'package:alalamia/features/settings/presentation/views/settings_view.dart';
 import 'package:alalamia/features/splash/presentations/views/splash_view.dart';
@@ -210,6 +211,18 @@ abstract class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => getIt<SupportCubit>(),
             child: const ChatSupportView(),
+          ),
+        );
+          case Routes.externalSendMoneySecoundStepView:
+        final cubit = settings.arguments as SendMoneyCubit;
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: getIt<GeneralCubit>()),
+              BlocProvider.value(value: getIt<HomeCubit>()),
+              BlocProvider.value(value: cubit),
+            ],
+            child: ExternalSendMoneySecoundStepView(),
           ),
         );
       default:

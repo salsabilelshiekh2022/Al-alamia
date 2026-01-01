@@ -25,4 +25,5 @@ abstract class Routes {
   static const String debtsView = '/debtsView';
   static const String inAndOutTransactionView = '/InAndOutTransactionView';
   static const String chatSupportView = '/chatSupportView';
+  static const String externalSendMoneySecoundStepView = '/ExternalSendMoneySecoundStepView';
 }

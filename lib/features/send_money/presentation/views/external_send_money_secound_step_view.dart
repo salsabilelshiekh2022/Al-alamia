@@ -1,37 +1,39 @@
-import 'package:alalamia/core/components/widgets/app_snack_bar.dart';
-import 'package:alalamia/core/components/widgets/custom_page.dart';
-import 'package:alalamia/core/enums/request_status.dart';
-import 'package:alalamia/core/helper/app_extention.dart';
-import 'package:alalamia/core/helper/number_extentions.dart';
-import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/core/utils/global_ui_utils.dart';
-import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
-import 'package:alalamia/features/send_money/presentation/cubit/send_money_state.dart';
-import 'package:alalamia/features/send_money/presentation/views/widgets/send_money_successfully_dialog.dart';
+import 'package:alalamia/features/send_money/presentation/views/widgets/external_transaction_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import '../../../../core/components/widgets/app_snack_bar.dart';
+import '../../../../core/components/widgets/custom_page.dart';
 import '../../../../core/components/widgets/main_button.dart';
+import '../../../../core/di/dependency_injection.dart';
+import '../../../../core/enums/request_status.dart';
+import '../../../../core/general/cubit/general_cubit.dart';
+import '../../../../core/helper/app_extention.dart';
+import '../../../../core/helper/number_extentions.dart';
+import '../../../../core/helper/translation_extensions.dart';
+import '../../../../core/utils/global_ui_utils.dart';
+import '../../../transactions/presentation/views/widgets/transactions_details/total_section.dart';
+import '../../../transfer_money/data/models/transfer_money_request_params.dart';
+import '../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
+import '../../data/models/send_money_form_data.dart';
+import '../cubit/send_money_cubit.dart';
+import '../cubit/send_money_state.dart';
 import 'widgets/fee_details_card.dart';
 import 'widgets/notes_card.dart';
+import 'widgets/send_money_successfully_dialog.dart';
 import 'widgets/transaction_details_card.dart';
-import '../../../../features/transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
-import '../../../../features/transfer_money/data/models/transfer_money_request_params.dart';
-import '../../../../core/general/cubit/general_cubit.dart';
-import '../../../../core/di/dependency_injection.dart';
-import '../../data/models/send_money_form_data.dart';
 
-class SendMoneySecondStepView extends StatefulWidget {
-  const SendMoneySecondStepView({super.key});
+class ExternalSendMoneySecoundStepView extends StatefulWidget {
+  const ExternalSendMoneySecoundStepView({super.key});
 
   @override
-  State<SendMoneySecondStepView> createState() =>
-      _SendMoneySecondStepViewState();
+  State<ExternalSendMoneySecoundStepView> createState() => _ExternalSendMoneySecoundStepViewState();
 }
 
-class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
+class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySecoundStepView> {
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return BlocListener<SendMoneyCubit, SendMoneyState>(
       listener: (context, state) {
         if (state.sendMoneyStatus.isSuccess) {
@@ -61,7 +63,8 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
               12.verticalSizedBox,
               _progressBar(context),
               24.verticalSizedBox,
-              TransactionDetailsCard(),
+              ExternalTransactionDetailsCard(),
+            
               20.verticalSizedBox,
               NotesCard(),
               20.verticalSizedBox,
@@ -139,7 +142,7 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
       child: BlocProvider.value(
         value: getIt<GeneralCubit>(),
         child: AllDenominationsBottomSheet(
-          amount: amount,
+          amount: amount, 
           onConfirm: (denominations) {
             _sendRequestWithDenominations(context, cubit, formData, denominations);
           },
@@ -210,5 +213,5 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
     );
   }
 
-}
 
+}
