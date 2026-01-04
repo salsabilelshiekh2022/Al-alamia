@@ -1,3 +1,10 @@
+import 'package:alalamia/core/general/cubit/general_cubit.dart';
+import 'package:alalamia/core/general/data/models/fee_details_request_params.dart';
+import 'package:alalamia/features/send_money/data/models/send_money_form_data.dart';
+import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
+import 'package:alalamia/features/send_money/presentation/cubit/send_money_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -43,75 +50,143 @@ class _CommitionCardState extends State<CommitionCard> {
       commissionTypeController.text = selectedItem;
       selectedCommissionType = selectedItem;
     });
-    // _updateFormData();
-    // _getFeeDetails();
+    _updateFormData();
+    _getFeeDetails();
+  }
+
+  void _updateFormData() {
+    try {
+      final cubit = context.read<SendMoneyCubit>();
+      final currentFormData = cubit.state.formData ?? SendMoneyFormData.empty();
+
+      // Get commission type
+      CommissionTypeEnum? commissionType;
+      if (selectedCommissionType != null) {
+        for (var type in CommissionTypeEnum.values) {
+          if (type.getCommissionType(context) == selectedCommissionType) {
+            commissionType = type;
+            break;
+          }
+        }
+      }
+
+      cubit.updateFormData(
+        currentFormData.copyWith(
+          commissionType: commissionType,
+        ),
+      );
+    } catch (e, stackTrace) {
+      debugPrint('ERROR in _updateFormData: $e');
+      debugPrint('Stack trace: $stackTrace');
+    }
+  }
+
+  void _getFeeDetails() {
+    final sendMoneyCubit = context.read<SendMoneyCubit>();
+    final formData = sendMoneyCubit.state.formData;
+
+    if (formData == null ||
+        formData.amount.isEmpty ||
+        formData.fromCurrency == null) {
+      return;
+    }
+
+    int? toCurrencyId = formData.toCurrency?.id;
+
+    if (sendMoneyCubit.state.deliveryType == DeliveryTypeEnum.inside) {
+      toCurrencyId = formData.fromCurrency?.id;
+    }
+
+    if (toCurrencyId == null) return;
+
+    CommissionTypeEnum commissionType = CommissionTypeEnum.none;
+    if (selectedCommissionType != null) {
+      for (var type in CommissionTypeEnum.values) {
+        if (type.getCommissionType(context) == selectedCommissionType) {
+          commissionType = type;
+          break;
+        }
+      }
+    }
+
+    context.read<GeneralCubit>().getFeeDetails(
+          params: FeeDetailsRequestParams(
+            fromCurrencyId: formData.fromCurrency!.id!,
+            toCurrencyId: toCurrencyId,
+            amount: formData.amount,
+            commissionType: commissionType,
+          ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    return CardWithPurpleShadow(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<SendMoneyCubit, SendMoneyState>(
+      builder: (context, state) {
+        return CardWithPurpleShadow(
+          child: Column(
             children: [
-              Expanded(
-                child: CustomTextFieldWithLabel(
-                  onTap: () {
-                    setState(() {
-                      openCommissionTypesDropDown =
-                          !openCommissionTypesDropDown;
-                    });
-                  },
-                  controller: commissionController,
-                  label: context.commission,
-                  hintText: "\$0.00",
-                  enabled: false,
-                  prefixWidget: AppAssets.svgsCoinsIcon,
-                  isRequired: true,
-                ),
-              ),
-              14.horizontalSizedBox,
-              Expanded(
-                child: CustomTextFieldWithLabel(
-                  controller: commissionTypeController,
-                  label: context.commissionType,
-                  hintText: context.commissionType,
-                  prefixWidget: AppAssets.svgsCoinsIcon,
-                  isRequired: true,
-                  isReadOnly: true,
-                  suffixWidget: InkWell(
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      setState(() {
-                        openCommissionTypesDropDown =
-                            !openCommissionTypesDropDown;
-                      });
-                    },
-                    child: Icon(
-                      openCommissionTypesDropDown
-                          ? Icons.keyboard_arrow_up_rounded
-                          : Icons.keyboard_arrow_down_rounded,
-                      color: openCommissionTypesDropDown
-                          ? context.colors.primaryColor
-                          : context.colors.grayColor,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: CustomTextFieldWithLabel(
+                      onTap: () {
+                        setState(() {
+                          openCommissionTypesDropDown =
+                              !openCommissionTypesDropDown;
+                        });
+                      },
+                      controller: commissionController,
+                      label: context.commission,
+                      hintText: "\$0.00",
+                      enabled: false,
+                      prefixWidget: AppAssets.svgsCoinsIcon,
+                      isRequired: true,
                     ),
                   ),
-                ),
+                  14.horizontalSizedBox,
+                  Expanded(
+                    child: CustomTextFieldWithLabel(
+                      controller: commissionTypeController,
+                      label: context.commissionType,
+                      hintText: context.commissionType,
+                      prefixWidget: AppAssets.svgsCoinsIcon,
+                      isRequired: true,
+                      isReadOnly: true,
+                      suffixWidget: InkWell(
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          setState(() {
+                            openCommissionTypesDropDown =
+                                !openCommissionTypesDropDown;
+                          });
+                        },
+                        child: Icon(
+                          openCommissionTypesDropDown
+                              ? Icons.keyboard_arrow_up_rounded
+                              : Icons.keyboard_arrow_down_rounded,
+                          color: openCommissionTypesDropDown
+                              ? context.colors.primaryColor
+                              : context.colors.grayColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              if (openCommissionTypesDropDown)
+                CustomDropDownCard(
+                  dropDownItems: CommissionTypeEnum.values
+                      .map((e) => e.getCommissionType(context))
+                      .toList(),
+                  selectedValue: commissionTypeController.text,
+                  onItemSelected: _onCommissionTypeSelected,
+                ).onlyPadding(topPadding: 6),
             ],
           ),
-
-          if (openCommissionTypesDropDown)
-            CustomDropDownCard(
-              dropDownItems: CommissionTypeEnum.values
-                  .map((e) => e.getCommissionType(context))
-                  .toList(),
-              selectedValue: commissionTypeController.text,
-              onItemSelected: _onCommissionTypeSelected,
-            ).onlyPadding(topPadding: 6),
-        ],
-      ),
-    ).onlyPadding(topPadding: 8, bottomPadding: 20);
+        ).onlyPadding(topPadding: 8, bottomPadding: 20);
+      },
+    );
   }
 }
