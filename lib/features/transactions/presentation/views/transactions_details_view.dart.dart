@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/components/widgets/custom_app_bar.dart';
 import '../../../../core/enums/status_enum.dart';
@@ -38,6 +39,12 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
     super.initState();
   }
 
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +57,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
             fit: BoxFit.cover,
           ),
           SingleChildScrollView(
-              child: BlocBuilder<TransactionsCubit, TransactionsState>(
+            child: BlocBuilder<TransactionsCubit, TransactionsState>(
               builder: (context, state) {
                 return Column(
                   children: [
@@ -59,9 +66,11 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                       hasActions: false,
                       isBack: true,
                     ).onlyPadding(bottomPadding: 24),
-                
+
                     Skeletonizer(
-                      enabled: state.transactionDetailsStatus == RequestStatus.loading,
+                      enabled:
+                          state.transactionDetailsStatus ==
+                          RequestStatus.loading,
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
@@ -95,10 +104,10 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                 TransactionInfoCard(),
                                 32.verticalSizedBox,
                                 MainButton(
-                                  title: context.receivedDone,
-                                  onTap: () {
-                                    context.pop(); 
-                                  },
+                                  title: context.printReceipt,
+                                  onTap: () => _launchUrl(
+                                    state.transactionDetails?.pdfUrl ?? '',
+                                  ),
                                 ),
                               ],
                             ),
@@ -108,7 +117,9 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                             start: 16,
                             end: 16,
                             child: StatusBox(
-                              status: state.transactionDetails?.details.status ?? StatusEnum.pending,
+                              status:
+                                  state.transactionDetails?.details.status ??
+                                  StatusEnum.pending,
                             ),
                           ),
                         ],

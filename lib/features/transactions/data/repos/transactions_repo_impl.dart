@@ -33,7 +33,8 @@ final ApiConsumer apiConsumer;
       request: () => apiConsumer.get(EndPoints.showTransactionDetails(transactionId: transactionId)),
       onSuccess: (result) {
         final data = result['data'];
-        return TransactionDetailsModel.fromJson(data);
+        final meta = result['meta'];
+        return TransactionDetailsModel.fromJson(data, pdfUrl: meta?['pdf_url']);
       },
     );
   }

@@ -16,6 +16,7 @@ class TransactionDetailsModel {
     required this.sender,
     required this.receiver,
     required this.details,
+    this.pdfUrl,
   });
 
   final String amountSent;
@@ -27,8 +28,11 @@ class TransactionDetailsModel {
   final ClientModel sender;
   final ClientModel receiver;
   final DetailModel details;
+  final String? pdfUrl;
 
-  factory TransactionDetailsModel.fromJson(Map<String, dynamic> json) => TransactionDetailsModel(
+
+
+  factory TransactionDetailsModel.fromJson(Map<String, dynamic> json, {String? pdfUrl}) => TransactionDetailsModel(
     amountSent: json["amount_sent"],
     currency: json["currency"],
     amountReceived: json["amount_received"],
@@ -38,6 +42,7 @@ class TransactionDetailsModel {
     sender: ClientModel.fromJson(json["sender"]),
     receiver: ClientModel.fromJson(json["receiver"]),
     details: DetailModel.fromJson(json["details"]),
+    pdfUrl: pdfUrl,
   );
 
 
