@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../../../../core/components/widgets/main_button.dart';
+import '../../../home/presentation/cubit/home_cubit.dart';
 import 'widgets/fee_details_card.dart';
 import 'widgets/notes_card.dart';
 import 'widgets/transaction_details_card.dart';
@@ -37,10 +38,13 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
         if (state.sendMoneyStatus.isSuccess) {
           context.pop();
           context.pop();
+                    context.read<HomeCubit>().getBranchCurrencies();
+
           GlobalUiUtils.showCustomDialog(
             context,
             child: SendMoneySuccessfullyDialog(),
           );
+
         } else if (state.sendMoneyStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,

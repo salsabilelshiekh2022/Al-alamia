@@ -14,6 +14,7 @@ import '../../../../core/helper/app_extention.dart';
 import '../../../../core/helper/number_extentions.dart';
 import '../../../../core/helper/translation_extensions.dart';
 import '../../../../core/utils/global_ui_utils.dart';
+import '../../../home/presentation/cubit/home_cubit.dart';
 import '../../../transfer_money/data/models/transfer_money_request_params.dart';
 import '../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../transfer_money/presentation/views/widgets/total_section.dart';
@@ -48,6 +49,8 @@ class _ExternalSendMoneySecoundStepViewState
             context,
             child: SendMoneySuccessfullyDialog(),
           );
+                    context.read<HomeCubit>().getBranchCurrencies();
+
         } else if (state.sendMoneyStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,

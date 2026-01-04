@@ -2,6 +2,7 @@ import 'package:alalamia/core/database/cache/cache_helper.dart';
 import 'package:alalamia/core/database/cache/cache_services.dart';
 import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/enums/commission_type_enum.dart';
+import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/core/general/cubit/general_state.dart';
 import 'package:alalamia/core/general/data/models/fee_details_request_params.dart';
@@ -99,6 +100,7 @@ class _ExternalTransactionDetailsCardState
       selectedCurrencyId = selectedCurrency.id;
     });
     _calculateExchangeRate();
+    _onAmountChanged(amountController.text);
     _updateFormData();
     _getFeeDetails();
   }
@@ -114,6 +116,7 @@ class _ExternalTransactionDetailsCardState
       selectedToCurrencyId = selectedCurrency.id;
     });
     _calculateExchangeRate();
+    _onAmountChanged(amountController.text);
     _updateFormData();
     _getFeeDetails();
   }
@@ -156,7 +159,7 @@ class _ExternalTransactionDetailsCardState
   void _onAmountChanged(String value) {
     final homeState = context.read<HomeCubit>().state;
     final double amount = double.tryParse(value) ?? 0;
-    final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
+    final num exchangeRate =homeState.transferCurrencyStatus.isSuccess ? homeState.transferCurrency?.exchangePriceUsed ?? 0 : 0;
     final result = (amount * exchangeRate).toStringAsFixed(2);
     converterAmountController.text = result;
 

@@ -176,8 +176,9 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider.value(value: getIt<GeneralCubit>()),
+              BlocProvider.value(value: getIt<GeneralCubit>()), 
               BlocProvider(create: (_) => getIt<TransferCurrencyCubit>()),
+              BlocProvider.value(value: getIt<HomeCubit>()), 
             ],
             child: AddAmountByDenominationView(transferData: transferData),
           ),

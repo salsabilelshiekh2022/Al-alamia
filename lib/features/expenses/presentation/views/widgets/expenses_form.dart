@@ -127,6 +127,8 @@ class _ExpensesFormState extends State<ExpensesForm> {
           );
           context.pop();
           context.pop();
+          context.read<HomeCubit>().getBranchCurrencies();
+
         }
       },
       builder: (context, state) {

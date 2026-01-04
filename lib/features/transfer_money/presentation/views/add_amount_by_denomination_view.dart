@@ -14,6 +14,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../generated/app_assets.dart';
+import '../../../home/presentation/cubit/home_cubit.dart';
 import '../../data/models/transfer_money_data_params.dart';
 import '../../data/models/transfer_money_request_params.dart';
 
@@ -122,6 +123,8 @@ class _AddAmountByDenominationViewState
       );
       context.pop();
         context.pop();
+          context.read<HomeCubit>().getBranchCurrencies();
+
     }
   }
 

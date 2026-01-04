@@ -136,6 +136,7 @@ class _PayDebtFormState extends State<PayDebtForm> {
           );
           context.pop();
           context.pop();
+          context.read<HomeCubit>().getBranchCurrencies();
         } else if (state.debtsStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,

@@ -36,7 +36,6 @@ class HomeView extends StatelessWidget {
                 _buildHomeAppBar(
                   context,
                 ).horizontalPadding(16).onlyPadding(topPadding: 16),
-
                 Stack(
                   clipBehavior: Clip.none,
                   children: [

@@ -158,6 +158,7 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
               state: SnackBarStates.success,
             );
             context.pop();
+          context.read<HomeCubit>().getBranchCurrencies();
           }else if (state.inAndOutTransactionStatus.isError) {
             AppSnackBar.showSnackBar(
               context: context,
