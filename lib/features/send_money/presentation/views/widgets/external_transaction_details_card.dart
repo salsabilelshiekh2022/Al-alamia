@@ -135,16 +135,12 @@ class _ExternalTransactionDetailsCardState
   }
 
   void _calculateExchangeRate() {
-    print(
-      "selectedCurrencyId: $selectedCurrencyId, selectedToCurrencyId: $selectedToCurrencyId",
-    );
+  
     if (selectedCurrencyId == null ||
         selectedToCurrencyId == null ||
         amountController.text.isEmpty)
       return;
-    print(
-      "selectedCurrencyId: $selectedCurrencyId, selectedToCurrencyId: $selectedToCurrencyId",
-    );
+    
 
     final cubit = context.read<HomeCubit>();
     cubit.transferCurrency(
@@ -240,7 +236,7 @@ class _ExternalTransactionDetailsCardState
               : commissionType,
         ),
       );
-      print('DEBUG: Form data updated successfully');
+   
     } catch (e, stackTrace) {
       print('ERROR in _updateFormData: $e');
       print('Stack trace: $stackTrace');

@@ -16,7 +16,7 @@ class TransactionFromTo extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
+        Column( 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(

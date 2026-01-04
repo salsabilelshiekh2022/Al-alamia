@@ -25,7 +25,6 @@ import 'widgets/commition_card.dart';
 import 'widgets/fee_details_card.dart';
 import 'widgets/notes_card.dart';
 import 'widgets/send_money_successfully_dialog.dart';
-import 'widgets/transaction_details_card.dart';
 
 class ExternalSendMoneySecoundStepView extends StatefulWidget {
   const ExternalSendMoneySecoundStepView({super.key});
