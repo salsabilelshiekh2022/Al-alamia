@@ -57,9 +57,14 @@ class GeneralRepoImpl extends GeneralRepo {
   }
 
   @override
-  Future<Either<Failure, List<BranchModel>>> getAllBranches() {
+  Future<Either<Failure, List<BranchModel>>> getAllBranches({
+    Map<String, dynamic>? queryParameters,
+  }) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getAllBranches),
+      request: () => apiConsumer.get(
+        EndPoints.getAllBranches,
+        queryParameters: queryParameters,
+      ),
       onSuccess: (result) {
         return List<BranchModel>.from(
           result['data'].map((x) => BranchModel.fromJson(x)),

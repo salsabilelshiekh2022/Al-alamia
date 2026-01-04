@@ -18,6 +18,8 @@ abstract class GeneralRepo {
   });
 
   Future<Either<Failure, List<DenominationModel>>> getAllDenominations();
-  Future<Either<Failure, List<BranchModel>>> getAllBranches();
+  Future<Either<Failure, List<BranchModel>>> getAllBranches({
+    Map<String, dynamic>? queryParameters,
+  });
   Future<Either<Failure, List<PaymentMethodModel>>> getPaymentMethods();
 }

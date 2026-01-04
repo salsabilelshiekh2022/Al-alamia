@@ -1,3 +1,4 @@
+import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/send_money/presentation/views/widgets/external_transaction_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,12 +14,13 @@ import '../../../../core/helper/app_extention.dart';
 import '../../../../core/helper/number_extentions.dart';
 import '../../../../core/helper/translation_extensions.dart';
 import '../../../../core/utils/global_ui_utils.dart';
-import '../../../transactions/presentation/views/widgets/transactions_details/total_section.dart';
 import '../../../transfer_money/data/models/transfer_money_request_params.dart';
 import '../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
+import '../../../transfer_money/presentation/views/widgets/total_section.dart';
 import '../../data/models/send_money_form_data.dart';
 import '../cubit/send_money_cubit.dart';
 import '../cubit/send_money_state.dart';
+import 'widgets/commition_card.dart';
 import 'widgets/fee_details_card.dart';
 import 'widgets/notes_card.dart';
 import 'widgets/send_money_successfully_dialog.dart';
@@ -28,12 +30,15 @@ class ExternalSendMoneySecoundStepView extends StatefulWidget {
   const ExternalSendMoneySecoundStepView({super.key});
 
   @override
-  State<ExternalSendMoneySecoundStepView> createState() => _ExternalSendMoneySecoundStepViewState();
+  State<ExternalSendMoneySecoundStepView> createState() =>
+      _ExternalSendMoneySecoundStepViewState();
 }
 
-class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySecoundStepView> {
+class _ExternalSendMoneySecoundStepViewState
+    extends State<ExternalSendMoneySecoundStepView> {
   @override
-   Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
+    var formData = context.watch<SendMoneyCubit>().state.formData;
     return BlocListener<SendMoneyCubit, SendMoneyState>(
       listener: (context, state) {
         if (state.sendMoneyStatus.isSuccess) {
@@ -52,7 +57,11 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
         }
       },
       child: ModalProgressHUD(
-        inAsyncCall: context.watch<SendMoneyCubit>().state.sendMoneyStatus.isLoading,
+        inAsyncCall: context
+            .watch<SendMoneyCubit>()
+            .state
+            .sendMoneyStatus
+            .isLoading,
         child: CustomPage(
           title: context.sendMoney,
           hasActions: false,
@@ -64,7 +73,16 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
               _progressBar(context),
               24.verticalSizedBox,
               ExternalTransactionDetailsCard(),
-            
+              formData?.fromCurrency == null || formData?.toCurrency == null
+                  ? SizedBox()
+                  : formData?.fromCurrency == formData?.toCurrency
+                  ? CommitionCard()
+                  : TotalSection(
+                      fromCurrency: formData!.fromCurrency!,
+                      toCurrency: formData.toCurrency!,
+                      total: formData.amount,
+                      exchangePrice: 0.0,
+                    ).onlyPadding(topPadding: 8),
               20.verticalSizedBox,
               NotesCard(),
               20.verticalSizedBox,
@@ -76,7 +94,7 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
                     title: context.confirm,
                     // isLoading: state.sendMoneyStatus.isLoading,
                     onTap: state.sendMoneyStatus.isLoading
-                        ? (){}
+                        ? () {}
                         : () => _handleConfirm(context),
                   );
                 },
@@ -94,7 +112,6 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
     final cubit = context.read<SendMoneyCubit>();
     final formData = cubit.state.formData;
 
-
     // Validate that we have all required data
     if (formData == null) {
       AppSnackBar.showSnackBar(
@@ -107,14 +124,14 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
 
     // Check specific requirements and show detailed error
     final missingFields = <String>[];
-    
+
     if (!formData.hasSenderInfo) missingFields.add('Sender information');
     if (!formData.hasReceiverInfo) missingFields.add('Receiver information');
     if (!formData.hasAmountDetails) missingFields.add('Amount and currency');
     if (!formData.hasBranches) missingFields.add('Branch information');
     if (!formData.hasCommissionDetails) missingFields.add('Commission type');
     if (!formData.hasPaymentMethod) missingFields.add('Payment method');
-    
+
     // Note: We don't check hasDenominations here because we are about to collect them
 
     if (missingFields.isNotEmpty) {
@@ -142,9 +159,14 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
       child: BlocProvider.value(
         value: getIt<GeneralCubit>(),
         child: AllDenominationsBottomSheet(
-          amount: amount, 
+          amount: amount,
           onConfirm: (denominations) {
-            _sendRequestWithDenominations(context, cubit, formData, denominations);
+            _sendRequestWithDenominations(
+              context,
+              cubit,
+              formData,
+              denominations,
+            );
           },
         ),
       ),
@@ -152,21 +174,22 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
   }
 
   void _sendRequestWithDenominations(
-    BuildContext context, 
-    SendMoneyCubit cubit, 
+    BuildContext context,
+    SendMoneyCubit cubit,
     SendMoneyFormData formData,
     List<DenominationsRequestParams> denominations,
   ) {
     try {
       // Map denominations to the format expected by SendMoneyFormData
-      final denominationsMap = denominations.map((d) => {
-        'id': d.id,
-        'quantity': d.quantity,
-      }).toList();
+      final denominationsMap = denominations
+          .map((d) => {'id': d.id, 'quantity': d.quantity})
+          .toList();
 
       // Update form data with denominations
-      final updatedFormData = formData.copyWith(denominations: denominationsMap);
-      
+      final updatedFormData = formData.copyWith(
+        denominations: denominationsMap,
+      );
+
       // Update cubit state
       cubit.updateFormData(updatedFormData);
 
@@ -212,6 +235,4 @@ class _ExternalSendMoneySecoundStepViewState extends State<ExternalSendMoneySeco
       ],
     );
   }
-
-
 }

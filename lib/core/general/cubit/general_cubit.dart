@@ -58,9 +58,11 @@ class GeneralCubit extends Cubit<GeneralState> {
     );
   }
 
-  Future<void> getAllBranches() async {
+  Future<void> getAllBranches({Map<String, dynamic>? queryParameters}) async {
     emit(state.copyWith(getAllBranchesStatus: RequestStatus.loading));
-    final result = await generalRepo.getAllBranches();
+    final result = await generalRepo.getAllBranches(
+      queryParameters: queryParameters,
+    );
     result.fold(
       (failure) =>
           emit(state.copyWith(getAllBranchesStatus: RequestStatus.error)),
@@ -71,7 +73,7 @@ class GeneralCubit extends Cubit<GeneralState> {
         ),
       ),
     );
-  } 
+  }
 
   Future<void> getPaymentMethods() async {
     emit(state.copyWith(getPaymentMethodsStatus: RequestStatus.loading));

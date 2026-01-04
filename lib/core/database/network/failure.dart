@@ -76,10 +76,12 @@ class ServerFailure extends Failure {
       );
     } else if (statusCode == 500) {
       return ServerFailure(
-          message: response['message'], statusCode: statusCode);
+        message: response['message'],
+        statusCode: statusCode,
+      );
     } else if (statusCode == 422) {
       return ServerFailure(
-        message: response['error']['message'],
+        message: response['error']['message'] ?? '',
         statusCode: statusCode,
       );
     } else {
