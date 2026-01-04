@@ -100,7 +100,7 @@ class _ExternalTransactionDetailsCardState
       selectedCurrencyId = selectedCurrency.id;
     });
     _calculateExchangeRate();
-    _onAmountChanged(amountController.text);
+
     _updateFormData();
     _getFeeDetails();
   }
@@ -116,7 +116,7 @@ class _ExternalTransactionDetailsCardState
       selectedToCurrencyId = selectedCurrency.id;
     });
     _calculateExchangeRate();
-    _onAmountChanged(amountController.text);
+
     _updateFormData();
     _getFeeDetails();
   }
@@ -278,9 +278,14 @@ class _ExternalTransactionDetailsCardState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SendMoneyCubit, SendMoneyState>(
-      builder: (context, state) {
-        return CardWithPurpleShadow(
+    return BlocListener<HomeCubit, HomeState>(
+    
+      listener: (context, state) {
+        _onAmountChanged(amountController.text);
+      },
+      child: BlocBuilder<SendMoneyCubit, SendMoneyState>(
+        builder: (context, state) {
+          return CardWithPurpleShadow(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -500,6 +505,6 @@ class _ExternalTransactionDetailsCardState
           ),
         );
       },
-    );
+    ));
   }
 }
