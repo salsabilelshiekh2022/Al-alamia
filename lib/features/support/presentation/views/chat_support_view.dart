@@ -22,6 +22,7 @@ class ChatSupportView extends StatefulWidget {
 
 class _ChatSupportViewState extends State<ChatSupportView> {
   Timer? timer;
+  
   Future<void> callMehtod() async {
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       context.read<SupportCubit>().getMessages();
@@ -30,9 +31,15 @@ class _ChatSupportViewState extends State<ChatSupportView> {
 
   @override
   void initState() {
+    super.initState();
     context.read<SupportCubit>().getMessages();
     callMehtod();
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -42,27 +49,30 @@ class _ChatSupportViewState extends State<ChatSupportView> {
       hasActions: false,
       isBack: true,
       bottomSheet: ChatSupportBottomSheet(),
-      body: Expanded(
-        child: BlocBuilder<SupportCubit, SupportState>(
-          builder: (context, state) {
-            bool isEmpty = state.messages.isEmpty;
-            return isEmpty ?  EmptyWidget(imagePath: AppAssets.imagesEmptyChat, title: context.notFoundMessages, description: context.notFoundMessagesDescription) : 
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              reverse: false,
-              itemBuilder: (context, index) {
-                return ChatBubble(
-                  isMe: state.messages[index].senderType == 'me',
-                  message: state.messages[index].message,
-                );
-              },
-              separatorBuilder: (_, __) => 12.verticalSpace,
-              itemCount: state.messages.length,
-            );
-          },
-        ),
+      body: BlocBuilder<SupportCubit, SupportState>(
+        builder: (context, state) {
+          bool isEmpty = state.messages.isEmpty;
+          return isEmpty 
+            ? EmptyWidget(
+                imagePath: AppAssets.imagesEmptyChat,
+                title: context.notFoundMessages,
+                description: context.notFoundMessagesDescription,
+              )
+            : ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                reverse: false,
+                itemBuilder: (context, index) {
+                  return ChatBubble(
+                    isMe: state.messages[index].senderType == 'me',
+                    message: state.messages[index].message,
+                  );
+                },
+                separatorBuilder: (_, __) => 12.verticalSpace,
+                itemCount: state.messages.length,
+              );
+        },
       ),
     );
   }
