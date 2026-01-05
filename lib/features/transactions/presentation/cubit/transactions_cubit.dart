@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/enums/request_status.dart';
 import '../../../../core/enums/transactions_enum.dart';
+import '../../data/models/update_transaction_request_params.dart';
 import '../../data/repos/transactions_repo.dart';
 import 'transactions_state.dart';
 
@@ -48,6 +49,15 @@ class TransactionsCubit extends Cubit<TransactionsState>{
           transactionDetails: transaction,
         ),
       ),
+    );
+  }
+
+  Future<void> updateTransactionStatus({required int transactionId, required UpdateTransactionRequestParams params}) async {
+    emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.loading));
+    final result = await transactionRepo.updateTransactionStatus(transactionId: transactionId, params: params);
+    result.fold(
+      (failure) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.error)),
+      (message) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.success)),
     );
   }
 }

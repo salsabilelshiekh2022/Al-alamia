@@ -37,4 +37,5 @@ class EndPoints {
   static String sendMessage = '/employee/ticket-messages';
   static String getMessages = '/employee/ticket-messages';
   static String changePassword = '/employee/auth/change-password';
+  static String updateTransactionStatus({required int transactionId}) => '/employee/transactions/$transactionId/update-status';
 }

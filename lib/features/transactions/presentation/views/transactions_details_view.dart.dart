@@ -1,9 +1,11 @@
 import 'package:alalamia/core/components/widgets/main_button.dart';
 import 'package:alalamia/core/enums/request_status.dart';
+import 'package:alalamia/core/enums/update_transaction_state_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/transactions/data/models/update_transaction_request_params.dart';
 import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +14,13 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/components/widgets/custom_app_bar.dart';
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/enums/status_enum.dart';
+import '../../../../core/general/cubit/general_cubit.dart';
+import '../../../../core/utils/global_ui_utils.dart';
 import '../../../../generated/app_assets.dart';
+import '../../../transfer_money/data/models/transfer_money_request_params.dart';
+import '../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../cubit/transactions_state.dart';
 import 'widgets/transactions_details/beneficiary_info_card.dart';
 import 'widgets/transactions_details/sender_info_card.dart';
@@ -44,6 +51,19 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
       throw Exception('Could not launch $url');
     }
   }
+
+  void _onDenominationsConfirmed(List<DenominationsRequestParams> denominations) {
+    final UpdateTransactionRequestParams updateTransactionRequestParams = UpdateTransactionRequestParams(
+      status: UpdateTransactionStatusEnum.recieved,
+      denominations: denominations,
+    );
+    context.read<TransactionsCubit>().updateTransactionStatus(
+      transactionId: widget.id,
+      params: updateTransactionRequestParams,
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +123,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                 20.verticalSizedBox,
                                 TransactionInfoCard(),
                                 32.verticalSizedBox,
-                                MainButton(
+                       context.read<TransactionsCubit>().state.transactionDetails?.recievingBranch == true && context.read<TransactionsCubit>().state.transactionDetails?.details.status == StatusEnum.pending ? recivingButton() : MainButton(
                                   title: context.printReceipt,
                                   onTap: () => _launchUrl(
                                     state.transactionDetails?.pdfUrl ?? '',
@@ -114,7 +134,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                           ),
                           PositionedDirectional(
                             top: -10,
-                            start: 16,
+                            start: 16,  
                             end: 16,
                             child: StatusBox(
                               status:
@@ -133,5 +153,20 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
         ],
       ),
     );
+  }
+
+  Widget recivingButton() {
+    return MainButton(title: context.receivedDone, onTap: (){
+     GlobalUiUtils.showBottomSheet(
+        context,
+        child: BlocProvider.value(
+          value: getIt<GeneralCubit>(),
+          child: AllDenominationsBottomSheet(
+            amount: int.parse(context.read<TransactionsCubit>().state.transactionDetails?.amountSent ?? '0') ,
+            onConfirm: _onDenominationsConfirmed,
+          ),
+        ),
+      );
+    });
   }
 }

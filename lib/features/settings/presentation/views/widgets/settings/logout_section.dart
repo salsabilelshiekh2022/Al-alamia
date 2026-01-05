@@ -74,7 +74,7 @@ class LogoutSection extends StatelessWidget {
                   title: context.confirm,
                   onTap: () {
                     context.pushNamedAndRemoveUntil(
-                      Routes.registerationMethodView,
+                      Routes.loginView,
                     );
                   },
                 ),

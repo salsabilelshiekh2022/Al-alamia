@@ -1,4 +1,5 @@
 import 'package:alalamia/core/database/network/api_consumer.dart';
+import 'package:alalamia/features/transactions/data/models/update_transaction_request_params.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
@@ -35,6 +36,16 @@ final ApiConsumer apiConsumer;
         final data = result['data'];
         final meta = result['meta'];
         return TransactionDetailsModel.fromJson(data, pdfUrl: meta?['pdf_url']);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> updateTransactionStatus({required UpdateTransactionRequestParams params , required int transactionId}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(path :EndPoints.updateTransactionStatus(transactionId: transactionId), data: params.toJson()),
+      onSuccess: (result) {
+        return result['meta']['message'] ?? 'Success';
       },
     );
   }

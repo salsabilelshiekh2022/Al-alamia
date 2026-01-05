@@ -17,6 +17,7 @@ class TransactionDetailsModel {
     required this.receiver,
     required this.details,
     this.pdfUrl,
+    required this.recievingBranch
   });
 
   final String amountSent;
@@ -29,6 +30,7 @@ class TransactionDetailsModel {
   final ClientModel receiver;
   final DetailModel details;
   final String? pdfUrl;
+  final bool recievingBranch;
 
 
 
@@ -43,6 +45,7 @@ class TransactionDetailsModel {
     receiver: ClientModel.fromJson(json["receiver"]),
     details: DetailModel.fromJson(json["details"]),
     pdfUrl: pdfUrl,
+    recievingBranch: json["recieving_branch"],
   );
 
 
@@ -96,6 +99,7 @@ TransactionDetailsModel dummyTransactionModel = TransactionDetailsModel(
   toCurrency: 'الدولار الأمريكي',
   fromBranch: dummyBranchModel,
   toBranch: dummyBranchModel,
+  recievingBranch: false,
   sender: ClientModel(
     id: 16,
     name: 'علي محمد',

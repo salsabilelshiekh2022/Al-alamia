@@ -1,0 +1,1 @@
+enum UpdateTransactionStatusEnum {recieved, canceled}
