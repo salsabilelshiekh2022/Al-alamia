@@ -22,6 +22,11 @@ class DenominationListItem extends StatelessWidget {
             ),
           ),
         ),
+           Container(
+                  width: 1,
+                  height: 20,
+                  color: context.colors.grayColor,
+                ),
         Expanded(
           child: FittedBox(
             fit: BoxFit.scaleDown,
@@ -33,6 +38,11 @@ class DenominationListItem extends StatelessWidget {
             ),
           ),
         ),
+          Container(
+                  width: 1,
+                  height: 20,
+                  color: context.colors.grayColor,
+                ),
         Expanded(
           child: FittedBox(
             fit: BoxFit.scaleDown,

@@ -28,6 +28,7 @@ class DenominationsListView extends StatelessWidget {
                     style: context.textStyles.font15MediumGrayColor,
                   ),
                 ),
+              
                 Expanded(
                   child: Text(
                     context.number,
