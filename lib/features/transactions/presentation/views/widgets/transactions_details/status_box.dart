@@ -25,38 +25,38 @@ class StatusBox extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(16),
         ),
-        shadows: [
-          BoxShadow(
-            color: Color(0x07000000),
-            blurRadius: 25,
-            offset: Offset(0, 11),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Color(0x07000000),
-            blurRadius: 45,
-            offset: Offset(0, 45),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Color(0x05000000),
-            blurRadius: 61,
-            offset: Offset(0, 101),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Color(0x00000000),
-            blurRadius: 72,
-            offset: Offset(0, 180),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Color(0x00000000),
-            blurRadius: 79,
-            offset: Offset(0, 280),
-            spreadRadius: 0,
-          ),
-        ],
+        // shadows: [
+        //   BoxShadow(
+        //     color: Color(0x07000000),
+        //     blurRadius: 25,
+        //     offset: Offset(0, 11),
+        //     spreadRadius: 0,
+        //   ),
+        //   BoxShadow(
+        //     color: Color(0x07000000),
+        //     blurRadius: 45,
+        //     offset: Offset(0, 45),
+        //     spreadRadius: 0,
+        //   ),
+        //   BoxShadow(
+        //     color: Color(0x05000000),
+        //     blurRadius: 61,
+        //     offset: Offset(0, 101),
+        //     spreadRadius: 0,
+        //   ),
+        //   BoxShadow(
+        //     color: Color(0x00000000),
+        //     blurRadius: 72,
+        //     offset: Offset(0, 180),
+        //     spreadRadius: 0,
+        //   ),
+        //   BoxShadow(
+        //     color: Color(0x00000000),
+        //     blurRadius: 79,
+        //     offset: Offset(0, 280),
+        //     spreadRadius: 0,
+        //   ),
+        // ],
       ),
       child: Row(
         children: [

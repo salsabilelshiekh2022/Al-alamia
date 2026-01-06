@@ -42,7 +42,7 @@ class NotificationsView extends StatelessWidget {
                       minHeight: MediaQuery.of(context).size.height - 130.h,
                     ),
                     decoration: BoxDecoration(
-                      color: context.colors.whiteColor,
+                      color: context.colors.backgroundColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(24),
                         topRight: Radius.circular(24),

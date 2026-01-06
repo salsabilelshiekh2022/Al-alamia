@@ -14,15 +14,15 @@ class CardWithShadow extends StatelessWidget {
       decoration: ShapeDecoration(
     color: Colors.white,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius ?? 12)),
-    shadows: [
-      BoxShadow(
-        color: Color(0x26000000),
-        blurRadius: 5,
-        offset: Offset(0, 0),
-        spreadRadius: 0,
-      )
+    // shadows: [
+    //   BoxShadow(
+    //     color: Color(0x26000000),
+    //     blurRadius: 5,
+    //     offset: Offset(0, 0),
+    //     spreadRadius: 0,
+    //   )
 
-    ],
+    // ],
   ),
   child: child,
     );
