@@ -56,8 +56,8 @@ class TransactionsCubit extends Cubit<TransactionsState>{
     emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.loading));
     final result = await transactionRepo.updateTransactionStatus(transactionId: transactionId, params: params);
     result.fold(
-      (failure) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.error)),
-      (message) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.success)),
+      (failure) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.error, message: failure.message)),
+      (message) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.success, message: message)),
     );
   }
 }

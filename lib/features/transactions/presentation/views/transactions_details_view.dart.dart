@@ -14,6 +14,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../core/components/widgets/custom_app_bar.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/enums/status_enum.dart';
@@ -182,10 +183,19 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
 
   Widget recivingButton() {
     return BlocListener<TransactionsCubit, TransactionsState>(
+      listenWhen: (previous, current) =>
+          previous.updateTransactionRequestStatus !=
+          current.updateTransactionRequestStatus,
       listener: (context, state) {
         if (state.updateTransactionRequestStatus.isSuccess) {
+           context.read<TransactionsCubit>().getTransactionList(transaction: TransactionsEnum.recieving);
           context.pop();
-          context.read<TransactionsCubit>().getTransactionList(transaction: TransactionsEnum.recieving);
+          AppSnackBar.showSnackBar(
+            context: context,
+            message: state.message ?? 'تمت العملية بنجاح',
+            state: SnackBarStates.success,
+          );
+         
         }
       },
       child: MainButton(
