@@ -145,16 +145,16 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-            boxShadow:
-                widget.boxShadow ??
-                [
-                  BoxShadow(
-                    color: const Color(0x11000000),
-                    blurRadius: 44,
-                    offset: const Offset(0, 0),
-                    spreadRadius: 0,
-                  ),
-                ],
+            // boxShadow:
+            //     widget.boxShadow ??
+            //     [
+            //       BoxShadow(
+            //         color: const Color(0x11000000),
+            //         blurRadius: 44,
+            //         offset: const Offset(0, 0),
+            //         spreadRadius: 0,
+            //       ),
+            //     ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -50,7 +50,7 @@ class HomeView extends StatelessWidget {
                         minHeight: MediaQuery.of(context).size.height - 130.h,
                       ),
                       decoration: BoxDecoration(
-                        color: context.colors.whiteColor,
+                        color: Color(0xfff5f7f9),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24),
@@ -59,7 +59,7 @@ class HomeView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          40.verticalSizedBox,
+                          25.verticalSizedBox,
                           WalletsSections(),
                           20.verticalSizedBox,
                           DebtsAndExpensesSection(),

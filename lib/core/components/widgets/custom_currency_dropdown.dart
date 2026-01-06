@@ -1,5 +1,6 @@
 import 'package:alalamia/core/components/widgets/card_with_purple_shadow.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
+import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -125,12 +126,13 @@ class CustomCurrencyDropdown extends StatelessWidget {
   }
 
   Widget _buildCurrencyImage(CurrencyModel currency) {
-    return ClipOval(
+    return ClipRRect(
+      borderRadius: 12.allBorderRadius,
       child: SvgPicture.network(
         currency.image!,
-        width: _imageSize.w,
-        height: _imageSize.h,
-        fit: BoxFit.cover,
+        width: 20,
+        height: 20,
+        fit: BoxFit.scaleDown,
       ),
     );
   }

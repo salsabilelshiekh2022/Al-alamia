@@ -20,7 +20,7 @@ class MainActionsBox extends StatelessWidget {
             side: BorderSide(width: 1, color: const Color(0x2800840F)),
             borderRadius: BorderRadius.circular(16),
           ),
-          shadows: context.colors.whiteShadowsBox,
+         // shadows: context.colors.whiteShadowsBox,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

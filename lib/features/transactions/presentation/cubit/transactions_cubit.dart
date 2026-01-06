@@ -22,7 +22,7 @@ class TransactionsCubit extends Cubit<TransactionsState>{
         state.copyWith(
           transactionsStatus: RequestStatus.error,
           message: failure.message,
-        ),
+        ), 
       ),
       (transactions) => emit(
         state.copyWith(
