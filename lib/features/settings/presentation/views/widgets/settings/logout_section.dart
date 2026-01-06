@@ -23,13 +23,13 @@ class LogoutSection extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.colors.whiteColor,
           borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xff6E0084).withValues(alpha: 0.2),
-              blurRadius: 20.r,
-              offset: const Offset(0, 0),
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Color(0xff6E0084).withValues(alpha: 0.2),
+          //     blurRadius: 20.r,
+          //     offset: const Offset(0, 0),
+          //   ),
+          // ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -51,10 +51,28 @@ class TransactionCard extends StatelessWidget {
             ).verticalPadding(10),
             TransactionFromTo(transactionModel: transactionModel),
             16.verticalSizedBox,
-            Text(
+             Text(
               "${transactionModel.amountReceived!.toString()} ${transactionModel.currency?.code ?? ""}",
               style: context.textStyles.font20SemiBoldPrimaryColor,
             ),
+            // Row(
+            //   children: [
+            //     Spacer(),
+            //     Text(
+            //       "${transactionModel.amountReceived!.toString()} ${transactionModel.currency?.code ?? ""}",
+            //       style: context.textStyles.font20SemiBoldPrimaryColor,
+            //     ),
+            //     Spacer(),
+            //     Text(
+            //       "المزيد",
+            //       style: context.textStyles.font14RegularPrimaryColor.copyWith(
+            //         decoration: TextDecoration.underline,
+            //         fontSize: 12
+            //       ),
+            //     ),
+
+            //   ],
+            // ),
           ],
         ),
       ),

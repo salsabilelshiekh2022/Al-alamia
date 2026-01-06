@@ -25,7 +25,7 @@ class CustomCurrencyDropdown extends StatelessWidget {
   static const double _popupMaxHeight = 180;
   static const double _itemPadding = 14;
   static const double _dropdownBorderRadius = 10;
-  static const double _imageSize = 22;
+  // static const double _imageSize = 22;
  
 
   @override

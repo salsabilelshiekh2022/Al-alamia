@@ -15,6 +15,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Gradient backGroundGradientColor;
   final Gradient navigationGradientColor;
   final List<BoxShadow> whiteShadowsBox;
+  final Color backgroundColor;
 
   const AppColors({
     required this.whiteColor,
@@ -31,6 +32,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.backGroundGradientColor,
     required this.navigationGradientColor,
     required this.whiteShadowsBox,
+    required this.backgroundColor,
   });
 
   @override
@@ -65,6 +67,7 @@ class AppColors extends ThemeExtension<AppColors> {
         redColor: Color.lerp(redColor, other.redColor, t)!,
 
         greenColor: Color.lerp(greenColor, other.greenColor, t)!,
+        backgroundColor: Color.lerp(greenColor, other.backgroundColor, t)!,
 
         yellowColor: Color.lerp(yellowColor, other.yellowColor, t)!,
         buttonGradientColor: Gradient.lerp(
