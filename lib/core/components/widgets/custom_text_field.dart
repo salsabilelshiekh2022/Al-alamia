@@ -94,6 +94,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 width: 20,
                 height: 20,
                 fit: BoxFit.scaleDown,
+                color: context.colors.grayColor,
               ),
         suffixIcon: widget.suffixIcon == true && widget.suffixWidget == null
             ? IconButton(
