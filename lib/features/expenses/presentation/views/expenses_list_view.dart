@@ -1,5 +1,3 @@
-import 'package:alalamia/core/components/widgets/custom_currency_dropdown.dart';
-import 'package:alalamia/core/components/widgets/main_button.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/features/expenses/presentation/cubit/expenses_state.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
@@ -46,6 +44,18 @@ class _ExpensesListViewState extends State<ExpensesListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: InkWell(
+        onTap: () => context.pushNamed(Routes.addExpensesView),
+        child: Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: context.colors.primaryColor,
+          ),
+          child: Icon(Icons.add_rounded, color: context.colors.whiteColor),
+        ),
+      ),
       body: Stack(
         children: [
           _buildBackgroundImage(),
@@ -57,43 +67,54 @@ class _ExpensesListViewState extends State<ExpensesListView> {
 
                   isBack: true,
                 ).onlyPadding(bottomPadding: 0),
-                BlocBuilder<ExpensesCubit, ExpensesState>(
-                  builder: (context, state) {
-                    return Text(
-                      "\$${state.expensesAmountByCurrency ?? ''}",
-                      style: context.textStyles.font24BoldSecondaryColor
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BlocBuilder<ExpensesCubit, ExpensesState>(
+                      builder: (context, state) {
+                        return Text(
+                          "0",
+                          style: context.textStyles.font24BoldSecondaryColor
+                              .copyWith(color: context.colors.whiteColor),
+                        );
+                      },
+                    ),
+                    6.horizontalSizedBox,
+                    Text(
+                      "الدينار الليبي",
+                      style: context.textStyles.font16RegularSecondaryColor
                           .copyWith(color: context.colors.whiteColor),
-                    );
-                  },
+                    ).verticalPadding(8),
+                  ],
                 ),
                 8.verticalSizedBox,
-                SizedBox(
-                  width: 150.w,
-                  child: CustomCurrencyDropdown(
-                    items: context.read<HomeCubit>().state.currenciesList,
-                    selectedItem: selectedCurrency,
-                    onChanged: (val) {
-                      setState(() {
-                        selectedCurrency = val;
-                        context.read<ExpensesCubit>().getExpensesByCurrency(
-                          id: val!.id!,
-                        );
-                      });
-                    },
-                    color: Colors.white,
-                    displayImageCurrency: false,
-                  ),
-                ),
-                12.verticalSizedBox,
-                MainButton(
-                  title: context.addExpenses,
-                  onTap: () => context.pushNamed(Routes.addExpensesView),
-                  color: Colors.white.withValues(alpha: 0.08),
-                  borderColor: context.colors.whiteColor.withValues(
-                    alpha: 0.36,
-                  ),
-                  icon: AppAssets.svgsCash,
-                ).horizontalPadding(16),
+                // SizedBox(
+                //   width: 150.w,
+                //   child: CustomCurrencyDropdown(
+                //     items: context.read<HomeCubit>().state.currenciesList,
+                //     selectedItem: selectedCurrency,
+                //     onChanged: (val) {
+                //       setState(() {
+                //         selectedCurrency = val;
+                //         context.read<ExpensesCubit>().getExpensesByCurrency(
+                //           id: val!.id!,
+                //         );
+                //       });
+                //     },
+                //     color: Colors.white,
+                //     displayImageCurrency: false,
+                //   ),
+                // ),
+                // 12.verticalSizedBox,
+                // MainButton(
+                //   title: context.addExpenses,
+                //   onTap: () => context.pushNamed(Routes.addExpensesView),
+                //   color: Colors.white.withValues(alpha: 0.08),
+                //   borderColor: context.colors.whiteColor.withValues(
+                //     alpha: 0.36,
+                //   ),
+                //   icon: AppAssets.svgsCash,
+                // ).horizontalPadding(16),
                 Container(
                   margin: EdgeInsets.only(top: 16),
                   padding: const EdgeInsets.all(24),

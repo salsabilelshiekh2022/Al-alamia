@@ -52,14 +52,14 @@ class DebtItemInReport extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        shadows: [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 44,
-            offset: Offset(0, 0),
-            spreadRadius: 0,
-          ),
-        ],
+        // shadows: [
+        //   BoxShadow(
+        //     color: Color(0x14000000),
+        //     blurRadius: 44,
+        //     offset: Offset(0, 0),
+        //     spreadRadius: 0,
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

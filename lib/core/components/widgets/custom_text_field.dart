@@ -82,7 +82,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         return null;
       },
       decoration: InputDecoration(
-        fillColor: context.colors.backgroundFieldColor,
+        fillColor: context.colors.whiteColor,
         filled: true,
         hintText: widget.hintText,
         hintStyle: context.textStyles.font14MediumGrayColor,
