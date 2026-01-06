@@ -2,7 +2,7 @@ class AppConstants {
   static const String appName = 'Alalamia';
   static const String appBox = 'AlalamiaAppBox';
   static const String appVersion = '1.0.0';
-  static const String fontName = 'Cairo';
+  static const String fontName = 'Tajawal';
   static const String tokenKey = 'tokenKey';
   static const String userKey = 'userKey';
   static const String idKey = 'idKey';

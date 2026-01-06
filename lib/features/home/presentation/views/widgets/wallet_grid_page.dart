@@ -23,9 +23,9 @@ class WalletGridPage extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        childAspectRatio: 1.4,
-        crossAxisSpacing: 12.w,
-        mainAxisSpacing: 12.h,
+        childAspectRatio: 1.5,
+        crossAxisSpacing: 4.w,
+        mainAxisSpacing: 4.h,
         mainAxisExtent: 100.h,
       ),
       itemCount: items.length,

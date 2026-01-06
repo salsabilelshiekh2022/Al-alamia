@@ -49,7 +49,7 @@ class DebtsAndExpensesSection extends StatelessWidget {
         child: Container(
           padding: 16.vPadding,
           decoration: BoxDecoration(
-            color: context.colors.primaryColor.withValues(alpha: 0.03),
+            color: context.colors.primaryColor.withValues(alpha: 0.1),
             borderRadius: 12.allBorderRadius,
             border: Border.all(
               color: context.colors.primaryColor.withValues(alpha: 0.16),

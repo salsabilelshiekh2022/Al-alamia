@@ -54,7 +54,7 @@ class WalletCard extends StatelessWidget {
                     child: Text(
                       currencyModel.currencyName!,
                       style: context.textStyles.font13SemiBoldPrimaryColor
-                          .copyWith(color: context.colors.grayColor),
+                          .copyWith(color: context.colors.secondaryColor.withValues(alpha: 0.9)),
                     ),
                   ),
                 ),
