@@ -42,7 +42,7 @@ class _PaymentMethodSelectionBottomSheetState
       filteredMethods = widget.paymentMethods
           .where((method) =>
               method?.name
-                  ?.toLowerCase()
+                  .toLowerCase()
                   .contains(searchController.text.toLowerCase()) ??
               false)
           .toList();
@@ -98,7 +98,7 @@ class _PaymentMethodSelectionBottomSheetState
                       ),
                     ),
                     child: Text(
-                      method.name ?? '',
+                      method.name ,
                       style: isSelected
                           ? context.textStyles.font16MediumPrimaryColor
                           : context.textStyles.font16MediumSecondaryColor,

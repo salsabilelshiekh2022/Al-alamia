@@ -41,7 +41,7 @@ class _DeliveryTypeWidgetState extends State<DeliveryTypeWidget> {
 
   void _onDeliveryMethodSelected(PaymentMethodModel method) {
     setState(() {
-      deliveryMethodController.text = method.name ?? '';
+      deliveryMethodController.text = method.name;
       selectedPaymentMethod = method.id;
     });
     

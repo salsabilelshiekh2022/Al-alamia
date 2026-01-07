@@ -12,9 +12,10 @@ import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
-import '../../../../../core/components/widgets/custom_drop_down_card.dart';
+import '../../../../../core/components/widgets/commission_type_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/enums/commission_type_enum.dart';
+import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../generated/app_assets.dart';
 
 class CommitionCard extends StatefulWidget {
@@ -27,8 +28,7 @@ class CommitionCard extends StatefulWidget {
 class _CommitionCardState extends State<CommitionCard> {
   late TextEditingController commissionTypeController;
   late TextEditingController commissionController;
-  bool openCommissionTypesDropDown = false;
-  String? selectedCommissionType;
+  CommissionTypeEnum? selectedCommissionType;
 
   @override
   void initState() {
@@ -44,14 +44,26 @@ class _CommitionCardState extends State<CommitionCard> {
     super.dispose();
   }
 
-  void _onCommissionTypeSelected(String selectedItem) {
+  void _onCommissionTypeSelected(CommissionTypeEnum type) {
     setState(() {
-      openCommissionTypesDropDown = false;
-      commissionTypeController.text = selectedItem;
-      selectedCommissionType = selectedItem;
+      commissionTypeController.text = type.getCommissionType(context);
+      selectedCommissionType = type;
     });
     _updateFormData();
     _getFeeDetails();
+  }
+
+  void _showCommissionTypeBottomSheet() {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: CommissionTypeSelectionBottomSheet(
+        selectedType: selectedCommissionType,
+        onTypeSelected: (type) {
+          _onCommissionTypeSelected(type);
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 
   void _updateFormData() {
@@ -60,15 +72,7 @@ class _CommitionCardState extends State<CommitionCard> {
       final currentFormData = cubit.state.formData ?? SendMoneyFormData.empty();
 
       // Get commission type
-      CommissionTypeEnum? commissionType;
-      if (selectedCommissionType != null) {
-        for (var type in CommissionTypeEnum.values) {
-          if (type.getCommissionType(context) == selectedCommissionType) {
-            commissionType = type;
-            break;
-          }
-        }
-      }
+      CommissionTypeEnum? commissionType = selectedCommissionType;
 
       cubit.updateFormData(
         currentFormData.copyWith(
@@ -99,15 +103,7 @@ class _CommitionCardState extends State<CommitionCard> {
 
     if (toCurrencyId == null) return;
 
-    CommissionTypeEnum commissionType = CommissionTypeEnum.none;
-    if (selectedCommissionType != null) {
-      for (var type in CommissionTypeEnum.values) {
-        if (type.getCommissionType(context) == selectedCommissionType) {
-          commissionType = type;
-          break;
-        }
-      }
-    }
+    CommissionTypeEnum commissionType = selectedCommissionType ?? CommissionTypeEnum.none;
 
     context.read<GeneralCubit>().getFeeDetails(
           params: FeeDetailsRequestParams(
@@ -133,8 +129,7 @@ class _CommitionCardState extends State<CommitionCard> {
                     child: CustomTextFieldWithLabel(
                       onTap: () {
                         setState(() {
-                          openCommissionTypesDropDown =
-                              !openCommissionTypesDropDown;
+                         
                         });
                       },
                       controller: commissionController,
@@ -148,6 +143,9 @@ class _CommitionCardState extends State<CommitionCard> {
                   14.horizontalSizedBox,
                   Expanded(
                     child: CustomTextFieldWithLabel(
+                      onTap: () {
+                        _showCommissionTypeBottomSheet();
+                      },
                       controller: commissionTypeController,
                       label: context.commissionType,
                       hintText: context.commissionType,
@@ -157,32 +155,17 @@ class _CommitionCardState extends State<CommitionCard> {
                       suffixWidget: InkWell(
                         splashColor: Colors.transparent,
                         onTap: () {
-                          setState(() {
-                            openCommissionTypesDropDown =
-                                !openCommissionTypesDropDown;
-                          });
+                          _showCommissionTypeBottomSheet();
                         },
                         child: Icon(
-                          openCommissionTypesDropDown
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.keyboard_arrow_down_rounded,
-                          color: openCommissionTypesDropDown
-                              ? context.colors.primaryColor
-                              : context.colors.grayColor,
+                          Icons.keyboard_arrow_down_rounded,
+                          color: context.colors.grayColor,
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              if (openCommissionTypesDropDown)
-                CustomDropDownCard(
-                  dropDownItems: CommissionTypeEnum.values
-                      .map((e) => e.getCommissionType(context))
-                      .toList(),
-                  selectedValue: commissionTypeController.text,
-                  onItemSelected: _onCommissionTypeSelected,
-                ).onlyPadding(topPadding: 6),
             ],
           ),
         ).onlyPadding(topPadding: 8, bottomPadding: 20);
