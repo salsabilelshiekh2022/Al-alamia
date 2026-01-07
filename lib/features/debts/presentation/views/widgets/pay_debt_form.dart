@@ -2,14 +2,12 @@ import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/debts/presentation/cubit/debt_state.dart';
 import 'package:alalamia/features/debts/presentation/cubit/debts_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/app_snack_bar.dart';
-import '../../../../../core/components/widgets/custom_drop_down_card.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
 import '../../../../../core/di/dependency_injection.dart';
@@ -24,6 +22,8 @@ import '../../../../home/presentation/cubit/home_state.dart';
 import '../../../../transfer_money/data/models/transfer_money_request_params.dart';
 import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/get_debts_by_currency_request_params.dart';
+import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'currency_selection_bottom_sheet.dart';
 import '../../../data/models/pay_debt_request_params.dart';
 
 class PayDebtForm extends StatefulWidget {
@@ -42,7 +42,6 @@ class _PayDebtFormState extends State<PayDebtForm> {
 
   final formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  bool isDropDownOpen = false;
   int? selectedCurrencyId;
   @override
   void initState() {
@@ -62,20 +61,32 @@ class _PayDebtFormState extends State<PayDebtForm> {
     super.dispose();
   }
 
-  void _onItemSelected(String selectedItem) {
-    final homeCubit = context.read<HomeCubit>();
-    final selectedCurrency = homeCubit.state.currenciesList.firstWhere(
-      (currency) => currency.name == selectedItem,
-    );
+  void _onItemSelected(CurrencyModel currency) {
     context.read<DebtsCubit>().getDebtsByCurrency(
-      id: selectedCurrency.id!,
-      params: GetDebtsByCurrencyRequestParams(debtsType: widget.debtType, phone: phoneController.text),
+      id: currency.id!,
+      params: GetDebtsByCurrencyRequestParams(
+        debtsType: widget.debtType,
+        phone: phoneController.text,
+      ),
     );
     setState(() {
-      isDropDownOpen = false;
-      currencyController.text = selectedItem;
-      selectedCurrencyId = selectedCurrency.id;
+      currencyController.text = currency.name ?? '';
+      selectedCurrencyId = currency.id;
     });
+  }
+
+  void _showCurrencyBottomSheet(List<CurrencyModel> currencies) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: CurrencySelectionBottomSheet(
+        currencies: currencies,
+        selectedCurrencyId: selectedCurrencyId,
+        onCurrencySelected: (currency) {
+          _onItemSelected(currency);
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 
   void _onDenominationsConfirmed(List<DenominationsRequestParams> denominations) {
@@ -225,51 +236,27 @@ class _PayDebtFormState extends State<PayDebtForm> {
   Widget _buildCurrencyField(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            CustomTextFieldWithLabel(
-              onTap: () {
-                setState(() {
-                  isDropDownOpen = !isDropDownOpen;
-                });
-              },
-              controller: currencyController,
-              label: context.currency,
-              hintText: context.currenyHint,
-              prefixWidget: AppAssets.svgsCoinsIcon,
-              isRequired: true,
-              isReadOnly: true,
-              validator: (value) =>
-                  Validator.validateAnotherField(value, context),
-              suffixWidget: InkWell(
-                splashColor: Colors.transparent,
-                onTap: () {
-                  setState(() {
-                    isDropDownOpen = !isDropDownOpen;
-                  });
-                },
-                child: Icon(
-                  isDropDownOpen
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded,
-                  color: isDropDownOpen
-                      ? context.colors.primaryColor
-                      : context.colors.grayColor,
-                ),
-              ),
+        return CustomTextFieldWithLabel(
+          onTap: () {
+            _showCurrencyBottomSheet(state.currenciesList);
+          },
+          controller: currencyController,
+          label: context.currency,
+          hintText: context.currenyHint,
+          prefixWidget: AppAssets.svgsCoinsIcon,
+          isRequired: true,
+          isReadOnly: true,
+          validator: (value) => Validator.validateAnotherField(value, context),
+          suffixWidget: InkWell(
+            splashColor: Colors.transparent,
+            onTap: () {
+              _showCurrencyBottomSheet(state.currenciesList);
+            },
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: context.colors.grayColor,
             ),
-
-            isDropDownOpen
-                ? CustomDropDownCard(
-                    dropDownItems: state.currenciesList
-                        .map((e) => e.name)
-                        .whereType<String>()
-                        .toList(),
-                    selectedValue: currencyController.text,
-                    onItemSelected: _onItemSelected,
-                  ).onlyPadding(topPadding: 6)
-                : SizedBox(),
-          ],
+          ),
         );
       },
     );
