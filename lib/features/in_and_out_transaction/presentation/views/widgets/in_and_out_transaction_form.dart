@@ -3,13 +3,13 @@ import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/core/general/cubit/general_state.dart';
 import 'package:alalamia/features/auth/data/models/user_model.dart';
-import 'package:alalamia/features/home/presentation/cubit/home_state.dart';
 import 'package:alalamia/features/in_and_out_transaction/presentation/cubit/in_and_out_transaction_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/app_snack_bar.dart';
-import '../../../../../core/components/widgets/custom_drop_down_card.dart';
+import '../../../../../core/general/data/models/branch_model.dart';
+import '../../../../debts/presentation/views/widgets/currency_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
 import '../../../../../core/database/cache/cache_services.dart';
@@ -17,14 +17,15 @@ import '../../../../../core/enums/request_status.dart';
 import '../../../../../core/helper/app_extention.dart';
 import '../../../../../core/helper/number_extentions.dart';
 import '../../../../../core/helper/translation_extensions.dart';
-import '../../../../../core/helper/widget_extentions.dart';
 import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
+import '../../../../home/data/models/currency_model.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../../transfer_money/data/models/transfer_money_request_params.dart';
 import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/in_and_out_request_params.dart';
+import 'branch_selection_bottom_sheet.dart';
 import '../../cubit/in_and_out_transaction_state.dart';
 
 class InAndOutTransactionForm extends StatefulWidget {
@@ -44,8 +45,8 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
   final formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
-  bool openCurrencyDropDown = false;
-  bool openDestinationDropDown = false;
+
+
 
   int? selectedCurrencyId;
   int? selectedDestinationId;
@@ -74,30 +75,46 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
     super.dispose();
   }
 
-  void _onCurrencySelected(String selectedItem) {
-    final homeCubit = context.read<HomeCubit>();
-    final selectedCurrency = homeCubit.state.currenciesList.firstWhere(
-      (currency) => currency.name == selectedItem,
-    );
-
+  void _onCurrencySelected(CurrencyModel currency) {
     setState(() {
-      openCurrencyDropDown = false;
-      currencyController.text = selectedItem;
-      selectedCurrencyId = selectedCurrency.id;
+      currencyController.text = currency.name ?? '';
+      selectedCurrencyId = currency.id;
     });
   }
 
-  _onDestinationSelected(String selectedItem) {
-    final generalCubit = context.read<GeneralCubit>();
-    final selectedDestination = generalCubit.state.branches!.firstWhere(
-      (branch) => branch?.name == selectedItem,
+  void _showCurrencyBottomSheet(List<CurrencyModel> currencies) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: CurrencySelectionBottomSheet(
+        currencies: currencies,
+        selectedCurrencyId: selectedCurrencyId,
+        onCurrencySelected: (currency) {
+          _onCurrencySelected(currency);
+          Navigator.pop(context);
+        },
+      ),
     );
+  }
 
+  _onDestinationSelected(BranchModel branch) {
     setState(() {
-      openDestinationDropDown = false;
-      destinationController.text = selectedItem;
-      selectedDestinationId = selectedDestination?.id;
+      destinationController.text = branch.name ?? '';
+      selectedDestinationId = branch.id;
     });
+  }
+
+  void _showBranchBottomSheet(List<BranchModel?> branches) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: BranchSelectionBottomSheet(
+        branches: branches,
+        selectedBranchId: selectedDestinationId,
+        onBranchSelected: (branch) {
+          _onDestinationSelected(branch);
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 
   void _handleSendButton() {
@@ -179,37 +196,32 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
               enabled: false,
             ),
             20.verticalSizedBox,
-            CustomTextFieldWithLabel(
-              controller: destinationController,
-              label: context.destination,
-              hintText: context.distinctionHint,
-              isReadOnly: true,
-              isRequired: true,
-              prefixWidget: AppAssets.svgsBank,
-              validator: (value) => Validator.validateAnotherField(value, context),
-              onTap: () {
-                setState(() {
-                  openDestinationDropDown = !openDestinationDropDown;
-                  openCurrencyDropDown = false;
-                });
+            BlocBuilder<GeneralCubit, GeneralState>(
+              builder: (context, state) {
+                return CustomTextFieldWithLabel(
+                  controller: destinationController,
+                  label: context.destination,
+                  hintText: context.distinctionHint,
+                  isReadOnly: true,
+                  isRequired: true,
+                  prefixWidget: AppAssets.svgsBank,
+                  validator: (value) => Validator.validateAnotherField(value, context),
+                  onTap: () {
+                     _showBranchBottomSheet(state.branches!);
+                  },
+                  suffixWidget: InkWell(
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                       _showBranchBottomSheet(state.branches!);
+                    },
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: context.colors.grayColor,
+                    ),
+                  ),
+                );
               },
-              suffixWidget: _buildDropdownIcon(
-                isDropDownOpen: openDestinationDropDown,
-              ),
             ),
-            if (openDestinationDropDown)
-              BlocBuilder<GeneralCubit, GeneralState>(
-                builder: (context, state) {
-                  return CustomDropDownCard(
-                    dropDownItems: state.branches!
-                        .map((e) => e?.name)
-                        .whereType<String>()
-                        .toList(),
-                    selectedValue: destinationController.text,
-                    onItemSelected: _onDestinationSelected,
-                  );
-                },
-              ).onlyPadding(topPadding: 6),
             20.verticalSizedBox,
             CustomTextFieldWithLabel(
               controller: currencyController,
@@ -218,30 +230,28 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
               isReadOnly: true,
               isRequired: true,
               prefixWidget: AppAssets.svgsCoinsIcon,
-              validator: (value) => Validator.validateAnotherField(value, context),
+              validator: (value) =>
+                  Validator.validateAnotherField(value, context),
               onTap: () {
-                setState(() {
-                  openCurrencyDropDown = !openCurrencyDropDown;
-                  openDestinationDropDown = false;
-                });
+                context.read<InAndOutTransactionCubit>().state.inAndOutTransactionStatus.isLoading
+                    ? null
+                    : _showCurrencyBottomSheet(
+                        context.read<HomeCubit>().state.currenciesList);
               },
-              suffixWidget: _buildDropdownIcon(
-                isDropDownOpen: openCurrencyDropDown,
+              suffixWidget: InkWell(
+                splashColor: Colors.transparent,
+                onTap: () {
+                   context.read<InAndOutTransactionCubit>().state.inAndOutTransactionStatus.isLoading
+                    ? null
+                    : _showCurrencyBottomSheet(
+                        context.read<HomeCubit>().state.currenciesList);
+                },
+                child: Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: context.colors.grayColor,
+                ),
               ),
             ),
-            if (openCurrencyDropDown)
-              BlocBuilder<HomeCubit, HomeState>(
-                builder: (context, state) {
-                  return CustomDropDownCard(
-                    dropDownItems: state.currenciesList
-                        .map((e) => e.name)
-                        .whereType<String>()
-                        .toList(),
-                    selectedValue: currencyController.text,
-                    onItemSelected: _onCurrencySelected,
-                  );
-                },
-              ).onlyPadding(topPadding: 6),
             20.verticalSizedBox,
             CustomTextFieldWithLabel(
               controller: amountController,
@@ -267,24 +277,5 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
     );
   }
 
-  Widget _buildDropdownIcon({required bool isDropDownOpen}) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      onTap: () => _toggleDropdown(isDropDownOpen: isDropDownOpen),
-      child: Icon(
-        isDropDownOpen
-            ? Icons.keyboard_arrow_up_rounded
-            : Icons.keyboard_arrow_down_rounded,
-        color: isDropDownOpen
-            ? context.colors.primaryColor
-            : context.colors.grayColor,
-      ),
-    );
-  }
 
-  void _toggleDropdown({required bool isDropDownOpen}) {
-    setState(() {
-      isDropDownOpen = !isDropDownOpen;
-    });
-  }
 }
