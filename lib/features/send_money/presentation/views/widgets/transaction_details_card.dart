@@ -18,10 +18,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
-import '../../../../../core/components/widgets/custom_drop_down_card.dart';
+import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
+import '../../../../../core/components/widgets/branch_selection_bottom_sheet.dart';
+import '../../../../../core/components/widgets/commission_type_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/enums/delivery_type_enum.dart';
+import '../../../../../core/general/data/models/branch_model.dart';
+import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../generated/app_assets.dart';
+import '../../../../home/data/models/currency_model.dart';
 import '../../../../home/data/models/transfer_currency_request_params.dart';
 import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../data/models/send_money_form_data.dart';
@@ -42,14 +47,10 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
   late TextEditingController amountByCharController;
   late TextEditingController commissionTypeController;
   late TextEditingController commissionController;
-  bool openCurrencyDropDown = false;
-  bool openDestinationDropDown = false;
-  bool openCommissionTypesDropDown = false;
-  bool openToCurrencyDropDown = false;
   int? selectedCurrencyId;
   int? selectedToCurrencyId;
   int? selectedDestinationId;
-  String? selectedCommissionType;
+  CommissionTypeEnum? selectedCommissionType;
   @override
   void initState() {
     currencyController = TextEditingController();
@@ -83,57 +84,86 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     super.dispose();
   }
 
-  void _onCurrencySelected(String selectedItem) {
-    final homeCubit = context.read<HomeCubit>();
-    final selectedCurrency = homeCubit.state.currenciesList.firstWhere(
-      (currency) => currency.name == selectedItem,
-    );
+  void _onCurrencySelected(CurrencyModel currency) {
     _calculateExchangeRate();
     setState(() {
-      openCurrencyDropDown = false;
-      currencyController.text = selectedItem;
-      selectedCurrencyId = selectedCurrency.id;
+      currencyController.text = currency.name ?? '';
+      selectedCurrencyId = currency.id;
     });
     _updateFormData();
     _getFeeDetails();
   }
 
-  void _onToCurrencySelected(String selectedItem) {
-    final homeCubit = context.read<HomeCubit>();
-    final selectedCurrency = homeCubit.state.currenciesList.firstWhere(
-      (currency) => currency.name == selectedItem,
-    );
+  void _onToCurrencySelected(CurrencyModel currency) {
     _calculateExchangeRate();
     setState(() {
-      openToCurrencyDropDown = false;
-      toCurrencyController.text = selectedItem;
-      selectedToCurrencyId = selectedCurrency.id;
+      toCurrencyController.text = currency.name ?? '';
+      selectedToCurrencyId = currency.id;
     });
     _updateFormData();
     _getFeeDetails();
   }
 
-  void _onDestinationSelected(String selectedItem) {
-    final generalCubit = context.read<GeneralCubit>();
-    final selectedDestination = generalCubit.state.branches?.firstWhere(
-      (branch) => branch?.name == selectedItem,
+  void _showCurrencyBottomSheet(List<CurrencyModel> currencies, {bool isToCurrency = false}) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: CurrencySelectionBottomSheet(
+        currencies: currencies,
+        selectedCurrencyId: isToCurrency ? selectedToCurrencyId : selectedCurrencyId,
+        onCurrencySelected: (currency) {
+          if (isToCurrency) {
+            _onToCurrencySelected(currency);
+          } else {
+            _onCurrencySelected(currency);
+          }
+          Navigator.pop(context);
+        },
+      ),
     );
+  }
+
+  void _onDestinationSelected(BranchModel branch) {
     setState(() {
-      openDestinationDropDown = false;
-      destinationController.text = selectedItem;
-      selectedDestinationId = selectedDestination?.id;
+      destinationController.text = branch.name ?? '';
+      selectedDestinationId = branch.id;
     });
     _updateFormData();
   }
 
-  void _onCommissionTypeSelected(String selectedItem) {
+  void _showBranchBottomSheet(List<BranchModel?> branches) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: BranchSelectionBottomSheet(
+        branches: branches,
+        selectedBranchId: selectedDestinationId,
+        onBranchSelected: (branch) {
+          _onDestinationSelected(branch);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _onCommissionTypeSelected(CommissionTypeEnum type) {
     setState(() {
-      openCommissionTypesDropDown = false;
-      commissionTypeController.text = selectedItem;
-      selectedCommissionType = selectedItem;
+      commissionTypeController.text = type.getCommissionType(context);
+      selectedCommissionType = type;
     });
     _updateFormData();
     _getFeeDetails();
+  }
+
+  void _showCommissionTypeBottomSheet() {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: CommissionTypeSelectionBottomSheet(
+        selectedType: selectedCommissionType,
+        onTypeSelected: (type) {
+          _onCommissionTypeSelected(type);
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 
   void _calculateExchangeRate() {
@@ -210,15 +240,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       final toBranch = selectedDestinationId;
 
       // Get commission type
-      CommissionTypeEnum? commissionType;
-      if (selectedCommissionType != null) {
-        for (var type in CommissionTypeEnum.values) {
-          if (type.getCommissionType(context) == selectedCommissionType) {
-            commissionType = type;
-            break;
-          }
-        }
-      }
+      CommissionTypeEnum? commissionType = selectedCommissionType;
 
       cubit.updateFormData(
         currentFormData.copyWith(
@@ -253,15 +275,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
 
     if (toCurrencyId == null) return;
 
-    CommissionTypeEnum commissionType = CommissionTypeEnum.none;
-    if (selectedCommissionType != null) {
-      for (var type in CommissionTypeEnum.values) {
-        if (type.getCommissionType(context) == selectedCommissionType) {
-          commissionType = type;
-          break;
-        }
-      }
-    }
+    CommissionTypeEnum commissionType = selectedCommissionType ?? CommissionTypeEnum.none;
 
     context.read<GeneralCubit>().getFeeDetails(
           params: FeeDetailsRequestParams(
@@ -298,20 +312,17 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                       prefixWidget: AppAssets.svgsDollarIcon,
                       isRequired: true,
                       isReadOnly: true,
+                      onTap: () {
+                        _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
+                      },
                       suffixWidget: InkWell(
                         splashColor: Colors.transparent,
                         onTap: () {
-                          setState(() {
-                            openCurrencyDropDown = !openCurrencyDropDown;
-                          });
+                          _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
                         },
                         child: Icon(
-                          openCurrencyDropDown
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.keyboard_arrow_down_rounded,
-                          color: openCurrencyDropDown
-                              ? context.colors.primaryColor
-                              : context.colors.grayColor,
+                          Icons.keyboard_arrow_down_rounded,
+                          color: context.colors.grayColor,
                         ),
                       ),
                     ),
@@ -334,19 +345,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                   ),
                 ],
               ),
-              if (openCurrencyDropDown)
-                BlocBuilder<HomeCubit, HomeState>(
-                  builder: (context, state) {
-                    return CustomDropDownCard(
-                      dropDownItems: state.currenciesList
-                          .map((e) => e.name)
-                          .whereType<String>()
-                          .toList(),
-                      selectedValue: currencyController.text,
-                      onItemSelected: _onCurrencySelected,
-                    );
-                  },
-                ).onlyPadding(topPadding: 6),
+
               16.verticalSizedBox,
               CustomTextFieldWithLabel(
                 controller: amountByCharController,
@@ -379,50 +378,31 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
               16.verticalSizedBox,
               // DeliveryTypeWidget(),
               // 16.verticalSizedBox,
-              CustomTextFieldWithLabel(
-                onTap: () {
-                  setState(() {
-                    openDestinationDropDown = !openDestinationDropDown;
-                  });
+              BlocBuilder<GeneralCubit, GeneralState>(
+                builder: (context, state) {
+                  return CustomTextFieldWithLabel(
+                    onTap: () {
+                      _showBranchBottomSheet(state.branches ?? []);
+                    },
+                    label: context.destination,
+                    controller: destinationController,
+                    hintText: context.distinctionHint,
+                    prefixWidget: AppAssets.svgsBank,
+                    isReadOnly: true,
+                    isRequired: true,
+                    suffixWidget: InkWell(
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        _showBranchBottomSheet(state.branches ?? []);
+                      },
+                      child: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: context.colors.grayColor,
+                      ),
+                    ),
+                  );
                 },
-                label: context.destination,
-                controller: destinationController,
-                hintText: context.distinctionHint,
-                prefixWidget: AppAssets.svgsBank,
-                isReadOnly: true,
-                isRequired: true,
-                suffixWidget: InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    setState(() {
-                      openDestinationDropDown = !openDestinationDropDown;
-                    });
-                  },
-                  child: Icon(
-                    openDestinationDropDown
-                        ? Icons.keyboard_arrow_up_rounded
-                        : Icons.keyboard_arrow_down_rounded,
-                    color: openDestinationDropDown
-                        ? context.colors.primaryColor
-                        : context.colors.grayColor,
-                  ),
-                ),
               ),
-              if (openDestinationDropDown)
-                BlocBuilder<GeneralCubit, GeneralState>(
-                  builder: (context, state) {
-                    return CustomDropDownCard(
-                      dropDownItems: state.branches != null
-                          ? state.branches!
-                                .map((e) => e?.name)
-                                .whereType<String>()
-                                .toList()
-                          : [],
-                      selectedValue: destinationController.text,
-                      onItemSelected: _onDestinationSelected,
-                    );
-                  },
-                ).onlyPadding(topPadding: 6),
               16.verticalSizedBox,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -431,8 +411,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                       child: CustomTextFieldWithLabel(
                         onTap: () {
                           setState(() {
-                            openCommissionTypesDropDown =
-                                !openCommissionTypesDropDown;
+                            // openCommissionTypesDropDown =
+                            //     !openCommissionTypesDropDown;
                           });
                         },
                         controller: commissionController,
@@ -446,6 +426,9 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                   14.horizontalSizedBox,
                   Expanded(
                     child: CustomTextFieldWithLabel(
+                      onTap: () {
+                        _showCommissionTypeBottomSheet();
+                      },
                       controller: commissionTypeController,
                       label: context.commissionType,
                       hintText: context.commissionType,
@@ -455,32 +438,15 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                       suffixWidget: InkWell(
                         splashColor: Colors.transparent,
                         onTap: () {
-                          setState(() {
-                            openCommissionTypesDropDown =
-                                !openCommissionTypesDropDown;
-                          });
+                          _showCommissionTypeBottomSheet();
                         },
                         child: Icon(
-                          openCommissionTypesDropDown
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.keyboard_arrow_down_rounded,
-                          color: openCommissionTypesDropDown
-                              ? context.colors.primaryColor
-                              : context.colors.grayColor,
+                          Icons.keyboard_arrow_down_rounded,
+                          color: context.colors.grayColor,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-              if (openCommissionTypesDropDown)
-                CustomDropDownCard(
-                  dropDownItems: CommissionTypeEnum.values
-                      .map((e) => e.getCommissionType(context))
-                      .toList(),
-                  selectedValue: commissionTypeController.text,
-                  onItemSelected: _onCommissionTypeSelected,
-                ).onlyPadding(topPadding: 6),
 
               context.read<SendMoneyCubit>().state.deliveryType ==
                       DeliveryTypeEnum.outside
@@ -490,32 +456,32 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: CustomTextFieldWithLabel(
-                                controller: toCurrencyController,
-                                label: context.convertedCurrency,
-                                hintText: context.convertedCurrency,
-                                prefixWidget: AppAssets.svgsDollarIcon,
-                                isRequired: true,
-                                isReadOnly: true,
-                                suffixWidget: InkWell(
-                                  splashColor: Colors.transparent,
-                                  onTap: () {
-                                    setState(() {
-                                      openToCurrencyDropDown =
-                                          !openToCurrencyDropDown;
-                                    });
-                                  },
-                                  child: Icon(
-                                    openToCurrencyDropDown
-                                        ? Icons.keyboard_arrow_up_rounded
-                                        : Icons.keyboard_arrow_down_rounded,
-                                    color: openToCurrencyDropDown
-                                        ? context.colors.primaryColor
-                                        : context.colors.grayColor,
+                            BlocBuilder<HomeCubit, HomeState>(
+                              builder: (context, state) {
+                                return Expanded(
+                                  child: CustomTextFieldWithLabel(
+                                    onTap: () {
+                                      _showCurrencyBottomSheet(state.currenciesList, isToCurrency: true);
+                                    },
+                                    controller: toCurrencyController,
+                                    label: context.convertedCurrency,
+                                    hintText: context.convertedCurrency,
+                                    prefixWidget: AppAssets.svgsDollarIcon,
+                                    isRequired: true,
+                                    isReadOnly: true,
+                                    suffixWidget: InkWell(
+                                      splashColor: Colors.transparent,
+                                      onTap: () {
+                                        _showCurrencyBottomSheet(state.currenciesList, isToCurrency: true);
+                                      },
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: context.colors.grayColor,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             ),
                             14.horizontalSizedBox,
                             BlocBuilder<HomeCubit, HomeState>(
@@ -540,22 +506,12 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                             ),
                           ],
                         ),
-                        if (openToCurrencyDropDown)
-                          BlocBuilder<HomeCubit, HomeState>(
-                            builder: (context, state) {
-                              return CustomDropDownCard(
-                                dropDownItems: state.currenciesList
-                                    .map((e) => e.name)
-                                    .whereType<String>()
-                                    .toList(),
-                                selectedValue: toCurrencyController.text,
-                                onItemSelected: _onToCurrencySelected,
-                              );
-                            },
-                          ).onlyPadding(topPadding: 6),
+
                       ],
                     )
                   : 0.verticalSizedBox,
+            ],
+          ),
             ],
           ),
         );

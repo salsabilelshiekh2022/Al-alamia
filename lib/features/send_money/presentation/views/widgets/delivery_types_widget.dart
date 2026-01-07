@@ -2,15 +2,17 @@ import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/components/widgets/custom_drop_down_card.dart';
+import '../../../../../core/components/widgets/payment_method_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/enums/delivery_type_enum.dart';
 import '../../../../../core/general/cubit/general_cubit.dart';
 import '../../../../../core/general/cubit/general_state.dart';
+import '../../../../../core/general/data/models/payment_method_model.dart';
 import '../../../../../core/helper/app_extention.dart';
 import '../../../../../core/helper/number_extentions.dart';
 import '../../../../../core/helper/translation_extensions.dart';
 import '../../../../../core/helper/widget_extentions.dart';
+import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../data/models/send_money_form_data.dart';
 
@@ -24,7 +26,6 @@ class DeliveryTypeWidget extends StatefulWidget {
 class _DeliveryTypeWidgetState extends State<DeliveryTypeWidget> {
   int selectedIndex = 0;
   int? selectedPaymentMethod;
-  bool openPaymentMethodDropDown = false;
   late TextEditingController deliveryMethodController;
   @override
   void initState() {
@@ -33,22 +34,15 @@ class _DeliveryTypeWidgetState extends State<DeliveryTypeWidget> {
   }
 
   @override
-/*************  ✨ Windsurf Command ⭐  *************/
-/// *****  083139e1-1f61-4d0a-a420-ff21e76b8792  ******
   void dispose() {
    deliveryMethodController.dispose();
     super.dispose();
   }
 
-  void _onDeliveryMethodSelected(String selectedItem) {
-    final generalCubit = context.read<GeneralCubit>();
-    final selectedDestination = generalCubit.state.paymentMethods?.firstWhere(
-      (payment) => payment?.name == selectedItem,
-    );
+  void _onDeliveryMethodSelected(PaymentMethodModel method) {
     setState(() {
-      openPaymentMethodDropDown = false;
-      deliveryMethodController.text = selectedItem;
-      selectedPaymentMethod = selectedDestination?.id;
+      deliveryMethodController.text = method.name ?? '';
+      selectedPaymentMethod = method.id;
     });
     
     // Update form data with payment method ID
@@ -56,6 +50,20 @@ class _DeliveryTypeWidgetState extends State<DeliveryTypeWidget> {
     final currentFormData = sendMoneyCubit.state.formData ?? SendMoneyFormData.empty();
     sendMoneyCubit.updateFormData(
       currentFormData.copyWith(paymentMethodId: selectedPaymentMethod),
+    );
+  }
+
+  void _showPaymentMethodBottomSheet(List<PaymentMethodModel?> methods) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: PaymentMethodSelectionBottomSheet(
+        paymentMethods: methods,
+        selectedPaymentMethodId: selectedPaymentMethod,
+        onPaymentMethodSelected: (method) {
+          _onDeliveryMethodSelected(method);
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
@@ -123,51 +131,31 @@ class _DeliveryTypeWidgetState extends State<DeliveryTypeWidget> {
           }),
         ),
         if (selectedIndex == 1)
-          CustomTextFieldWithLabel(
-            onTap: () {
-              setState(() {
-                openPaymentMethodDropDown = !openPaymentMethodDropDown;
-              });
+          BlocBuilder<GeneralCubit, GeneralState>(
+            builder: (context, state) {
+              return CustomTextFieldWithLabel(
+                onTap: () {
+                  _showPaymentMethodBottomSheet(state.paymentMethods ?? []);
+                },
+                controller: deliveryMethodController,
+                label: context.deliveryMethod,
+                hintText: context.chooseDeliveryMethod,
+                isRequired: true,
+                isReadOnly: true,
+                prefixWidget: AppAssets.svgsDeliveryMethod,
+                suffixWidget: InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    _showPaymentMethodBottomSheet(state.paymentMethods ?? []);
+                  },
+                  child: Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: context.colors.grayColor,
+                  ),
+                ),
+              );
             },
-            controller: deliveryMethodController,
-            label: context.deliveryMethod,
-            hintText: context.chooseDeliveryMethod,
-            isRequired: true,
-            isReadOnly: true,
-            prefixWidget:AppAssets.svgsDeliveryMethod ,
-             suffixWidget: InkWell(
-              splashColor: Colors.transparent,
-              onTap: () {
-                setState(() {
-                  openPaymentMethodDropDown = !openPaymentMethodDropDown;
-                });
-              },
-              child: Icon(
-                openPaymentMethodDropDown
-                    ? Icons.keyboard_arrow_up_rounded
-                    : Icons.keyboard_arrow_down_rounded,
-                color: openPaymentMethodDropDown
-                    ? context.colors.primaryColor
-                    : context.colors.grayColor,
-              ),
-            ),
-          
           ),
-           if (openPaymentMethodDropDown)
-            BlocBuilder<GeneralCubit, GeneralState>(
-              builder: (context, state) {
-                return CustomDropDownCard(
-                  dropDownItems: state.paymentMethods != null
-                      ? state.paymentMethods!
-                            .map((e) => e?.name)
-                            .whereType<String>()
-                            .toList()                                              
-                      : [],
-                  selectedValue: deliveryMethodController.text,
-                  onItemSelected: _onDeliveryMethodSelected,
-                );
-              },
-            ).onlyPadding(topPadding: 6),
       ],
     );
   }

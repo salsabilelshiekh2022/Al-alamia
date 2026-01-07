@@ -25,7 +25,7 @@ import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../../transfer_money/data/models/transfer_money_request_params.dart';
 import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/in_and_out_request_params.dart';
-import 'branch_selection_bottom_sheet.dart';
+import '../../../../../core/components/widgets/branch_selection_bottom_sheet.dart';
 import '../../cubit/in_and_out_transaction_state.dart';
 
 class InAndOutTransactionForm extends StatefulWidget {
