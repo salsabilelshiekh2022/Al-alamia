@@ -23,7 +23,7 @@ import '../../../../transfer_money/data/models/transfer_money_request_params.dar
 import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/get_debts_by_currency_request_params.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
-import 'currency_selection_bottom_sheet.dart';
+import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
 import '../../../data/models/pay_debt_request_params.dart';
 
 class PayDebtForm extends StatefulWidget {

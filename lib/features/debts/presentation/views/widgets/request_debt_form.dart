@@ -23,7 +23,7 @@ import '../../../../transfer_money/data/models/transfer_money_request_params.dar
 import '../../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../../../data/models/add_debt_request_params.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
-import 'currency_selection_bottom_sheet.dart';
+import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
 
 class RequestDebtForm extends StatefulWidget {
   const RequestDebtForm({super.key, required this.debetType});

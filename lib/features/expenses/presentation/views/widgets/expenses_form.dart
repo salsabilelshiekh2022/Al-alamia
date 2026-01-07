@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/app_snack_bar.dart';
-import '../../../../debts/presentation/views/widgets/currency_selection_bottom_sheet.dart';
+import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
 import '../../../../../core/di/dependency_injection.dart';
