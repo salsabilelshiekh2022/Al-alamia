@@ -72,7 +72,9 @@ class _ForgetPassWordFormState extends State<ForgetPassWordForm> {
       if(state.authStatus.isSuccess) {
             GlobalUiUtils.showBottomSheet(
               context,
-              child: VerficationCodeBottomSheet(),
+              child: VerficationCodeBottomSheet(
+                phone: phoneController.text,
+              ),
             );
       }else if(state.authStatus.isError) {
         AppSnackBar.showSnackBar(context: context, message: state.message!, state: SnackBarStates.error);
@@ -105,10 +107,6 @@ class _ForgetPassWordFormState extends State<ForgetPassWordForm> {
                   autovalidateMode = AutovalidateMode.always;
                 }
               },
-              // => GlobalUiUtils.showBottomSheet(
-              //   context,
-              //   child: VerficationCodeBottomSheet(),
-              // ),
             ).verticalPadding(32),
           ],
         ),

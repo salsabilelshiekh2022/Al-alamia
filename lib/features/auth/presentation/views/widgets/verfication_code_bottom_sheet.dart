@@ -13,7 +13,8 @@ import '../../../../../generated/app_assets.dart';
 import 'create_new_password_bottom_sheet.dart';
 
 class VerficationCodeBottomSheet extends StatelessWidget {
-  const VerficationCodeBottomSheet({super.key});
+  const VerficationCodeBottomSheet({super.key, required this.phone});
+  final String phone ;
 
   @override
   Widget build(BuildContext context) {
