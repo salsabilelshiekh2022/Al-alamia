@@ -14,6 +14,7 @@ import 'package:alalamia/features/auth/presentation/views/widgets/otp_text_field
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../generated/app_assets.dart';
 import 'create_new_password_bottom_sheet.dart';
 
@@ -53,11 +54,11 @@ class _VerficationCodeBottomSheetState
     }
 
     context.read<AuthCubit>().verifyCodeOtp(
-          verifyCodeRequestParams: VerifyCodeRequestParams(
-            phone: widget.phone,
-            code: _otpCode,
-          ),
-        );
+      verifyCodeRequestParams: VerifyCodeRequestParams(
+        phone: widget.phone,
+        code: _otpCode,
+      ),
+    );
   }
 
   void _onStateChanged(BuildContext context, AuthState state) {
@@ -66,7 +67,10 @@ class _VerficationCodeBottomSheetState
     if (state.authStatus.isSuccess) {
       GlobalUiUtils.showBottomSheet(
         context,
-        child: CreateNewPasswordBottomSheet(),
+        child: BlocProvider.value(
+          value: getIt<AuthCubit>(),
+          child: CreateNewPasswordBottomSheet(phone: widget.phone),
+        ),
       );
     } else if (state.authStatus.isError) {
       AppSnackBar.showSnackBar(
