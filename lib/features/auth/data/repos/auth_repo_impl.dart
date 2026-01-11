@@ -1,5 +1,8 @@
 import 'package:alalamia/core/database/network/failure.dart';
 import 'package:alalamia/features/auth/data/models/login_request_params.dart';
+import 'package:alalamia/features/auth/data/models/reset_pass_request_params.dart';
+import 'package:alalamia/features/auth/data/models/send_code_request_params.dart';
+import 'package:alalamia/features/auth/data/models/verify_code_request_params.dart';
 import 'package:alalamia/features/auth/data/repos/auth_repo.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
@@ -36,6 +39,46 @@ class AuthRepoImpl extends AuthRepo {
       request: () => apiConsumer.post(
         path: EndPoints.changePassword,
         data: changePassRequestModel.toJson(), 
+      ),
+      onSuccess: (result) {
+        return result['message'] ?? 'Success';
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPassword({required ResetPassRequestParams resetPassRequestParams}) {
+   
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.resetPassword,
+        data: resetPassRequestParams.toJson(),
+      ),
+      onSuccess: (result) {
+        return result['message'] ?? 'Success';
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> sendCodeOtp({required SendCodeRequestParams sendCodeRequestParams}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.sendOtp,
+        data: sendCodeRequestParams.toJson(),
+      ),
+      onSuccess: (result) {
+        return result['message'] ?? 'Success';
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> verifyCodeOtp({required VerifyCodeRequestParams verifyCodeRequestParams}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.verifyOtp,
+        data: verifyCodeRequestParams.toJson(),
       ),
       onSuccess: (result) {
         return result['message'] ?? 'Success';
