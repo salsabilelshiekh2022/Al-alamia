@@ -98,18 +98,22 @@ class _ForgetPassWordFormState extends State<ForgetPassWordForm> {
               prefixWidget: AppAssets.svgsPhone,
               validator: (value) => Validator.validatePhone(value, context),
             ),
-            MainButton(
-              title: context.next,
-              onTap: () {
-                if (formKey.currentState!.validate()) {
-                  context.read<AuthCubit>().sendCodeOtp(
-                    sendCodeRequestParams: SendCodeRequestParams(
-                      phone: phoneController.text,
-                    ),
-                  );
-                } else {
-                  autovalidateMode = AutovalidateMode.always;
-                }
+            BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                return state.authStatus.isLoading ? const CircularProgressIndicator() : MainButton(
+                  title: context.next,
+                  onTap: () {
+                    if (formKey.currentState!.validate()) {
+                      context.read<AuthCubit>().sendCodeOtp(
+                        sendCodeRequestParams: SendCodeRequestParams(
+                          phone: phoneController.text,
+                        ),
+                      );
+                    } else {
+                      autovalidateMode = AutovalidateMode.always;
+                    }
+                  },
+                );
               },
             ).verticalPadding(32),
           ],
