@@ -4,5 +4,5 @@ class VerifyCodeRequestParams {
 
   VerifyCodeRequestParams({required this.phone, required this.code});
 
-  Map<String, dynamic> toJson() => {'phone': phone, 'code': code};
+  Map<String, dynamic> toJson() => {'phone': phone, 'otp': code};
 }

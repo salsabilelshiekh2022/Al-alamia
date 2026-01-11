@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
+import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/enums/request_status.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
@@ -68,18 +69,21 @@ class _ForgetPassWordFormState extends State<ForgetPassWordForm> {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-       
-      if(state.authStatus.isSuccess) {
-            GlobalUiUtils.showBottomSheet(
-              context,
-              child: VerficationCodeBottomSheet(
-                phone: phoneController.text,
-              ),
-            );
-      }else if(state.authStatus.isError) {
-        AppSnackBar.showSnackBar(context: context, message: state.message!, state: SnackBarStates.error);
-      }
-      
+        if (state.authStatus.isSuccess) {
+          GlobalUiUtils.showBottomSheet(
+            context,
+            child: BlocProvider.value(
+              value: getIt<AuthCubit>(),
+              child: VerficationCodeBottomSheet(phone: phoneController.text),
+            ),
+          );
+        } else if (state.authStatus.isError) {
+          AppSnackBar.showSnackBar(
+            context: context,
+            message: state.message!,
+            state: SnackBarStates.error,
+          );
+        }
       },
       child: Form(
         key: formKey,
