@@ -1,3 +1,4 @@
+import 'package:alalamia/core/di/dependency_injection.dart';
 import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -85,7 +86,10 @@ class _LoginFormState extends State<LoginForm> {
               child: InkWell(
                 onTap: () => GlobalUiUtils.showBottomSheet(
                   context,
-                  child: ForgetPasswordBottomsheet(),
+                  child: BlocProvider.value(
+                   value: getIt<AuthCubit>(),
+                    child: ForgetPasswordBottomsheet(),
+                  ),
                 ),
                 child: Text(
                   context.forgotPassword,
@@ -108,7 +112,6 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   );
                 }
-                // context.pushNamedAndRemoveUntil(Routes.mainNavigationView);
               },
             ),
             24.verticalSpace,
