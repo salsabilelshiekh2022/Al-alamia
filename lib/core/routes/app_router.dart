@@ -29,6 +29,7 @@ import '../../features/auth/presentation/views/login_view.dart';
 import '../../features/debts/presentation/views/debts_view.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../../features/in_and_out_transaction/presentation/cubit/in_and_out_transaction_cubit.dart';
+import '../../features/notifications/presentation/views/notifications_view.dart';
 import '../../features/send_money/presentation/views/send_money_frist_step_view.dart';
 import '../../features/settings/presentation/views/change_password_view.dart';
 import '../../features/settings/presentation/views/profile_setting_view.dart';
@@ -225,6 +226,10 @@ abstract class AppRouter {
             ],
             child: ExternalSendMoneySecoundStepView(),
           ),
+        );
+        case Routes.notificationsView:
+        return MaterialPageRoute(
+          builder: (_) => const NotificationsView(),
         );
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());

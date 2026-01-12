@@ -47,7 +47,9 @@ List<SettingItemModel> secoundSettingGroup(BuildContext context) => [
     title: context.notifications,
     iconPath: AppAssets.svgsBell,
     isNotification: true,
-    onTap: () {},
+    onTap: () {
+      context.pushNamed(Routes.notificationsView);
+    },
   ),
   SettingItemModel(
     title: context.language,
@@ -66,7 +68,9 @@ List<SettingItemModel> thirdSettingGroup(BuildContext context) => [
     title: context.support,
     iconPath: AppAssets.svgsSupportIcon,
 
-    onTap: () {},
+    onTap: () {
+      context.pushNamed(Routes.chatSupportView);
+    },
   ),
   SettingItemModel(
     title: context.aboutApp,

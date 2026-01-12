@@ -25,7 +25,7 @@ class _SplashViewState extends State<SplashView> {
         key: 'user',
       );
       context.pushReplacementNamed(
-        user?.token == null ? Routes.loginView : Routes.loginView,
+        user?.token == null ? Routes.loginView : Routes.mainNavigationView,
       );
     });
     super.initState();
