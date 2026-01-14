@@ -13,14 +13,27 @@ class NotificationsRepoImpl extends NotificationsRepo {
   final ApiConsumer apiConsumer;
   NotificationsRepoImpl({required this.apiConsumer});
   @override
-  Future<Either<Failure, List<NotificationModel>>> fetchNotifications() {
-      return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getNotifications),
+  Future<Either<Failure, NotificationsResponseModel>> fetchNotifications({
+    int page = 1,
+  }) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(
+        EndPoints.getNotifications,
+        queryParameters: {'page': page},
+      ),
       onSuccess: (result) {
-        final data = result['data'] as List;
-        return data.map((e) => NotificationModel.fromJson(e)).toList();
+        return NotificationsResponseModel.fromJson(result);
       },
     );
   }
   
+  @override
+  Future<Either<Failure, String>> toggleNotification() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.toggleNotifications),
+      onSuccess: (result) {
+        return result['message'] ?? 'Success';
+      },
+    );
+  }
 }

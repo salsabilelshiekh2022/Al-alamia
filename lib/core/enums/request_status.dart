@@ -4,6 +4,7 @@ enum RequestStatus {
   loadingMore,
   success,
   error,
+  refreshing,
 }
 
 extension BoolRequestStatus on RequestStatus {
@@ -12,4 +13,5 @@ extension BoolRequestStatus on RequestStatus {
   bool get isLoadingMore => this == RequestStatus.loadingMore;
   bool get isSuccess => this == RequestStatus.success;
   bool get isError => this == RequestStatus.error;
+  bool get isRefreshing => this == RequestStatus.refreshing;
 }

@@ -41,4 +41,5 @@ class EndPoints {
   static String sendOtp = '/employee/auth/send-code';
   static String verifyOtp = '/employee/auth/verify-code';
   static String resetPassword = '/employee/auth/reset-password';
+  static String toggleNotifications = '/employee/auth/toggle-notifications';
 }
