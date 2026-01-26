@@ -1,3 +1,4 @@
+import 'package:alalamia/core/components/widgets/card_with_gray_border.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -56,6 +57,21 @@ class WalletDetailsBottomSheet extends StatelessWidget {
             fontSize: 28,
           ),
         ),
+        6.verticalSizedBox,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(context.balanceDetails,
+                style: context.textStyles.font14MediumPrimaryColor),
+                4.horizontalSpace,
+            InkWell(
+              onTap: () {
+                
+              },
+              child: Icon(Icons.keyboard_arrow_down_rounded, size: 20, color: context.colors.primaryColor)),
+          ],
+        ),
+        _buildBalanceDetails(context),
         32.verticalSizedBox,
         Expanded(
           child: BlocBuilder<HomeCubit, HomeState>(
@@ -64,6 +80,35 @@ class WalletDetailsBottomSheet extends StatelessWidget {
             },
           ),
         ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBalanceDetails(BuildContext context) {
+    return CardWithGrayBorder(
+      color: context.colors.backgroundFieldColor,
+      child:Column(
+        children: [
+          Row(
+            children: [
+              Text(context.baseBalance,
+                  style: context.textStyles.font14MediumGrayColor),
+                  Spacer(),
+                  Text(context.baseBalance,
+                  style: context.textStyles.font16MediumSecondaryColor),
+                              ],
+          ),
+          14.verticalSizedBox,
+          Row(
+            children: [
+              Text(context.commission,
+                  style: context.textStyles.font14MediumGrayColor),
+                  Spacer(),
+                  Text(context.baseBalance,
+                  style: context.textStyles.font16MediumSecondaryColor),
+                              ],
+          )
         ],
       ),
     );

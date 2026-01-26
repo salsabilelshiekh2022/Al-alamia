@@ -208,7 +208,9 @@
   "not_found_messages" : "هل تحتاج إلى مساعدة؟",
   "not_found_messages_description" : "ابدأ محادثة جديدة مع فريق الدعم الفني وسنقوم بالرد عليك في أقرب وقت.",
   "password_not_match" : "كلمة المرور غير متطابقة",
-  "internal_external_delivery" :"التسليم داخلي/خارجي"
+  "internal_external_delivery" :"التسليم داخلي/خارجي",
+  "balance_details" : "تفاصيل الرصيد",
+  "base_balance" : "الرصيد الأساسي"
 
 
 }
