@@ -2,6 +2,32 @@ import 'package:alalamia/core/enums/debets_enum.dart';
 
 import '../../../expenses/data/models/expense_model.dart';
 import '../../../home/data/models/currency_model.dart';
+import '../../../notifications/data/models/notification_model.dart';
+
+/// Response structure for paginated debts API
+class DebtsResponseModel {
+  final List<DebtModel>? debtsList;
+  final Meta? meta;
+  final bool? success;
+
+  DebtsResponseModel({
+    this.debtsList,
+    this.meta,
+    this.success,
+  });
+
+  factory DebtsResponseModel.fromJson(Map<String, dynamic> json) {
+    return DebtsResponseModel(
+      debtsList: json['data'] != null
+          ? (json['data'] as List)
+              .map((v) => DebtModel.fromJson(v))
+              .toList()
+          : null,
+      meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
+      success: json['success'],
+    );
+  }
+}
 
 class DebtModel {
   int? id;

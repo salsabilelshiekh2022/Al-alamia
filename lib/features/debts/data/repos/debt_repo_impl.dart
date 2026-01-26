@@ -61,12 +61,14 @@ class DebtRepoImpl extends DebtRepo {
   }
 
   @override
-  Future<Either<Failure, List<DebtModel>>> getDebtsTransactions({required String type}) {
+  Future<Either<Failure, DebtsResponseModel>> getDebtsTransactions({required String type, int page = 1}) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getDebtsTransactions(type: type)),
+      request: () => apiConsumer.get(
+        EndPoints.getDebtsTransactions(type: type),
+        queryParameters: {'page': page},
+      ),
       onSuccess: (result) {
-        final data = result['data'] as List;
-        return data.map((e) => DebtModel.fromJson(e)).toList();
+        return DebtsResponseModel.fromJson(result);
       },
     );
   }

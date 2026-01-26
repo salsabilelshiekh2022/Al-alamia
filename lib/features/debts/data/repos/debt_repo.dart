@@ -14,5 +14,5 @@ abstract class DebtRepo {
     required PayDebtRequestParams payDebtRequestParams,
   });
   Future<Either<Failure, int>> getDebtsByCurrency({required int id, required GetDebtsByCurrencyRequestParams params});
-  Future<Either<Failure, List<DebtModel>>> getDebtsTransactions({required String type});
+  Future<Either<Failure, DebtsResponseModel>> getDebtsTransactions({required String type, int page = 1});
 } 
