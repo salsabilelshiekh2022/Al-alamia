@@ -1,3 +1,50 @@
+class DenominationsResponseModel {
+  List<DenominationsModel>? data;
+  bool? success;
+  DenominationsMeta? meta;
+
+  DenominationsResponseModel({this.data, this.success, this.meta});
+
+  DenominationsResponseModel.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      data = <DenominationsModel>[];
+      json['data'].forEach((v) {
+        data!.add(DenominationsModel.fromJson(v));
+      });
+    }
+    success = json['success'];
+    meta = json['meta'] != null ? DenominationsMeta.fromJson(json['meta']) : null;
+  }
+}
+
+class DenominationsMeta {
+  String? balance;
+  BalanceDetails? balanceDetails;
+  String? message;
+
+  DenominationsMeta({this.balance, this.balanceDetails, this.message});
+
+  DenominationsMeta.fromJson(Map<String, dynamic> json) {
+    balance = json['balance'];
+    balanceDetails = json['balance_details'] != null
+        ? BalanceDetails.fromJson(json['balance_details'])
+        : null;
+    message = json['message'];
+  }
+}
+
+class BalanceDetails {
+  String? baseBalance;
+  String? commissionValue;
+
+  BalanceDetails({this.baseBalance, this.commissionValue});
+
+  BalanceDetails.fromJson(Map<String, dynamic> json) {
+    baseBalance = json['base_balance'];
+    commissionValue = json['commission_value'];
+  }
+}
+
 class DenominationsModel {
   String? name;
   String? value;

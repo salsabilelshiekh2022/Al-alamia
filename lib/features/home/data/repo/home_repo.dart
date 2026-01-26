@@ -8,7 +8,7 @@ import 'package:dartz/dartz.dart';
 
 abstract class HomeRepo {
   Future<Either<Failure, List<WalletModel>>> getBranchCurrencies();
-  Future<Either<Failure, List<DenominationsModel>>> getDenominationsOfCurrency({
+  Future<Either<Failure, DenominationsResponseModel>> getDenominationsOfCurrency({
     required int currencyId,
   });
 

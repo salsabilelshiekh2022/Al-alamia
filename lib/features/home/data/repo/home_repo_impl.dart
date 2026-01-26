@@ -28,15 +28,14 @@ class HomeRepoImpl extends HomeRepo {
   }
 
   @override
-  Future<Either<Failure, List<DenominationsModel>>> getDenominationsOfCurrency({
+  Future<Either<Failure, DenominationsResponseModel>> getDenominationsOfCurrency({
     required int currencyId,
   }) {
     return apiConsumer.handleRequest(
       request: () =>
           apiConsumer.get(EndPoints.getDenominations(id: currencyId)),
       onSuccess: (result) {
-        final data = result['data'] as List;
-        return data.map((e) => DenominationsModel.fromJson(e)).toList();
+        return DenominationsResponseModel.fromJson(result);
       },
     );
   }

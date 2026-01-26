@@ -39,10 +39,11 @@ class HomeCubit extends Cubit<HomeState> {
     result.fold(
       (failure) =>
           emit(state.copyWith(denominationsStatus: RequestStatus.error)),
-      (denominations) => emit(
+      (response) => emit(
         state.copyWith(
           denominationsStatus: RequestStatus.success,
-          denominations: denominations,
+          denominations: response.data,
+          denominationsMeta: response.meta,
         ),
       ),
     );

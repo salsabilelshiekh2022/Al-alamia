@@ -14,6 +14,7 @@ class HomeState extends Equatable {
   final List<CurrencyModel> currenciesList;
   final List<WalletModel> walletsList;
   final List<DenominationsModel> denominations;
+  final DenominationsMeta? denominationsMeta;
   final TransferCurrencyModel? transferCurrency;
 
   static HomeState initial() => const HomeState();
@@ -25,6 +26,7 @@ class HomeState extends Equatable {
     this.transferCurrencyStatus = RequestStatus.initial,
     this.walletsList = const [],
     this.denominations = const [],
+    this.denominationsMeta,
     this.currenciesList = const [],
     this.transferCurrency,
   });
@@ -36,6 +38,7 @@ class HomeState extends Equatable {
     RequestStatus? currenciesStatus,
     List<WalletModel>? walletsList,
     List<DenominationsModel>? denominations,
+    DenominationsMeta? denominationsMeta,
     List<CurrencyModel>? currenciesList,
     TransferCurrencyModel? transferCurrency,
   }) {
@@ -47,6 +50,7 @@ class HomeState extends Equatable {
       currenciesStatus: currenciesStatus ?? this.currenciesStatus,
       walletsList: walletsList ?? this.walletsList,
       denominations: denominations ?? this.denominations,
+      denominationsMeta: denominationsMeta ?? this.denominationsMeta,
       currenciesList: currenciesList ?? this.currenciesList,
       transferCurrency: transferCurrency ?? this.transferCurrency,
     );
@@ -60,6 +64,7 @@ class HomeState extends Equatable {
     transferCurrencyStatus,
     walletsList,
     denominations,
+    denominationsMeta,
     currenciesList,
     transferCurrency,
   ];

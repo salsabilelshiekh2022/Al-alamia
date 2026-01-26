@@ -10,9 +10,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/components/widgets/custom_svg_builder.dart';
+import '../../../../../core/helper/widget_extentions.dart';
 import '../../../../../generated/app_assets.dart';
 
-class WalletDetailsBottomSheet extends StatelessWidget {
+class WalletDetailsBottomSheet extends StatefulWidget {
   const WalletDetailsBottomSheet({
     super.key,
     required this.currencyName,
@@ -23,6 +24,12 @@ class WalletDetailsBottomSheet extends StatelessWidget {
   final String totalBalance;
 
   @override
+  State<WalletDetailsBottomSheet> createState() => _WalletDetailsBottomSheetState();
+}
+
+class _WalletDetailsBottomSheetState extends State<WalletDetailsBottomSheet> {
+  bool showBalanceDetails = false;
+  @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -30,87 +37,109 @@ class WalletDetailsBottomSheet extends StatelessWidget {
       ),
       child: Column(
         children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomSvgBuilder(
-              path: AppAssets.svgsPurpleDoller,
-              width: 22,
-              height: 22,
-            ),
-            8.horizontalSpace,
-            Text(
-              currencyName,
-              style: context.textStyles.font16SemiBoldSecondaryColor,
-            ),
-          ],
-        ),
-        24.verticalSizedBox,
-        Text(
-          context.totalBalance,
-          style: context.textStyles.font15MediumGrayColor,
-        ),
-        14.verticalSizedBox,
-        Text(
-          totalBalance,
-          style: context.textStyles.font24BoldSecondaryColor.copyWith(
-            fontSize: 28,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomSvgBuilder(
+                path: AppAssets.svgsPurpleDoller,
+                width: 22,
+                height: 22,
+              ),
+              8.horizontalSpace,
+              Text(
+                widget.currencyName,
+                style: context.textStyles.font16SemiBoldSecondaryColor,
+              ),
+            ],
           ),
-        ),
-        6.verticalSizedBox,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(context.balanceDetails,
-                style: context.textStyles.font14MediumPrimaryColor),
-                4.horizontalSpace,
-            InkWell(
-              onTap: () {
-                
+          24.verticalSizedBox,
+          Text(
+            context.totalBalance,
+            style: context.textStyles.font15MediumGrayColor,
+          ),
+          14.verticalSizedBox,
+          Text(
+            widget.totalBalance,
+            style: context.textStyles.font24BoldSecondaryColor.copyWith(
+              fontSize: 28,
+            ),
+          ),
+          6.verticalSizedBox,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                context.balanceDetails,
+                style: context.textStyles.font14MediumPrimaryColor,
+              ),
+              4.horizontalSpace,
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    showBalanceDetails = !showBalanceDetails;
+                  });
+                },
+                child: Icon(
+               showBalanceDetails ? Icons.keyboard_arrow_up_rounded :   Icons.keyboard_arrow_down_rounded,
+                  size: 20,
+                  color: context.colors.primaryColor,
+                ),
+              ),
+            ],
+          ),
+         showBalanceDetails ? _buildBalanceDetails(context) : const SizedBox.shrink(),
+          32.verticalSizedBox,
+          Expanded(
+            child: BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                return DenominationsListView();
               },
-              child: Icon(Icons.keyboard_arrow_down_rounded, size: 20, color: context.colors.primaryColor)),
-          ],
-        ),
-        _buildBalanceDetails(context),
-        32.verticalSizedBox,
-        Expanded(
-          child: BlocBuilder<HomeCubit, HomeState>(
-            builder: (context, state) {
-              return DenominationsListView();
-            },
+            ),
           ),
-        ),
         ],
       ),
     );
   }
 
   Widget _buildBalanceDetails(BuildContext context) {
-    return CardWithGrayBorder(
-      color: context.colors.backgroundFieldColor,
-      child:Column(
-        children: [
-          Row(
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        return CardWithGrayBorder(
+          color: context.colors.backgroundFieldColor,
+          child: Column(
             children: [
-              Text(context.baseBalance,
-                  style: context.textStyles.font14MediumGrayColor),
+              Row(
+                children: [
+                  Text(
+                    context.baseBalance,
+                    style: context.textStyles.font14MediumGrayColor,
+                  ),
                   Spacer(),
-                  Text(context.baseBalance,
-                  style: context.textStyles.font16MediumSecondaryColor),
-                              ],
+                  Text(
+                    state.denominationsMeta?.balanceDetails?.baseBalance ?? '----',
+                    style: context.textStyles.font17SemiBoldSecondaryColor,
+                  ),
+                ],
+              ),
+              14.verticalSizedBox,
+              Row(
+                children: [
+                  Text(
+                    context.commission,
+                    style: context.textStyles.font14MediumGrayColor,
+                  ),
+                  Spacer(),
+                  Text(
+                    state.denominationsMeta?.balanceDetails?.commissionValue ??
+                        '----',
+                    style: context.textStyles.font17SemiBoldSecondaryColor,
+                  ),
+                ],
+              ),
+            ],
           ),
-          14.verticalSizedBox,
-          Row(
-            children: [
-              Text(context.commission,
-                  style: context.textStyles.font14MediumGrayColor),
-                  Spacer(),
-                  Text(context.baseBalance,
-                  style: context.textStyles.font16MediumSecondaryColor),
-                              ],
-          )
-        ],
-      ),
-    );
+        );
+      },
+    ).onlyPadding(topPadding: 20);
   }
 }
