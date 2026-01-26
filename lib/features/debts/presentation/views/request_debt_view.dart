@@ -12,7 +12,7 @@ import '../cubit/debts_cubit.dart';
 class RequestDebtView extends StatelessWidget {
   const RequestDebtView({super.key, required this.debetType});
   final DebetsTypeEnum debetType;
-
+ 
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(

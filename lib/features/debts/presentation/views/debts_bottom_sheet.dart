@@ -51,7 +51,7 @@ class _DebtsBottomSheetState extends State<DebtsBottomSheet> {
         32.verticalSizedBox,
         Row(
           children: [
-            Expanded(
+             Expanded(
               child: DebtCardWidget(
                 imagePath:AppAssets.svgsSendMoneyIcon ,
                 debets: DebetsTypeEnum.debt_inside,

@@ -123,7 +123,7 @@ class _DebtsViewState extends State<DebtsView> {
                   ),
 
                   decoration: BoxDecoration(
-                    color: context.colors.whiteColor,
+                    color: context.colors.backgroundColor,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24),
                       topRight: Radius.circular(24),
@@ -155,7 +155,7 @@ class _DebtsViewState extends State<DebtsView> {
                               padding: EdgeInsets.zero,
                               physics: const NeverScrollableScrollPhysics(),
                               separatorBuilder: (context, index) =>
-                                  16.verticalSizedBox,
+                                  12.verticalSizedBox,
                               itemCount: isLoading
                                   ? 3
                                   : state.debtsTransactions?.length ?? 0,
