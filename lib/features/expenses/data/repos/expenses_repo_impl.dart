@@ -29,12 +29,14 @@ class ExpensesRepoImpl extends ExpensesRepo {
   }
 
   @override
-  Future<Either<Failure, List<ExpenseModel>>> getExpenses() {
+  Future<Either<Failure, ExpensesResponseModel>> getExpenses({int page = 1}) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getExpenses),
+      request: () => apiConsumer.get(
+        EndPoints.getExpenses,
+        queryParameters: {'page': page},
+      ),
       onSuccess: (result) {
-        final data = result['data'] as List;
-        return data.map((e) => ExpenseModel.fromJson(e)).toList();
+        return ExpensesResponseModel.fromJson(result);
       },
     );
   }

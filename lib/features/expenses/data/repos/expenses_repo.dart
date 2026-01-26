@@ -9,6 +9,6 @@ abstract class ExpensesRepo {
     required ExpensesRequestParams expensesRequestParams,
   });
 
-  Future<Either<Failure, List<ExpenseModel>>> getExpenses();
+  Future<Either<Failure, ExpensesResponseModel>> getExpenses({int page = 1});
   Future<Either<Failure, dynamic>> getExpensesByCurrency({required int id});
 }

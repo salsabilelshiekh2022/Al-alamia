@@ -1,5 +1,30 @@
 import 'package:alalamia/core/enums/status_enum.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
+import '../../../notifications/data/models/notification_model.dart';
+
+class ExpensesResponseModel {
+  final List<ExpenseModel>? expensesList;
+  final Meta? meta;
+  final bool? success;
+
+  ExpensesResponseModel({
+    this.expensesList,
+    this.meta,
+    this.success,
+  });
+
+  factory ExpensesResponseModel.fromJson(Map<String, dynamic> json) {
+    return ExpensesResponseModel(
+      expensesList: json['data'] != null
+          ? (json['data'] as List)
+              .map((v) => ExpenseModel.fromJson(v))
+              .toList()
+          : null,
+      meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
+      success: json['success'],
+    );
+  }
+}
 
 class ExpenseModel {
 
