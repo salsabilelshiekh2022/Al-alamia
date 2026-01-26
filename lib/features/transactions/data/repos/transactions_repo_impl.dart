@@ -17,13 +17,15 @@ final ApiConsumer apiConsumer;
   TransactionsRepoImpl({required this.apiConsumer});
 
   @override
-  Future<Either<Failure, List<TransactionModel>>> getTransactionList(
-      {required TransactionsEnum transaction}) async {
-   return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getTransactionList(transaction: transaction)),
+  Future<Either<Failure, TransactionsResponseModel>> getTransactionList(
+      {required TransactionsEnum transaction, int page = 1}) async {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(
+        EndPoints.getTransactionList(transaction: transaction),
+        queryParameters: {'page': page},
+      ),
       onSuccess: (result) {
-        final data = result['data'] as List;
-        return data.map((e) => TransactionModel.fromJson(e)).toList();
+        return TransactionsResponseModel.fromJson(result);
       },
     );
   }

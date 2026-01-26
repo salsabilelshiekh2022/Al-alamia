@@ -1,6 +1,31 @@
 
 import '../../../../core/enums/status_enum.dart';
 import '../../../home/data/models/currency_model.dart';
+import '../../../notifications/data/models/notification_model.dart';
+
+class TransactionsResponseModel {
+  final List<TransactionModel>? transactionsList;
+  final Meta? meta;
+  final bool? success;
+
+  TransactionsResponseModel({
+    this.transactionsList,
+    this.meta,
+    this.success,
+  });
+
+  factory TransactionsResponseModel.fromJson(Map<String, dynamic> json) {
+    return TransactionsResponseModel(
+      transactionsList: json['data'] != null
+          ? (json['data'] as List)
+              .map((v) => TransactionModel.fromJson(v))
+              .toList()
+          : null,
+      meta: json['meta'] != null ? Meta.fromJson(json['meta']) : null,
+      success: json['success'],
+    );
+  }
+}
 
 class TransactionModel {
   int? id;

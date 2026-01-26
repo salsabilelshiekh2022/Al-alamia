@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/enums/request_status.dart';
 import '../../../../core/enums/transactions_enum.dart';
+import '../../data/models/transaction_model.dart';
 import '../../data/models/update_transaction_request_params.dart';
 import '../../data/repos/transactions_repo.dart';
 import 'transactions_state.dart';
@@ -14,9 +15,9 @@ class TransactionsCubit extends Cubit<TransactionsState>{
   TransactionsCubit({required this.transactionRepo}) : super(const TransactionsState());
   final TransactionsRepo transactionRepo;
 
-  Future<void> getTransactionList({required TransactionsEnum transaction}) async {
-    emit(state.copyWith(transactionsStatus: RequestStatus.loading));
-    final result = await transactionRepo.getTransactionList(transaction: transaction);
+  Future<void> fetchTransactionList({required TransactionsEnum transaction}) async {
+    emit(state.copyWith(transactionsStatus: RequestStatus.loading, currentFilter: transaction));
+    final result = await transactionRepo.getTransactionList(transaction: transaction, page: 1);
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -24,13 +25,96 @@ class TransactionsCubit extends Cubit<TransactionsState>{
           message: failure.message,
         ), 
       ),
-      (transactions) => emit(
+      (transactionsResponse) {
+        final hasReachedMax = _checkIfReachedMax(transactionsResponse);
+        emit(
+          state.copyWith(
+            transactionsStatus: RequestStatus.success,
+            transactionsResponse: transactionsResponse,
+            transactionsList: transactionsResponse.transactionsList ?? [],
+            transactions: transactionsResponse.transactionsList,
+            currentPage: 1,
+            hasReachedMax: hasReachedMax,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> loadMoreTransactions() async {
+    if (state.hasReachedMax || state.isLoadingMore) return;
+
+    emit(state.copyWith(transactionsStatus: RequestStatus.loadingMore));
+
+    final nextPage = state.currentPage + 1;
+    final result = await transactionRepo.getTransactionList(transaction: state.currentFilter, page: nextPage);
+
+    result.fold(
+      (failure) => emit(
         state.copyWith(
-          transactionsStatus: RequestStatus.success,
-          transactions: transactions,
+          transactionsStatus: RequestStatus.error,
+          message: failure.message,
         ),
       ),
+      (transactionsResponse) {
+        final newTransactions = transactionsResponse.transactionsList ?? [];
+        final updatedList = List<TransactionModel>.from(state.transactionsList)..addAll(newTransactions);
+        
+        final hasReachedMax = _checkIfReachedMax(transactionsResponse) || newTransactions.isEmpty;
+
+        emit(
+          state.copyWith(
+            transactionsStatus: RequestStatus.success,
+            transactionsResponse: transactionsResponse,
+            transactionsList: updatedList,
+            transactions: updatedList,
+            currentPage: nextPage,
+            hasReachedMax: hasReachedMax,
+          ),
+        );
+      },
     );
+  }
+
+  Future<void> refreshTransactions() async {
+    emit(state.copyWith(transactionsStatus: RequestStatus.refreshing));
+
+    final result = await transactionRepo.getTransactionList(transaction: state.currentFilter, page: 1);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          transactionsStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (transactionsResponse) {
+        final hasReachedMax = _checkIfReachedMax(transactionsResponse);
+        emit(
+          state.copyWith(
+            transactionsStatus: RequestStatus.success,
+            transactionsResponse: transactionsResponse,
+            transactionsList: transactionsResponse.transactionsList ?? [],
+            transactions: transactionsResponse.transactionsList,
+            currentPage: 1,
+            hasReachedMax: hasReachedMax,
+          ),
+        );
+      },
+    );
+  }
+
+  bool _checkIfReachedMax(TransactionsResponseModel transactionsResponse) {
+    if (transactionsResponse.meta == null) return true;
+
+    final currentPage = transactionsResponse.meta!.currentPage ?? 1;
+    final lastPage = transactionsResponse.meta!.lastPage ?? 1;
+
+    return currentPage >= lastPage;
+  }
+  
+  // Legacy support
+  Future<void> getTransactionList({required TransactionsEnum transaction}) async {
+    await fetchTransactionList(transaction: transaction);
   }
 
   Future<void> showTransactionDetails({required String transactionId}) async {

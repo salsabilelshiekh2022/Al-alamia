@@ -10,7 +10,7 @@ import '../../../../generated/app_assets.dart';
 import 'widgets/filter_box.dart';
 import 'widgets/search_box.dart';
 import 'widgets/transactions_filter_type.dart';
-import 'widgets/transactions_list.dart';
+import 'widgets/transactions_list_widget.dart';
 
 class TransactionsView extends StatelessWidget {
   const TransactionsView({super.key});
@@ -26,29 +26,26 @@ class TransactionsView extends StatelessWidget {
             height: double.infinity,
             fit: BoxFit.cover,
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                CustomAppBar(
-                  title: context.transactions,
-                  hasActions: false,
-                  isBack: false,
-                ).onlyPadding(bottomPadding: 24),
+          Column(
+            children: [
+              CustomAppBar(
+                title: context.transactions,
+                hasActions: false,
+                isBack: false,
+              ).onlyPadding(bottomPadding: 24),
 
-                Row(
-                  children: [
-                    Expanded(child: SearchBox()),
-                    12.horizontalSpace,
-                    FilterBox(),
-                  ],
-                ).horizontalPadding(16),
-                Container(
+              Row(
+                children: [
+                  Expanded(child: SearchBox()),
+                  12.horizontalSpace,
+                  FilterBox(),
+                ],
+              ).horizontalPadding(16),
+              Expanded(
+                child: Container(
                   margin: EdgeInsets.only(top: 30),
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 35),
                   width: double.infinity,
-                  constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height - 130.h,
-                  ),
                   decoration: BoxDecoration(
                     color: context.colors.backgroundColor,
                     borderRadius: BorderRadius.only(
@@ -60,13 +57,15 @@ class TransactionsView extends StatelessWidget {
                     children: [
                       TransactionsFilterType(),
                       16.verticalSizedBox,
-                      TransactionsList(),
+                      const Expanded(
+                        child: TransactionsListWidget(),
+                      ),
                       80.verticalSizedBox,
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
