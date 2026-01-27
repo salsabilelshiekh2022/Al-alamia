@@ -150,4 +150,20 @@ class ExpensesCubit extends Cubit<ExpensesState> {
       ),
     );
   }
+
+  Future<void> getAllExpenseTypes() async {
+    emit(state.copyWith(expensesStatus: RequestStatus.loading));
+    final result = await expensesRepo.getAllExpense();
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          expensesStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (expenseTypes) => emit(
+        state.copyWith(expensesStatus: RequestStatus.success, expenseTypes: expenseTypes),
+      ),
+    );
+  }
 }

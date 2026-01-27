@@ -1,5 +1,6 @@
 import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/features/expenses/data/models/expense_model.dart';
+import 'package:alalamia/features/expenses/data/models/expense_type_model.dart';
 import 'package:equatable/equatable.dart';
 
 class ExpensesState extends Equatable {
@@ -7,6 +8,7 @@ class ExpensesState extends Equatable {
   final String? message;
   final List<ExpenseModel?>? expenses;
   final dynamic expensesAmountByCurrency;
+  final List<ExpenseTypeModel> expenseTypes ;
 
   // Pagination fields
   final ExpensesResponseModel? expensesResponse;
@@ -23,6 +25,7 @@ class ExpensesState extends Equatable {
     this.expensesList = const [],
     this.currentPage = 1,
     this.hasReachedMax = false,
+    this.expenseTypes = const [],
   });
 
   ExpensesState copyWith({
@@ -34,6 +37,7 @@ class ExpensesState extends Equatable {
     List<ExpenseModel>? expensesList,
     int? currentPage,
     bool? hasReachedMax,
+    List<ExpenseTypeModel>? expenseTypes,
   }) {
     return ExpensesState(
       expensesStatus: expensesStatus ?? this.expensesStatus,
@@ -44,6 +48,7 @@ class ExpensesState extends Equatable {
       expensesList: expensesList ?? this.expensesList,
       currentPage: currentPage ?? this.currentPage,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      expenseTypes: expenseTypes ?? this.expenseTypes,
     );
   }
   
@@ -65,5 +70,6 @@ class ExpensesState extends Equatable {
         expensesList,
         currentPage,
         hasReachedMax,
+        expenseTypes,
       ];
 }

@@ -3,6 +3,7 @@ import 'package:alalamia/features/expenses/data/models/expenses_request_params.d
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/database/network/failure.dart';
+import '../models/expense_type_model.dart';
 
 abstract class ExpensesRepo {
   Future<Either<Failure, String>> addExpense({
@@ -11,4 +12,5 @@ abstract class ExpensesRepo {
 
   Future<Either<Failure, ExpensesResponseModel>> getExpenses({int page = 1});
   Future<Either<Failure, dynamic>> getExpensesByCurrency({required int id});
+  Future<Either<Failure, List<ExpenseTypeModel>>> getAllExpense();
 }

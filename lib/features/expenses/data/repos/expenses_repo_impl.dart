@@ -1,6 +1,7 @@
 import 'package:alalamia/core/database/network/api_consumer.dart';
 import 'package:alalamia/core/database/network/failure.dart';
 import 'package:alalamia/features/expenses/data/models/expense_model.dart';
+import 'package:alalamia/features/expenses/data/models/expense_type_model.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
@@ -47,6 +48,17 @@ class ExpensesRepoImpl extends ExpensesRepo {
       request: () => apiConsumer.get(EndPoints.getExpensesByCurrency(id: id)),
       onSuccess: (result) {
         return result['data']['expenses_amount'] ?? '0';
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<ExpenseTypeModel>>> getAllExpense() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getAllExpenses),
+      onSuccess: (result) {
+        final data = result['data'] as List;
+        return data.map((e) => ExpenseTypeModel.fromJson(e)).toList();
       },
     );
   }
