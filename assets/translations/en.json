@@ -211,6 +211,8 @@
   "password_not_match" : "Password does not match",
   "internal_external_delivery" :"Internal/External Delivery",
   "balance_details" : "Balance Details",
-  "base_balance" : "Base Balance"
+  "base_balance" : "Base Balance",
+  "expense_type" : "Expense Type",
+  "salary_details" : "Salary Details"
 
 }

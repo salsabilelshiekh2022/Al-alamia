@@ -217,4 +217,6 @@ extension TranslationExtension on BuildContext {
   String get internalExternalDelivery => tr("internal_external_delivery");
   String get balanceDetails => tr("balance_details");
   String get baseBalance => tr("base_balance");
+  String get expenseType => tr("expense_type");
+  String get salaryDetails => tr("salary_details");
 }
