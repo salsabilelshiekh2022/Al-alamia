@@ -2,21 +2,19 @@
 class AppAssets {
   AppAssets._();
   
-  static const String fontsCairoBlack = "assets/fonts/Cairo-Black.ttf";
+  static const String fontsTajawalBlack = "assets/fonts/Tajawal-Black.ttf";
 
-  static const String fontsCairoBold = "assets/fonts/Cairo-Bold.ttf";
+  static const String fontsTajawalBold = "assets/fonts/Tajawal-Bold.ttf";
 
-  static const String fontsCairoExtraBold = "assets/fonts/Cairo-ExtraBold.ttf";
+  static const String fontsTajawalExtraBold = "assets/fonts/Tajawal-ExtraBold.ttf";
 
-  static const String fontsCairoExtraLight = "assets/fonts/Cairo-ExtraLight.ttf";
+  static const String fontsTajawalExtraLight = "assets/fonts/Tajawal-ExtraLight.ttf";
 
-  static const String fontsCairoLight = "assets/fonts/Cairo-Light.ttf";
+  static const String fontsTajawalLight = "assets/fonts/Tajawal-Light.ttf";
 
-  static const String fontsCairoMedium = "assets/fonts/Cairo-Medium.ttf";
+  static const String fontsTajawalMedium = "assets/fonts/Tajawal-Medium.ttf";
 
-  static const String fontsCairoRegular = "assets/fonts/Cairo-Regular.ttf";
-
-  static const String fontsCairoSemiBold = "assets/fonts/Cairo-SemiBold.ttf";
+  static const String fontsTajawalRegular = "assets/fonts/Tajawal-Regular.ttf";
 
   static const String imagesBackBtn = "assets/images/back_btn.png";
 
@@ -34,7 +32,7 @@ class AppAssets {
 
   static const String imagesFlag = "assets/images/flag.png";
 
-  static const String imagesLogo = "assets/images/logo.png";
+  static const String imagesLogo = "assets/images/logo.jpeg";
 
   static const String imagesSuccess = "assets/images/success.png";
 

@@ -9,7 +9,7 @@ import 'core/utils/service_init.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await ScreenUtil.ensureScreenSize();
+  await ScreenUtil.ensureScreenSize();
   await ServicesInit.init();
   runApp(
     EasyLocalization(
@@ -20,7 +20,7 @@ void main() async {
       child: RequestsInspector(
         hideInspectorBanner: true,
         navigatorKey: AppKeys.navigatorKey,
-        enabled: true,
+        enabled: false,
         child: AlalamiaApp(),
       ),
     ),

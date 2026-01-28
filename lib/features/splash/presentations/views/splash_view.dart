@@ -39,7 +39,7 @@ class _SplashViewState extends State<SplashView> {
           AppAssets.imagesLogo,
           width: 300.w,
           height: 100.h,
-          fit: BoxFit.fill,
+          fit: BoxFit.fitHeight,
         ),
       ),
     );
