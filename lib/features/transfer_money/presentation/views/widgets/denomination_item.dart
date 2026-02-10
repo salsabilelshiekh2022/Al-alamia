@@ -11,10 +11,14 @@ class DenominationItem extends StatefulWidget {
     super.key,
     required this.denominationModel,
     this.onCountChanged,
+    this.isEnabled = true,
   });
   
   final DenominationModel denominationModel;
   final void Function(int change)? onCountChanged;
+
+  /// When false, the item is visually dimmed and the add button is disabled.
+  final bool isEnabled;
 
   @override
   State<DenominationItem> createState() => _DenominationItemState();
@@ -24,6 +28,7 @@ class _DenominationItemState extends State<DenominationItem> {
   int count = 0;
 
   void _incrementCount() {
+    if (!widget.isEnabled) return;
     setState(() {
       count++;
     });
@@ -41,17 +46,23 @@ class _DenominationItemState extends State<DenominationItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.colors.backgroundFieldColor,
-        borderRadius: 12.allBorderRadius,
-        border: Border.all(color: context.colors.strokeColor, width: 1),
-      ),
-      child: Row(
-        children: [
-          _buildDenominationValue(context),
-          _buildCounterSection(context),
-        ],
+    // Only dim the entire widget if the user has none AND cannot add any.
+    final bool isTotallyDisabled = !widget.isEnabled && count == 0;
+
+    return Opacity(
+      opacity: isTotallyDisabled ? 0.5 : 1.0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.backgroundFieldColor,
+          borderRadius: 12.allBorderRadius,
+          border: Border.all(color: context.colors.strokeColor, width: 1),
+        ),
+        child: Row(
+          children: [
+            _buildDenominationValue(context),
+            _buildCounterSection(context),
+          ],
+        ),
       ),
     );
   }
@@ -98,7 +109,8 @@ class _DenominationItemState extends State<DenominationItem> {
             _buildCountButton(
               context: context,
               icon: Icons.add_rounded,
-              onTap: _incrementCount,
+              onTap: widget.isEnabled ? _incrementCount : null,
+              isEnabled: widget.isEnabled,
             ),
             Text(
               count.toString(),
@@ -108,7 +120,8 @@ class _DenominationItemState extends State<DenominationItem> {
             _buildCountButton(
               context: context,
               icon: Icons.remove_rounded,
-              onTap: _decrementCount,
+              onTap: count > 0 ? _decrementCount : null,
+              isEnabled: count > 0,
             ),
           ],
         ),
@@ -119,7 +132,8 @@ class _DenominationItemState extends State<DenominationItem> {
   Widget _buildCountButton({
     required BuildContext context,
     required IconData icon,
-    required VoidCallback onTap,
+    required VoidCallback? onTap,
+    required bool isEnabled,
   }) {
     return InkWell(
       onTap: onTap,
@@ -133,7 +147,7 @@ class _DenominationItemState extends State<DenominationItem> {
         ),
         child: Icon(
           icon,
-          color: context.colors.secondaryColor,
+          color: isEnabled ? context.colors.secondaryColor : Colors.grey,
           size: 16.sp,
         ).center(),
       ),

@@ -301,7 +301,7 @@ class _ExternalTransactionDetailsCardState
                       isRequired: true,
                       isReadOnly: true,
                       // onTap: () {
-                      //   _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
+                      //   _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);`
                       // },
                       // suffixWidget: InkWell(
                       //   splashColor: Colors.transparent,

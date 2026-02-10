@@ -65,6 +65,8 @@ class _AllDenominationsBottomSheetState
   void _updateAmount(int denominationId, num denominationValue, int countChange) {
     setState(() {
       remainingAmount -= (denominationValue * countChange);
+      // Fix floating point issues for currency calculations
+      remainingAmount = double.parse(remainingAmount.toStringAsFixed(2));
       amountController.text = _formatAmount(remainingAmount);
 
       denominationCounts[denominationId] =
@@ -127,15 +129,22 @@ class _AllDenominationsBottomSheetState
               itemCount: state.denominations?.length ?? 6,
               itemBuilder: (context, index) {
                 final denomination = state.denominations?[index];
+                final denominationValue = double.tryParse(
+                        denomination?.value?.replaceAll(',', '') ?? '0') ??
+                    0;
+                final isEnabled = denominationValue <= remainingAmount;
+
                 return Skeletonizer(
                   enabled: state.getAllDenominationsStatus.isLoading,
                   child: DenominationItem(
+                    key: ValueKey(denomination?.id),
                     denominationModel: denomination ?? DenominationModel(),
+                    isEnabled: isEnabled,
                     onCountChanged: (change) {
                       if (denomination != null) {
                         _updateAmount(
                           denomination.id ?? 0,
-                          double.parse(denomination.value ?? '0'),
+                          denominationValue,
                           change,
                         );
                       }
