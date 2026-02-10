@@ -14,6 +14,7 @@ class CurrencyInputRow extends StatelessWidget {
     this.controller,
     this.onAmountChanged,
     this.enabled = true,
+    this.isDropdownEnabled = true,
     this.dropdownFlex = 3,
     this.textFieldFlex = 2,
   });
@@ -24,6 +25,7 @@ class CurrencyInputRow extends StatelessWidget {
   final TextEditingController? controller;
   final ValueChanged<String>? onAmountChanged;
   final bool enabled;
+  final bool isDropdownEnabled;
   final int dropdownFlex;
   final int textFieldFlex;
 
@@ -33,10 +35,16 @@ class CurrencyInputRow extends StatelessWidget {
       children: [
         Expanded(
           flex: dropdownFlex,
-          child: CustomCurrencyDropdown(
-            items: currencies,
-            selectedItem: selectedCurrency,
-            onChanged: onCurrencyChanged,
+          child: IgnorePointer(
+            ignoring: !isDropdownEnabled,
+            child: Opacity(
+              opacity: isDropdownEnabled ? 1.0 : 0.7,
+              child: CustomCurrencyDropdown(
+                items: currencies,
+                selectedItem: selectedCurrency,
+                onChanged: onCurrencyChanged,
+              ),
+            ),
           ),
         ),
         12.horizontalSizedBox,

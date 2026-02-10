@@ -46,6 +46,9 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
   CurrencyModel? _fromCurrency;
   CurrencyModel? _toCurrency;
 
+  /// The from-currency name that must always be selected.
+  static const _lockedFromCurrencyName = 'دينار ليبي';
+
   @override
   void initState() {
     _amountController = TextEditingController();
@@ -56,6 +59,17 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     _notesController = TextEditingController();
     context.read<HomeCubit>().getCurrencies();
     super.initState();
+  }
+
+  /// Finds the "دينار ليبي" currency from the loaded list.
+  CurrencyModel? _findLibyanDinar(List<CurrencyModel> currencies) {
+    try {
+      return currencies.firstWhere(
+        (c) => c.name == _lockedFromCurrencyName,
+      );
+    } catch (_) {
+      return currencies.isNotEmpty ? currencies.first : null;
+    }
   }
 
   @override
@@ -134,23 +148,42 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     );
   }
 
+  /// Initializes currencies if not already set.
+  void _initializeCurrencies(List<CurrencyModel> currenciesList) {
+    if (currenciesList.isEmpty ||
+        _fromCurrency != null ||
+        _toCurrency != null) {
+      return;
+    }
+
+    final libyanDinar = _findLibyanDinar(currenciesList);
+    _fromCurrency = libyanDinar;
+    _toCurrency = currenciesList.firstWhere(
+      (c) => c.id != libyanDinar?.id,
+      orElse: () => currenciesList.first,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeCubit, HomeState>(
+    return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state.currenciesList.isNotEmpty &&
             _fromCurrency == null &&
             _toCurrency == null) {
           setState(() {
-            _fromCurrency = state.currenciesList[0];
-            _toCurrency = state.currenciesList.length > 1
-                ? state.currenciesList[1]
-                : state.currenciesList[0];
+            _initializeCurrencies(state.currenciesList);
           });
           _getFeeDetails();
         }
       },
-      child: CustomPage(
+      builder: (context, state) {
+        // Also try to initialize on build in case the listener missed it
+        if (_fromCurrency == null && _toCurrency == null) {
+          _initializeCurrencies(state.currenciesList);
+        }
+
+        return CustomPage(
         title: context.currencyTransfer,
         isBack: true,
         hasActions: false,
@@ -167,12 +200,13 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
               title: context.conversionData,
               amountController: _amountController,
               resultController: _resultController,
+              isFromCurrencyLocked: true,
+              initialFromCurrency: _fromCurrency,
               onAmountChanged: (val) {
                 _getFeeDetails();
               },
               onFromCurrencyChanged: (c) {
-                setState(() => _fromCurrency = c);
-                _getFeeDetails();
+                // From currency is locked — no action needed.
               },
               onToCurrencyChanged: (c) {
                 setState(() => _toCurrency = c);
@@ -188,15 +222,17 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
               ],
             ),
             20.verticalSizedBox,
-            ValueListenableBuilder<TextEditingValue>(
-              valueListenable: _resultController,
-              builder: (_, value, __) => TotalSection(
-                fromCurrency: _fromCurrency!,
-                toCurrency: _toCurrency!,
-                total: value.text,
-                exchangePrice: 0.0,
+            if (_fromCurrency != null && _toCurrency != null)
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _resultController,
+                builder: (_, value, __) => TotalSection(
+                  fromCurrency: _fromCurrency!,
+                  toCurrency: _toCurrency!,
+                  total: value.text,
+                  exchangePrice: 0.0,
+                ),
               ),
-            ),
+              
             20.verticalSizedBox,
             AmountSection(
               amountByCharController: _amountByCharController,
@@ -215,7 +251,8 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
             40.verticalSizedBox,
           ],
         ),
-      ),
+      );
+      },
     );
   }
 }

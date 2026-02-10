@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'currency_swap_button.dart';
 
 class DividerWithSwapButton extends StatelessWidget {
-  const DividerWithSwapButton({super.key, required this.onSwapPressed});
+  const DividerWithSwapButton({super.key, this.onSwapPressed});
 
-  final VoidCallback onSwapPressed;
+  final VoidCallback? onSwapPressed;
 
   @override
   Widget build(BuildContext context) {

@@ -24,6 +24,8 @@ class CurrencyCalculator extends StatefulWidget {
     this.onFromCurrencyChanged,
     this.onToCurrencyChanged,
     this.onAmountChanged,
+    this.isFromCurrencyLocked = false,
+    this.initialFromCurrency,
   });
 
   final TextEditingController amountController;
@@ -33,6 +35,8 @@ class CurrencyCalculator extends StatefulWidget {
   final ValueChanged<CurrencyModel?>? onFromCurrencyChanged;
   final ValueChanged<CurrencyModel?>? onToCurrencyChanged;
   final void Function(String)? onAmountChanged;
+  final bool isFromCurrencyLocked;
+  final CurrencyModel? initialFromCurrency;
 
   @override
   State<CurrencyCalculator> createState() => _CurrencyCalculatorState();
@@ -44,6 +48,8 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   bool _currenciesInitialized = false;
 
   void _swapCurrencies() {
+    if (widget.isFromCurrencyLocked) return;
+
     setState(() {
       final temp = _fromCurrency;
       _fromCurrency = _toCurrency;
@@ -105,11 +111,19 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {
-            _fromCurrency = state.currenciesList.first;
-            _toCurrency = state.currenciesList[1];
+            // Use locked currency if provided, otherwise use first item
+            _fromCurrency =
+                widget.initialFromCurrency ?? state.currenciesList.first;
+
+            // Pick a "to" currency that differs from the "from" currency
+            _toCurrency = state.currenciesList.firstWhere(
+              (c) => c.id != _fromCurrency?.id,
+              orElse: () => state.currenciesList[1],
+            );
+
             _currenciesInitialized = true;
-            widget.onFromCurrencyChanged?.call(state.currenciesList.first);
-            widget.onToCurrencyChanged?.call(state.currenciesList[1]);
+            widget.onFromCurrencyChanged?.call(_fromCurrency);
+            widget.onToCurrencyChanged?.call(_toCurrency);
             _calculateExchangeRate();
           });
         }
@@ -178,9 +192,13 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
                 onCurrencyChanged: _onFromCurrencyChanged,
                 controller: widget.amountController,
                 onAmountChanged: _onAmountChanged,
+                isDropdownEnabled: !widget.isFromCurrencyLocked,
               ),
               35.verticalSizedBox,
-              DividerWithSwapButton(onSwapPressed: _swapCurrencies),
+              DividerWithSwapButton(
+                onSwapPressed:
+                    widget.isFromCurrencyLocked ? null : _swapCurrencies,
+              ),
               16.verticalSizedBox,
               Text(
                 context.transeferedAmount,

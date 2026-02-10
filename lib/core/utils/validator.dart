@@ -62,10 +62,10 @@ class Validator {
      
     }
     //egypt numbers
-    final ksaLocalRegex = RegExp(r'^01[0125][0-9]{8}$');
-    if (!ksaLocalRegex.hasMatch(value)) {
-      return "Please enter a valid phone number";
-    }
+    // final ksaLocalRegex = RegExp(r'^01[0125][0-9]{8}$');
+    // if (!ksaLocalRegex.hasMatch(value)) {
+    //   return "Please enter a valid phone number";
+    // }
 
     return null;
   }
