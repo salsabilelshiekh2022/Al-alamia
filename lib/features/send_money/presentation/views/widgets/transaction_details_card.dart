@@ -60,6 +60,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     commissionController = TextEditingController();
     toCurrencyController = TextEditingController();
     converterAmountController = TextEditingController();
+   selectedCurrencyId = context.read<HomeCubit>().state.currenciesList.first.id;
+   
     super.initState();
   }
 
@@ -305,25 +307,26 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                 children: [
                   Expanded(
                     child: CustomTextFieldWithLabel(
-                      controller: currencyController,
+                     // controller: currencyController,
                       label: context.currency,
                       hintText: context.currenyHint,
+                     initialValue: context.read<HomeCubit>().state.currenciesList.firstWhere((c) => c.id == selectedCurrencyId, orElse: () => CurrencyModel(name: '')).name ?? '',
                       prefixWidget: AppAssets.svgsDollarIcon,
                       isRequired: true,
                       isReadOnly: true,
-                      onTap: () {
-                        _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
-                      },
-                      suffixWidget: InkWell(
-                        splashColor: Colors.transparent,
-                        onTap: () {
-                          _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
-                        },
-                        child: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: context.colors.grayColor,
-                        ),
-                      ),
+                      // onTap: () {
+                      //   _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
+                      // },
+                      // suffixWidget: InkWell(
+                      //   splashColor: Colors.transparent,
+                      //   onTap: () {
+                      //     _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
+                      //   },
+                      //   child: Icon(
+                      //     Icons.keyboard_arrow_down_rounded,
+                      //     color: context.colors.grayColor,
+                      //   ),
+                      // ),
                     ),
                   ),
                   14.horizontalSizedBox,
