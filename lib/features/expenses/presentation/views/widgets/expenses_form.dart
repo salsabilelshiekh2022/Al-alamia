@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/app_snack_bar.dart';
-import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
+// import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/main_button.dart';
 import '../../../../../core/di/dependency_injection.dart';
@@ -30,6 +30,7 @@ class ExpensesForm extends StatefulWidget {
   State<ExpensesForm> createState() => _ExpensesFormState();
 }
 
+
 class _ExpensesFormState extends State<ExpensesForm> {
   late TextEditingController amountController;
   late TextEditingController currencyController;
@@ -42,7 +43,16 @@ class _ExpensesFormState extends State<ExpensesForm> {
   void initState() {
     super.initState();
     amountController = TextEditingController();
-    currencyController = TextEditingController();
+    currencyController = TextEditingController(
+      text: context.read<HomeCubit>().state.currenciesList.firstWhere(
+            (currency) => currency.code == 'LYD',
+            orElse: () => CurrencyModel(id: 0, name: ''),
+          ).name,
+    );
+    selectedCurrencyId = context.read<HomeCubit>().state.currenciesList.firstWhere(
+          (currency) => currency.code == 'LYD',
+          orElse: () => CurrencyModel(id: 0, name: ''),
+        ).id;
     purposeController = TextEditingController();
   }
 
@@ -54,26 +64,26 @@ class _ExpensesFormState extends State<ExpensesForm> {
     super.dispose();
   }
 
-  void _onCurrencySelected(CurrencyModel currency) {
-    setState(() {
-      currencyController.text = currency.name ?? '';
-      selectedCurrencyId = currency.id;
-    });
-  }
+  // void _onCurrencySelected(CurrencyModel currency) {
+  //   setState(() {
+  //     currencyController.text = currency.name ?? '';
+  //     selectedCurrencyId = currency.id;
+  //   });
+  // }
 
-  void _showCurrencyBottomSheet(List<CurrencyModel> currencies) {
-    GlobalUiUtils.showBottomSheet(
-      context,
-      child: CurrencySelectionBottomSheet(
-        currencies: currencies,
-        selectedCurrencyId: selectedCurrencyId,
-        onCurrencySelected: (currency) {
-          _onCurrencySelected(currency);
-          Navigator.pop(context);
-        },
-      ),
-    );
-  }
+  // void _showCurrencyBottomSheet(List<CurrencyModel> currencies) {
+  //   GlobalUiUtils.showBottomSheet(
+  //     context,
+  //     child: CurrencySelectionBottomSheet(
+  //       currencies: currencies,
+  //       selectedCurrencyId: selectedCurrencyId,
+  //       onCurrencySelected: (currency) {
+  //         _onCurrencySelected(currency);
+  //         Navigator.pop(context);
+  //       },
+  //     ),
+  //   );
+  // }
 
   void _onDenominationsConfirmed(List<DenominationsRequestParams> denominations) {
     final cubit = context.read<ExpensesCubit>();
@@ -192,22 +202,23 @@ class _ExpensesFormState extends State<ExpensesForm> {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return CustomTextFieldWithLabel(
-          onTap: () => _showCurrencyBottomSheet(state.currenciesList),
+         // onTap: () => _showCurrencyBottomSheet(state.currenciesList),
           controller: currencyController,
           label: context.currency,
           hintText: context.currenyHint,
           prefixWidget: AppAssets.svgsCoinsIcon,
           isRequired: true,
           isReadOnly: true,
+          enabled: false,
           validator: (value) => Validator.validateAnotherField(value, context),
-          suffixWidget: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () => _showCurrencyBottomSheet(state.currenciesList),
-            child: Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: context.colors.grayColor,
-            ),
-          ),
+          // suffixWidget: InkWell(
+          //   splashColor: Colors.transparent,
+          //   onTap: () => _showCurrencyBottomSheet(state.currenciesList),
+          //   child: Icon(
+          //     Icons.keyboard_arrow_down_rounded,
+          //     color: context.colors.grayColor,
+          //   ),
+          // ),
         );
       },
     );

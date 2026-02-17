@@ -21,8 +21,10 @@ import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/branch_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
+import '../../../../../core/components/widgets/payment_methods_bottom_sheet.dart';
 import '../../../../../core/enums/delivery_type_enum.dart';
 import '../../../../../core/general/data/models/branch_model.dart';
+import '../../../../../core/general/data/models/payment_method_model.dart';
 import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../../home/data/models/currency_model.dart';
@@ -44,6 +46,7 @@ class _ExternalTransactionDetailsCardState
   late TextEditingController toCurrencyController;
   late TextEditingController converterAmountController;
   late TextEditingController destinationController;
+    late TextEditingController paymentMethodController;
   late TextEditingController amountController;
   late TextEditingController amountByCharController;
   late TextEditingController commissionTypeController;
@@ -51,6 +54,7 @@ class _ExternalTransactionDetailsCardState
   int? selectedCurrencyId;
   int? selectedToCurrencyId;
   int? selectedDestinationId;
+  int? selectedPaymentMethodId;
   CommissionTypeEnum? selectedCommissionType;
   @override
   void initState() {
@@ -62,7 +66,9 @@ class _ExternalTransactionDetailsCardState
     commissionController = TextEditingController();
     toCurrencyController = TextEditingController();
     converterAmountController = TextEditingController();
+    paymentMethodController = TextEditingController();
     selectedCurrencyId = context.read<HomeCubit>().state.currenciesList.first.id;
+    selectedPaymentMethodId = context.read<GeneralCubit>().state.paymentMethods?.first?.id;
     super.initState();
   }
 
@@ -85,6 +91,7 @@ class _ExternalTransactionDetailsCardState
     commissionTypeController.dispose();
     toCurrencyController.dispose();
     converterAmountController.dispose();
+    paymentMethodController.dispose();
     super.dispose();
   }
 
@@ -142,6 +149,28 @@ class _ExternalTransactionDetailsCardState
         selectedBranchId: selectedDestinationId,
         onBranchSelected: (branch) {
           _onDestinationSelected(branch);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _onPaymentMethodSelected(PaymentMethodModel paymentMethod) {
+    setState(() {
+      paymentMethodController.text = paymentMethod.name ;
+      selectedPaymentMethodId = paymentMethod.id;
+    });
+    _updateFormData();
+  }
+
+  void _showPaymentMethodBottomSheet(List<PaymentMethodModel?>? paymentMethods) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: PaymentMethodBottomSheet(
+        paymentMethods: paymentMethods ?? [],
+        selectedPaymentMethodId: selectedPaymentMethodId,
+        onPaymentMethodSelected: (paymentMethod) {
+          _onPaymentMethodSelected(paymentMethod);
           Navigator.pop(context);
         },
       ),
@@ -382,6 +411,35 @@ class _ExternalTransactionDetailsCardState
                       splashColor: Colors.transparent,
                       onTap: () {
                         _showBranchBottomSheet(state.branches ?? []);
+                      },
+                      child: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: context.colors.grayColor,
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+               16.verticalSizedBox,
+              // DeliveryTypeWidget(),
+              // 16.verticalSizedBox,
+              BlocBuilder<GeneralCubit, GeneralState>(
+                builder: (context, state) {
+                  return CustomTextFieldWithLabel(
+                    onTap: () {
+                      _showPaymentMethodBottomSheet(state.paymentMethods ?? []);
+                    },
+                    label: "طرق التسليم",
+                    controller: paymentMethodController,
+                    hintText: "اختر طريقة التسليم",
+                    prefixWidget: AppAssets.svgsBank,
+                    isReadOnly: true,
+                    isRequired: true,
+                    suffixWidget: InkWell(
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        _showPaymentMethodBottomSheet(state.paymentMethods ?? []);
                       },
                       child: Icon(
                         Icons.keyboard_arrow_down_rounded,

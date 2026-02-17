@@ -34,7 +34,7 @@ class _CommitionCardState extends State<CommitionCard> {
   void initState() {
     super.initState();
     commissionTypeController = TextEditingController();
-    commissionController = TextEditingController();
+    commissionController = TextEditingController(text: "3 %");
   }
 
   @override

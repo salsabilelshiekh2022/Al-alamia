@@ -1,0 +1,121 @@
+import 'package:alalamia/core/components/widgets/custom_text_field.dart';
+import 'package:alalamia/core/general/data/models/payment_method_model.dart';
+import 'package:alalamia/core/helper/app_extention.dart';
+import 'package:alalamia/core/helper/number_extentions.dart';
+import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/generated/app_assets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class PaymentMethodBottomSheet extends StatefulWidget {
+  const PaymentMethodBottomSheet({
+    super.key,
+    required this.paymentMethods,
+    required this.onPaymentMethodSelected,
+    this.selectedPaymentMethodId,
+  });
+
+  final List<PaymentMethodModel?> paymentMethods;
+  final ValueChanged<PaymentMethodModel> onPaymentMethodSelected;
+  final int? selectedPaymentMethodId;
+
+  @override
+  State<PaymentMethodBottomSheet> createState() =>
+      _PaymentMethodBottomSheetState();
+}
+
+class _PaymentMethodBottomSheetState
+    extends State<PaymentMethodBottomSheet> {
+  late List<PaymentMethodModel?> filteredPaymentMethods;
+  final TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    filteredPaymentMethods = widget.paymentMethods;
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = searchController.text.toLowerCase();
+    setState(() {
+      filteredPaymentMethods = widget.paymentMethods.where((paymentMethod) {
+        if (paymentMethod == null) return false;
+        final name = (paymentMethod.name ?? '').toLowerCase();
+        return name.contains(query);
+      }).toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 350.h,
+      child: Column(
+        children: [
+          Text(
+            "طرق الدفع",
+            style: context.textStyles.font18BoldSecondaryColor,
+          ),
+          12.verticalSizedBox,
+          CustomTextField(
+            hintText: context.search,
+            controller: searchController,
+            prefixWidget: AppAssets.svgsSearchIcon,
+            onChanged: (value) {},
+          ),
+          12.verticalSizedBox,
+          Expanded(
+            child: ListView.separated(
+              itemCount: filteredPaymentMethods.length,
+              separatorBuilder: (context, index) => 4.verticalSizedBox,
+              itemBuilder: (context, index) {
+                final paymentMethod = filteredPaymentMethods[index];
+                if (paymentMethod == null) return const SizedBox();
+                final isSelected = widget.selectedPaymentMethodId == paymentMethod.id;
+
+                return InkWell(
+                  onTap: () => widget.onPaymentMethodSelected(paymentMethod),
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Container(
+                    padding: isSelected ? 14.allPadding : 14.allPadding,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? context.colors.primaryColor.withValues(alpha: 0.1)
+                          : context.colors.backgroundFieldColor,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: isSelected
+                            ? context.colors.primaryColor
+                            : context.colors.strokeColor,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            paymentMethod.name ?? '',
+                            style: isSelected
+                                ? context.textStyles.font16MediumPrimaryColor
+                                : context.textStyles.font16MediumSecondaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
