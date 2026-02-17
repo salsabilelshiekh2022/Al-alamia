@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/general/data/models/denomination_model.dart';
 import '../../../../../core/helper/app_extention.dart';
 import '../../../../../core/helper/number_extentions.dart';
-import '../../../../../core/helper/widget_extentions.dart';
 
 class DenominationItem extends StatefulWidget {
   const DenominationItem({
@@ -82,92 +81,128 @@ class _DenominationItemState extends State<DenominationItem> {
   @override
   Widget build(BuildContext context) {
     final bool isTotallyDisabled = !widget.isEnabled && _currentQuantity == 0;
+    final bool hasValue = _currentQuantity > 0;
 
-    return Opacity(
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
       opacity: isTotallyDisabled ? 0.5 : 1.0,
       child: Container(
         decoration: BoxDecoration(
-          color: context.colors.backgroundFieldColor,
+          color: hasValue
+              ? context.colors.secondaryColor.withOpacity(0.05)
+              : context.colors.backgroundFieldColor,
           borderRadius: 12.allBorderRadius,
-          border: Border.all(color: context.colors.strokeColor, width: 1),
+          border: Border.all(
+            color: hasValue
+                ? context.colors.secondaryColor.withOpacity(0.3)
+                : context.colors.strokeColor,
+            width: hasValue ? 1.5 : 1,
+          ),
         ),
         child: Row(
           children: [
-            _buildDenominationValue(context),
-            _buildQuantityInput(context),
+            _buildDenominationValue(context, hasValue),
+            _buildQuantityInput(context, hasValue),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDenominationValue(BuildContext context) {
+  Widget _buildDenominationValue(BuildContext context, bool hasValue) {
     return Expanded(
       flex: 1,
       child: Container(
         height: double.infinity,
         padding: 12.allPadding,
         decoration: BoxDecoration(
-          color: context.colors.strokeColor,
+          color: hasValue
+              ? context.colors.secondaryColor.withOpacity(0.15)
+              : context.colors.strokeColor,
           borderRadius: BorderRadiusDirectional.only(
             topStart: Radius.circular(12.r),
             bottomStart: Radius.circular(12.r),
           ),
         ),
-        child: FittedBox(
-          child: Text(
-            widget.denominationModel.value.toString(),
-            style: context.textStyles.font18SemiBoldSecondaryColor,
+        child: Center(
+          child: FittedBox(
+            child: Text(
+              widget.denominationModel.value.toString(),
+              style: context.textStyles.font18SemiBoldSecondaryColor.copyWith(
+                fontWeight: hasValue ? FontWeight.w600 : FontWeight.w500,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildQuantityInput(BuildContext context) {
+  Widget _buildQuantityInput(BuildContext context, bool hasValue) {
     return Expanded(
       flex: 2,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         height: double.infinity,
         decoration: BoxDecoration(
-          color: context.colors.backgroundFieldColor,
+          color: hasValue
+              ? context.colors.secondaryColor.withOpacity(0.05)
+              : context.colors.backgroundFieldColor,
           borderRadius: BorderRadiusDirectional.only(
             topEnd: Radius.circular(12.r),
             bottomEnd: Radius.circular(12.r),
           ),
         ),
-        child: TextField(
-          controller: _quantityController,
-          focusNode: _focusNode,
-          enabled: widget.isEnabled || _currentQuantity > 0,
-          textAlign: TextAlign.center,
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(3),
-          ],
-          style: context.textStyles.font17SemiBoldSecondaryColor.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            contentPadding: EdgeInsets.zero,
-            hintText: '0',
-            hintStyle: context.textStyles.font17SemiBoldSecondaryColor.copyWith(
-              fontWeight: FontWeight.w500,
-              color: Colors.grey.withOpacity(0.5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (hasValue)
+              Icon(
+                Icons.receipt_long,
+                size: 16.sp,
+                color: context.colors.secondaryColor.withOpacity(0.6),
+              ),
+            if (hasValue) 6.horizontalSizedBox,
+            Flexible(
+              child: TextField(
+                controller: _quantityController,
+                focusNode: _focusNode,
+                enabled: widget.isEnabled || _currentQuantity > 0,
+                textAlign: TextAlign.center,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(3),
+                ],
+                style: context.textStyles.font17SemiBoldSecondaryColor.copyWith(
+                  fontWeight: hasValue ? FontWeight.w600 : FontWeight.w500,
+                  color: hasValue
+                      ? context.colors.secondaryColor
+                      : Colors.grey.withOpacity(0.5),
+                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                  isDense: true,
+                  hintText: '0',
+                  hintStyle: context.textStyles.font17SemiBoldSecondaryColor
+                      .copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                ),
+                onChanged: _handleQuantityChange,
+                onTap: () {
+                  if (_quantityController.text == '0') {
+                    _quantityController.clear();
+                  }
+                },
+              ),
             ),
-          ),
-          onChanged: _handleQuantityChange,
-          onTap: () {
-            if (_quantityController.text == '0') {
-              _quantityController.clear();
-            }
-          },
+          ],
         ),
       ),
     );

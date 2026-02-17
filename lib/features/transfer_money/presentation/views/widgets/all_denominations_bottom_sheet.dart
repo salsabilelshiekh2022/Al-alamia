@@ -1,4 +1,3 @@
-import 'package:alalamia/core/components/widgets/custom_text_field.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
 import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
@@ -7,7 +6,6 @@ import 'package:alalamia/core/general/data/models/denomination_model.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/transfer_money/data/models/transfer_money_request_params.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -126,77 +124,176 @@ class _AllDenominationsBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        widget.showTitle
-            ? Text(
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom +40;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final availableHeight = screenHeight - keyboardHeight;
+    
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: availableHeight * 0.9,
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: keyboardHeight > 0 ? 16 : 0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.showTitle) ...[
+              Text(
                 context.enterAmountByDenominations,
                 style: context.textStyles.font17SemiBoldSecondaryColor,
-              )
-            : const SizedBox.shrink(),
-        widget.showTitle ? 27.verticalSizedBox : const SizedBox.shrink(),
-        CustomTextField(
-          hintText: context.amountHint,
-          enabled: false,
-          controller: amountController,
-          textStyle: context.textStyles.font16MediumSecondaryColor,
-        ),
-        BlocBuilder<GeneralCubit, GeneralState>(
-          builder: (context, state) {
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 4,
-                mainAxisExtent: 50,
               ),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.denominations?.length ?? 6,
-              itemBuilder: (context, index) {
-                final denomination = state.denominations?[index];
-                final denominationValue =
-                    double.tryParse(
-                      denomination?.value?.replaceAll(',', '') ?? '0',
-                    ) ??
-                    0;
-                final currentQuantity =
-                    _denominationQuantities[denomination?.id] ?? 0;
-                final maxQuantity =
-                    _calculateMaxQuantity(denominationValue) + currentQuantity;
-                final isEnabled = maxQuantity > 0;
+              20.verticalSizedBox,
+            ],
+            _buildRemainingAmountCard(context),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    16.verticalSizedBox,
+                    BlocBuilder<GeneralCubit, GeneralState>(
+                      builder: (context, state) {
+                        return GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 4,
+                            mainAxisExtent: 50,
+                          ),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.denominations?.length?? 6,
+                          itemBuilder: (context, index) {
+                            final denomination = state.denominations?[index];
+                            final denominationValue = double.tryParse(
+                                  denomination?.value?.replaceAll(',', '') ?? '0',
+                                ) ??
+                                0;
+                            final currentQuantity =
+                                _denominationQuantities[denomination?.id] ?? 0;
+                            final maxQuantity =
+                                _calculateMaxQuantity(denominationValue) +
+                                    currentQuantity;
+                            final isEnabled = maxQuantity > 0;
 
-                return Skeletonizer(
-                  enabled: state.getAllDenominationsStatus.isLoading,
-                  child: DenominationItem(
-                    key: ValueKey(denomination?.id),
-                    denominationModel: denomination ?? DenominationModel(),
-                    isEnabled: isEnabled,
-                    maxQuantity: maxQuantity,
-                    onQuantityChanged: (newQuantity) {
-                      if (denomination != null) {
-                        _handleQuantityChanged(
-                          denomination.id ?? 0,
-                          denominationValue,
-                          newQuantity,
+                            return Skeletonizer(
+                              enabled: state.getAllDenominationsStatus.isLoading,
+                              child: DenominationItem(
+                                key: ValueKey(denomination?.id),
+                                denominationModel:
+                                    denomination ?? DenominationModel(),
+                                isEnabled: isEnabled,
+                                maxQuantity: maxQuantity,
+                                onQuantityChanged: (newQuantity) {
+                                  if (denomination != null) {
+                                    _handleQuantityChanged(
+                                      denomination.id ?? 0,
+                                      denominationValue,
+                                      newQuantity,
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          },
                         );
-                      }
-                    },
-                  ),
-                );
-              },
-            ).onlyPadding(topPadding: 28);
-          },
-        ),
-        if (widget.showConfirmButton) ...[
-          _isAmountComplete ? 24.verticalSizedBox : const SizedBox.shrink(),
-          if (_isAmountComplete)
-            MainButton(title: context.confirm, onTap: _handleConfirm)
-          else
-            const SizedBox(),
-          32.verticalSizedBox,
+                      },
+                    ),
+                  if (widget.showConfirmButton && _isAmountComplete) ...[
+                    24.verticalSizedBox,
+                    MainButton(title: context.confirm, onTap: _handleConfirm),
+                    16.verticalSizedBox,
+                  ],
+                ],
+              ),
+            ),
+          ),
         ],
-      ],
+      ),
+    ));
+  }
+
+  Widget _buildRemainingAmountCard(BuildContext context) {
+    final isComplete = _isAmountComplete;
+    final hasStarted = _denominationQuantities.isNotEmpty;
+
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isComplete
+            ? context.colors.secondaryColor.withOpacity(0.1)
+            : hasStarted
+            ? context.colors.orangeColor.withOpacity(0.1)
+            : context.colors.backgroundFieldColor,
+        borderRadius: 12.allBorderRadius,
+        border: Border.all(
+          color: isComplete
+              ? context.colors.secondaryColor
+              : hasStarted
+              ? context.colors.orangeColor
+              : context.colors.strokeColor,
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.amountHint,
+                style: context.textStyles.font14MediumSecondaryColor.copyWith(
+                  color: context.colors.secondaryColor.withOpacity(0.7),
+                ),
+              ),
+              if (isComplete)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: context.colors.secondaryColor,
+                    borderRadius: 20.allBorderRadius,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.check_circle, size: 16, color: Colors.white),
+                      4.horizontalSizedBox,
+                      Text(
+                        'مكتمل',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          8.verticalSizedBox,
+          Text(
+            _formatAmount(remainingAmount),
+            style: context.textStyles.font24BoldSecondaryColor.copyWith(
+              color: isComplete
+                  ? context.colors.secondaryColor
+                  : hasStarted
+                  ? context.colors.orangeColor
+                  : context.colors.secondaryColor,
+            ),
+          ),
+          if (hasStarted && !isComplete) ...[
+            4.verticalSizedBox,
+            Text(
+              'المتبقي من ${_formatAmount(widget.amount)}',
+              style: context.textStyles.font14MediumSecondaryColor.copyWith(
+                color: context.colors.secondaryColor.withOpacity(0.6),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
