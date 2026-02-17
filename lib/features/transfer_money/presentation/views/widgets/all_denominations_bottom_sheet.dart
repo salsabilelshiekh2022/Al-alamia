@@ -29,9 +29,14 @@ class AllDenominationsBottomSheet extends StatefulWidget {
   final Function(List<DenominationsRequestParams> denominations) onConfirm;
   final bool showTitle;
   final bool showConfirmButton;
+
   /// Callback triggered when the amount completion status changes.
   /// Returns true when remaining amount equals 0, false otherwise.
-  final void Function(bool isComplete, List<DenominationsRequestParams> denominations)? onAmountStatusChanged;
+  final void Function(
+    bool isComplete,
+    List<DenominationsRequestParams> denominations,
+  )?
+  onAmountStatusChanged;
 
   @override
   State<AllDenominationsBottomSheet> createState() =>
@@ -42,13 +47,15 @@ class _AllDenominationsBottomSheetState
     extends State<AllDenominationsBottomSheet> {
   late num remainingAmount;
   late TextEditingController amountController;
-  Map<int, int> denominationCounts = {};
+  final Map<int, int> _denominationQuantities = {};
 
   @override
   void initState() {
     super.initState();
     remainingAmount = widget.amount;
-    amountController = TextEditingController(text: _formatAmount(remainingAmount));
+    amountController = TextEditingController(
+      text: _formatAmount(remainingAmount),
+    );
     context.read<GeneralCubit>().getAllDenominations();
   }
 
@@ -62,31 +69,48 @@ class _AllDenominationsBottomSheetState
     return amount.toStringAsFixed(2);
   }
 
-  void _updateAmount(int denominationId, num denominationValue, int countChange) {
+  void _handleQuantityChanged(
+    int denominationId,
+    num denominationValue,
+    int newQuantity,
+  ) {
     setState(() {
-      remainingAmount -= (denominationValue * countChange);
+      final oldQuantity = _denominationQuantities[denominationId] ?? 0;
+      final quantityDifference = newQuantity - oldQuantity;
+
+      // Update remaining amount based on the difference
+      remainingAmount -= (denominationValue * quantityDifference);
+
       // Fix floating point issues for currency calculations
       remainingAmount = double.parse(remainingAmount.toStringAsFixed(2));
       amountController.text = _formatAmount(remainingAmount);
 
-      denominationCounts[denominationId] =
-          (denominationCounts[denominationId] ?? 0) + countChange;
-
-      if (denominationCounts[denominationId] == 0) {
-        denominationCounts.remove(denominationId);
+      // Update the quantity
+      if (newQuantity > 0) {
+        _denominationQuantities[denominationId] = newQuantity;
+      } else {
+        _denominationQuantities.remove(denominationId);
       }
     });
 
     // Notify parent about amount status change
-    widget.onAmountStatusChanged?.call(_isAmountComplete, _buildDenominationsList());
+    widget.onAmountStatusChanged?.call(
+      _isAmountComplete,
+      _buildDenominationsList(),
+    );
+  }
+
+  int _calculateMaxQuantity(num denominationValue) {
+    if (denominationValue <= 0) return 0;
+    return (remainingAmount / denominationValue).floor();
   }
 
   List<DenominationsRequestParams> _buildDenominationsList() {
-    return denominationCounts.entries
-        .map((entry) => DenominationsRequestParams(
-              id: entry.key,
-              quantity: entry.value,
-            ))
+    return _denominationQuantities.entries
+        .map(
+          (entry) =>
+              DenominationsRequestParams(id: entry.key, quantity: entry.value),
+        )
         .toList();
   }
 
@@ -104,11 +128,13 @@ class _AllDenominationsBottomSheetState
   Widget build(BuildContext context) {
     return Column(
       children: [
-    widget.showTitle ?    Text(
-          context.enterAmountByDenominations,
-          style: context.textStyles.font17SemiBoldSecondaryColor,
-        ) : const SizedBox.shrink(),
-       widget.showTitle ?   27.verticalSizedBox : const SizedBox.shrink(),
+        widget.showTitle
+            ? Text(
+                context.enterAmountByDenominations,
+                style: context.textStyles.font17SemiBoldSecondaryColor,
+              )
+            : const SizedBox.shrink(),
+        widget.showTitle ? 27.verticalSizedBox : const SizedBox.shrink(),
         CustomTextField(
           hintText: context.amountHint,
           enabled: false,
@@ -129,10 +155,16 @@ class _AllDenominationsBottomSheetState
               itemCount: state.denominations?.length ?? 6,
               itemBuilder: (context, index) {
                 final denomination = state.denominations?[index];
-                final denominationValue = double.tryParse(
-                        denomination?.value?.replaceAll(',', '') ?? '0') ??
+                final denominationValue =
+                    double.tryParse(
+                      denomination?.value?.replaceAll(',', '') ?? '0',
+                    ) ??
                     0;
-                final isEnabled = denominationValue <= remainingAmount;
+                final currentQuantity =
+                    _denominationQuantities[denomination?.id] ?? 0;
+                final maxQuantity =
+                    _calculateMaxQuantity(denominationValue) + currentQuantity;
+                final isEnabled = maxQuantity > 0;
 
                 return Skeletonizer(
                   enabled: state.getAllDenominationsStatus.isLoading,
@@ -140,12 +172,13 @@ class _AllDenominationsBottomSheetState
                     key: ValueKey(denomination?.id),
                     denominationModel: denomination ?? DenominationModel(),
                     isEnabled: isEnabled,
-                    onCountChanged: (change) {
+                    maxQuantity: maxQuantity,
+                    onQuantityChanged: (newQuantity) {
                       if (denomination != null) {
-                        _updateAmount(
+                        _handleQuantityChanged(
                           denomination.id ?? 0,
                           denominationValue,
-                          change,
+                          newQuantity,
                         );
                       }
                     },
@@ -158,10 +191,7 @@ class _AllDenominationsBottomSheetState
         if (widget.showConfirmButton) ...[
           _isAmountComplete ? 24.verticalSizedBox : const SizedBox.shrink(),
           if (_isAmountComplete)
-            MainButton(
-              title: context.confirm,
-              onTap: _handleConfirm,
-            )
+            MainButton(title: context.confirm, onTap: _handleConfirm)
           else
             const SizedBox(),
           32.verticalSizedBox,
@@ -170,4 +200,3 @@ class _AllDenominationsBottomSheetState
     );
   }
 }
-

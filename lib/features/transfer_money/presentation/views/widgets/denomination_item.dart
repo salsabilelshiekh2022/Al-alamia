@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/general/data/models/denomination_model.dart';
@@ -10,44 +11,77 @@ class DenominationItem extends StatefulWidget {
   const DenominationItem({
     super.key,
     required this.denominationModel,
-    this.onCountChanged,
+    this.onQuantityChanged,
     this.isEnabled = true,
+    this.maxQuantity,
   });
-  
-  final DenominationModel denominationModel;
-  final void Function(int change)? onCountChanged;
 
-  /// When false, the item is visually dimmed and the add button is disabled.
+  final DenominationModel denominationModel;
+
+  /// Callback triggered when quantity changes, passes the new absolute quantity.
+  final void Function(int quantity)? onQuantityChanged;
+
+  /// When false, the item is visually dimmed and input is disabled.
   final bool isEnabled;
+
+  /// Maximum allowed quantity based on remaining amount.
+  final int? maxQuantity;
 
   @override
   State<DenominationItem> createState() => _DenominationItemState();
 }
 
 class _DenominationItemState extends State<DenominationItem> {
-  int count = 0;
+  late TextEditingController _quantityController;
+  late FocusNode _focusNode;
+  int _currentQuantity = 0;
 
-  void _incrementCount() {
-    if (!widget.isEnabled) return;
-    setState(() {
-      count++;
-    });
-    widget.onCountChanged?.call(1);
+  @override
+  void initState() {
+    super.initState();
+    _quantityController = TextEditingController(text: '0');
+    _focusNode = FocusNode();
   }
 
-  void _decrementCount() {
-    if (count > 0) {
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleQuantityChange(String value) {
+    if (value.isEmpty) {
+      _updateQuantity(0);
+      return;
+    }
+
+    final quantity = int.tryParse(value) ?? 0;
+    final maxAllowed = widget.maxQuantity ?? 999;
+    final validQuantity = quantity.clamp(0, maxAllowed);
+
+    if (validQuantity != quantity) {
+      _quantityController.text = validQuantity.toString();
+      _quantityController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _quantityController.text.length),
+      );
+    }
+
+    _updateQuantity(validQuantity);
+  }
+
+  void _updateQuantity(int quantity) {
+    if (_currentQuantity != quantity) {
       setState(() {
-        count--;
+        _currentQuantity = quantity;
       });
-      widget.onCountChanged?.call(-1);
+      widget.onQuantityChanged?.call(quantity);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Only dim the entire widget if the user has none AND cannot add any.
-    final bool isTotallyDisabled = !widget.isEnabled && count == 0;
+    final bool isTotallyDisabled = !widget.isEnabled && _currentQuantity == 0;
 
     return Opacity(
       opacity: isTotallyDisabled ? 0.5 : 1.0,
@@ -60,7 +94,7 @@ class _DenominationItemState extends State<DenominationItem> {
         child: Row(
           children: [
             _buildDenominationValue(context),
-            _buildCounterSection(context),
+            _buildQuantityInput(context),
           ],
         ),
       ),
@@ -90,11 +124,11 @@ class _DenominationItemState extends State<DenominationItem> {
     );
   }
 
-  Widget _buildCounterSection(BuildContext context) {
+  Widget _buildQuantityInput(BuildContext context) {
     return Expanded(
       flex: 2,
       child: Container(
-        padding: 12.allPadding,
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         height: double.infinity,
         decoration: BoxDecoration(
           color: context.colors.backgroundFieldColor,
@@ -103,53 +137,38 @@ class _DenominationItemState extends State<DenominationItem> {
             bottomEnd: Radius.circular(12.r),
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildCountButton(
-              context: context,
-              icon: Icons.add_rounded,
-              onTap: widget.isEnabled ? _incrementCount : null,
-              isEnabled: widget.isEnabled,
-            ),
-            Text(
-              count.toString(),
-              style: context.textStyles.font17SemiBoldSecondaryColor
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            _buildCountButton(
-              context: context,
-              icon: Icons.remove_rounded,
-              onTap: count > 0 ? _decrementCount : null,
-              isEnabled: count > 0,
-            ),
+        child: TextField(
+          controller: _quantityController,
+          focusNode: _focusNode,
+          enabled: widget.isEnabled || _currentQuantity > 0,
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(3),
           ],
+          style: context.textStyles.font17SemiBoldSecondaryColor.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            contentPadding: EdgeInsets.zero,
+            hintText: '0',
+            hintStyle: context.textStyles.font17SemiBoldSecondaryColor.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.withOpacity(0.5),
+            ),
+          ),
+          onChanged: _handleQuantityChange,
+          onTap: () {
+            if (_quantityController.text == '0') {
+              _quantityController.clear();
+            }
+          },
         ),
-      ),
-    );
-  }
-
-  Widget _buildCountButton({
-    required BuildContext context,
-    required IconData icon,
-    required VoidCallback? onTap,
-    required bool isEnabled,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(13.r),
-      child: Container(
-        width: 26,
-        height: 26,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(13.r),
-          color: const Color(0xff9b9b9b).withValues(alpha: 0.09),
-        ),
-        child: Icon(
-          icon,
-          color: isEnabled ? context.colors.secondaryColor : Colors.grey,
-          size: 16.sp,
-        ).center(),
       ),
     );
   }
