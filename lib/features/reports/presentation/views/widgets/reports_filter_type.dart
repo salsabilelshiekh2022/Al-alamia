@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/enums/reports_enum.dart';
 import '../../cubit/reports_cubit.dart';
+import '../../cubit/reports_state.dart';
 
 class ReportsFilterType extends StatefulWidget {
   const ReportsFilterType({super.key});
@@ -19,50 +20,58 @@ class _ReportsFilterTypeState extends State<ReportsFilterType> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: 6.allPadding,
-      width: double.infinity,
-      height: 45.h,
-      decoration: BoxDecoration(
-        color: context.colors.backgroundFieldColor,
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: Row(
-        children: List.generate(
-          ReportsEnum.values.length,
+    return BlocBuilder<ReportsCubit, ReportsState>(
+      builder: (context, state) {
+        return Container(
+          padding: 6.allPadding,
+          width: double.infinity,
+          height: 45.h,
+          decoration: BoxDecoration(
+            color: context.colors.backgroundFieldColor,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Row(
+            children: List.generate(
+              ReportsEnum.values.length,
 
-          (index) => Expanded(
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                  context.read<ReportsCubit>().getReports(type: ReportsEnum.values[index]);
-                });
-              },
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 2),
-                padding: 5.allPadding,
-                decoration: BoxDecoration(
-                  color: selectedIndex == index
-                      ? context.colors.whiteColor
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Center(
-                  child: Text(
-                    ReportsEnum.values[index].translate(context),
-                    style: selectedIndex == index
-                        ? context.textStyles.font16MediumPrimaryColor
-                        : context.textStyles.font16MediumSecondaryColor
-                              .copyWith(color: context.colors.grayColor),
-                    textAlign: TextAlign.center,
+              (index) => Expanded(
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                    // Pass the selected date from state when changing report type
+                    context.read<ReportsCubit>().getReports(
+                      type: ReportsEnum.values[index],
+                      date: state.selectedDate,
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 2),
+                    padding: 5.allPadding,
+                    decoration: BoxDecoration(
+                      color: selectedIndex == index
+                          ? context.colors.whiteColor
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        ReportsEnum.values[index].translate(context),
+                        style: selectedIndex == index
+                            ? context.textStyles.font16MediumPrimaryColor
+                            : context.textStyles.font16MediumSecondaryColor
+                                  .copyWith(color: context.colors.grayColor),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -5,5 +5,8 @@ import '../../../../core/database/network/failure.dart';
 import '../../../../core/enums/reports_enum.dart';
 
 abstract class ReportsRepo {
-  Future<Either<Failure, ReportsModel>> getReports({required ReportsEnum type});
+  Future<Either<Failure, ReportsModel>> getReports({
+    required ReportsEnum type,
+    String? date,
+  });
 }

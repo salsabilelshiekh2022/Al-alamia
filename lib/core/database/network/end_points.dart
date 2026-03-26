@@ -39,8 +39,11 @@ class EndPoints {
       '/employee/transactions?type=${transaction.name}';
   static String showTransactionDetails({required String transactionId}) =>
       '/employee/transactions/$transactionId/client-transaction';
-  static String getReports({required ReportsEnum type}) =>
-      '/employee/reports?type=${type.name}';
+  static String getReports({required ReportsEnum type, String? date}) {
+    final baseUrl = '/employee/reports?type=${type.name}';
+    return date != null ? '$baseUrl&date=$date' : baseUrl;
+  }
+
   static String sendMessage = '/employee/ticket-messages';
   static String getMessages = '/employee/ticket-messages';
   static String changePassword = '/employee/auth/change-password';

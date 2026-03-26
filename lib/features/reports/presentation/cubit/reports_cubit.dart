@@ -7,13 +7,37 @@ import '../../../../core/enums/request_status.dart';
 import 'reports_state.dart';
 
 @injectable
-class ReportsCubit extends  Cubit<ReportsState>{
+class ReportsCubit extends Cubit<ReportsState> {
   ReportsCubit({required this.reportsRepo}) : super(const ReportsState());
-  final ReportsRepo reportsRepo ;
+  final ReportsRepo reportsRepo;
 
-  Future<void> getReports({required ReportsEnum type}) async {
-    emit(state.copyWith(requestStatus: RequestStatus.loading));
-    final result = await reportsRepo.getReports(type: type);
+  Future<void> getReports({required ReportsEnum type, DateTime? date}) async {
+    // Format date as yyyy-M-d if provided
+    String? formattedDate;
+    if (date != null) {
+      formattedDate = '${date.year}-${date.month}-${date.day}';
+    }
+
+    // Avoid duplicate API calls if the same date and type are selected
+    if (state.reportsType == type &&
+        state.selectedDate == date &&
+        state.requestStatus == RequestStatus.success) {
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        requestStatus: RequestStatus.loading,
+        reportsType: type,
+        selectedDate: date,
+      ),
+    );
+
+    final result = await reportsRepo.getReports(
+      type: type,
+      date: formattedDate,
+    );
+
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -28,5 +52,17 @@ class ReportsCubit extends  Cubit<ReportsState>{
         ),
       ),
     );
+  }
+
+  void updateSelectedDate(DateTime? date) {
+    if (state.reportsType != null) {
+      getReports(type: state.reportsType!, date: date);
+    }
+  }
+
+  void clearDate() {
+    if (state.reportsType != null) {
+      getReports(type: state.reportsType!, date: null);
+    }
   }
 }

@@ -13,12 +13,13 @@ class ReportsRepoImpl implements ReportsRepo {
   final ApiConsumer apiConsumer;
   ReportsRepoImpl({required this.apiConsumer});
   @override
-  Future<Either<Failure, ReportsModel>> getReports({required ReportsEnum type}) {
-     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(
-         EndPoints.getReports(type: type),
-      
-      ),
+  Future<Either<Failure, ReportsModel>> getReports({
+    required ReportsEnum type,
+    String? date,
+  }) {
+    return apiConsumer.handleRequest(
+      request: () =>
+          apiConsumer.get(EndPoints.getReports(type: type, date: date)),
       onSuccess: (result) {
         return ReportsModel.fromJson(result['data']);
       },
