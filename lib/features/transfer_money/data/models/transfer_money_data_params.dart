@@ -10,6 +10,7 @@ class TransferMoneyDataParams {
   final String totalPrice;
   final String amountByChar;
   final String? note;
+  final String? sendingMessageType;
 
   const TransferMoneyDataParams({
     required this.clientPhone,
@@ -21,12 +22,13 @@ class TransferMoneyDataParams {
     required this.totalPrice,
     required this.amountByChar,
     this.note,
+    this.sendingMessageType,
   });
 
   @override
   String toString() {
     return 'TransferMoneyDataParams(clientPhone: $clientPhone, whatsappNumber: $whatsappNumber, clientName: $clientName, '
         'fromCurrencyId: $fromCurrencyId, toCurrencyId: $toCurrencyId, '
-        'amount: $amount, totalPrice: $totalPrice, amountByChar: $amountByChar, note: $note)';
+        'amount: $amount, totalPrice: $totalPrice, amountByChar: $amountByChar, note: $note, sendingMessageType: $sendingMessageType)';
   }
 }

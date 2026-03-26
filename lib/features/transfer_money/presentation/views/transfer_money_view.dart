@@ -1,5 +1,7 @@
 import 'package:alalamia/core/components/widgets/custom_page.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
+import 'package:alalamia/core/components/widgets/message_type_selection_bottom_sheet.dart';
+import 'package:alalamia/core/enums/message_type_enum.dart';
 import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
@@ -84,8 +86,8 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     }
   }
 
-  /// Validate all required fields and navigate to denomination view
-  void _handleConfirm() {
+  /// Validate all required fields and show message type selection
+  void _handleConfirm() async {
     // Validate required fields
     if (_phoneController.text.trim().isEmpty) {
       _showError('يرجى إدخال رقم الهاتف');
@@ -112,7 +114,20 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       return;
     }
 
-    // Create transfer data params
+    // Show message type selection bottom sheet
+    final selectedMessageType = await showModalBottomSheet<MessageTypeEnum>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const MessageTypeSelectionBottomSheet(),
+    );
+
+    // If user cancelled, do not proceed
+    if (selectedMessageType == null) {
+      return;
+    }
+
+    // Create transfer data params with selected message type
     final transferData = TransferMoneyDataParams(
       clientPhone: _phoneController.text.trim(),
       clientName: _nameController.text.trim(),
@@ -125,6 +140,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       note: _notesController.text.trim().isNotEmpty
           ? _notesController.text.trim()
           : null,
+      sendingMessageType: selectedMessageType.apiValue,
     );
 
     // Navigate to denomination view with data

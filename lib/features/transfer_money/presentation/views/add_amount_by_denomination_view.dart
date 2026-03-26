@@ -64,6 +64,7 @@ class _AddAmountByDenominationViewState
       note: widget.transferData.note,
       denominations: _denominationsIn,
       denominationsOut: _denominationsOut,
+      sendingMessageType: widget.transferData.sendingMessageType ?? 'sms',
     );
 
     context.read<TransferCurrencyCubit>().transferMoney(

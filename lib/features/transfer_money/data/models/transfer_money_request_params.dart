@@ -10,6 +10,7 @@ class TransferMoneyRequestParams {
   final List<DenominationsRequestParams> denominations;
   final List<DenominationsRequestParams> denominationsOut;
   final String? note;
+  final String sendingMessageType;
 
   TransferMoneyRequestParams({
     required this.clientPhone,
@@ -22,6 +23,7 @@ class TransferMoneyRequestParams {
     required this.amountByChar,
     required this.denominations,
     required this.denominationsOut,
+    required this.sendingMessageType,
     this.note,
   });
 
@@ -40,6 +42,7 @@ class TransferMoneyRequestParams {
         .map((v) => v.toJson())
         .toList();
     data['note'] = note;
+    data['sending_message_type'] = sendingMessageType;
     return data;
   }
 }
