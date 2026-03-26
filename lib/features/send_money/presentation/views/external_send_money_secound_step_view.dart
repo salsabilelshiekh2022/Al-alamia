@@ -1,3 +1,5 @@
+import 'package:alalamia/core/components/widgets/message_type_selection_bottom_sheet.dart';
+import 'package:alalamia/core/enums/message_type_enum.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/send_money/presentation/views/widgets/external_transaction_details_card.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +112,7 @@ class _ExternalSendMoneySecoundStepViewState
   }
 
   /// Handle confirm button tap - collect data and send request
-  void _handleConfirm(BuildContext context) {
+  void _handleConfirm(BuildContext context) async {
     final cubit = context.read<SendMoneyCubit>();
     final formData = cubit.state.formData;
 
@@ -155,6 +157,25 @@ class _ExternalSendMoneySecoundStepViewState
       return;
     }
 
+    // Show message type selection bottom sheet
+    final selectedMessageType = await showModalBottomSheet<MessageTypeEnum>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const MessageTypeSelectionBottomSheet(),
+    );
+
+    // If user cancelled, do not proceed
+    if (selectedMessageType == null) {
+      return;
+    }
+
+    // Update form data with selected message type
+    final updatedFormData = formData.copyWith(
+      sendingMessageType: selectedMessageType.apiValue,
+    );
+    cubit.updateFormData(updatedFormData);
+
     // Show bottom sheet to collect denominations
     GlobalUiUtils.showBottomSheet(
       context,
@@ -166,7 +187,7 @@ class _ExternalSendMoneySecoundStepViewState
             _sendRequestWithDenominations(
               context,
               cubit,
-              formData,
+              updatedFormData,
               denominations,
             );
           },

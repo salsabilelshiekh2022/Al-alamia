@@ -40,6 +40,9 @@ class SendMoneyFormData extends Equatable {
   // Delivery Type
   final DeliveryTypeEnum deliveryType;
 
+  // Message Type
+  final String? sendingMessageType;
+
   const SendMoneyFormData({
     // Sender Info
     this.senderPhone = '',
@@ -72,6 +75,9 @@ class SendMoneyFormData extends Equatable {
 
     // Delivery Type
     this.deliveryType = DeliveryTypeEnum.inside,
+
+    // Message Type
+    this.sendingMessageType,
   });
 
   factory SendMoneyFormData.empty() => const SendMoneyFormData();
@@ -106,6 +112,9 @@ class SendMoneyFormData extends Equatable {
 
     // Delivery Type
     DeliveryTypeEnum? deliveryType,
+
+    // Message Type
+    String? sendingMessageType,
   }) {
     return SendMoneyFormData(
       // Sender Info
@@ -138,6 +147,9 @@ class SendMoneyFormData extends Equatable {
 
       // Delivery Type
       deliveryType: deliveryType ?? this.deliveryType,
+
+      // Message Type
+      sendingMessageType: sendingMessageType ?? this.sendingMessageType,
     );
   }
 
@@ -209,6 +221,7 @@ class SendMoneyFormData extends Equatable {
       paymentMethodId: paymentMethodId,
       receiverPhone2: receiverPhone2,
       deliveryType: deliveryType,
+      sendingMessageType: sendingMessageType ?? 'sms',
     );
   }
 
@@ -236,5 +249,6 @@ class SendMoneyFormData extends Equatable {
     commissionAmount,
     paymentMethodId,
     deliveryType,
+    sendingMessageType,
   ];
 }

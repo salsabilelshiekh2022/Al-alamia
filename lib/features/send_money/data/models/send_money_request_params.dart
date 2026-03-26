@@ -24,6 +24,7 @@ class SendMoneyRequestParams {
   final int? paymentMethodId;
   final String? receiverPhone2;
   final DeliveryTypeEnum deliveryType;
+  final String sendingMessageType;
 
   SendMoneyRequestParams({
     required this.senderPhone,
@@ -46,6 +47,7 @@ class SendMoneyRequestParams {
     this.paymentMethodId,
     required this.receiverPhone2,
     required this.deliveryType,
+    required this.sendingMessageType,
   });
 
   Map<String, dynamic> toJson() {
@@ -84,6 +86,8 @@ class SendMoneyRequestParams {
     data['receive_type'] = deliveryType == DeliveryTypeEnum.inside
         ? 'inside'
         : 'outside';
+
+    data['sending_message_type'] = sendingMessageType;
 
     return data;
   }
