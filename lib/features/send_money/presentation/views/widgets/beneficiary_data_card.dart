@@ -21,6 +21,7 @@ class BeneficiaryDataCard extends StatefulWidget {
 class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
   late TextEditingController nameController;
   late TextEditingController phoneController;
+  late TextEditingController whatsAppController;
   late TextEditingController additionalController;
   late TextEditingController addressController;
 
@@ -29,19 +30,27 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
     super.initState();
     final cubit = context.read<SendMoneyCubit>();
     nameController = TextEditingController(
-        text: cubit.state.formData?.receiverName ?? '');
+      text: cubit.state.formData?.receiverName ?? '',
+    );
     phoneController = TextEditingController(
-        text: cubit.state.formData?.receiverPhone ?? '');
+      text: cubit.state.formData?.receiverPhone ?? '',
+    );
+    whatsAppController = TextEditingController(
+      text: cubit.state.formData?.receiverWhatsApp ?? '',
+    );
     additionalController = TextEditingController(
-        text: cubit.state.formData?.receiverPhone2 ?? '');
+      text: cubit.state.formData?.receiverPhone2 ?? '',
+    );
     addressController = TextEditingController(
-        text: cubit.state.formData?.receiverAddress ?? '');
+      text: cubit.state.formData?.receiverAddress ?? '',
+    );
   }
 
   @override
   void dispose() {
     nameController.dispose();
     phoneController.dispose();
+    whatsAppController.dispose();
     additionalController.dispose();
     addressController.dispose();
     super.dispose();
@@ -53,6 +62,7 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
     cubit.updateFormData(
       currentFormData.copyWith(
         receiverPhone: phoneController.text,
+        receiverWhatsApp: whatsAppController.text,
         receiverName: nameController.text,
         receiverAddress: addressController.text,
         receiverPhone2: additionalController.text.isEmpty
@@ -95,6 +105,17 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
           ),
           16.verticalSizedBox,
           CustomTextFieldWithLabel(
+            controller: whatsAppController,
+            label: "رقم الواتساب",
+            hintText: "ادخل رقم الواتساب",
+            prefixWidget: AppAssets.svgsPhone,
+            keyboardType: TextInputType.phone,
+            isRequired: true,
+            validator: (value) => Validator.validatePhone(value, context),
+            onChanged: (_) => _updateFormData(),
+          ),
+          16.verticalSizedBox,
+          CustomTextFieldWithLabel(
             controller: additionalController,
             label: context.additionalNumber,
             hintText: context.additionalNumberHint,
@@ -108,7 +129,7 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
             label: context.address,
             hintText: context.addressHint,
             prefixWidget: AppAssets.svgsMapIcon,
-            
+
             onChanged: (_) => _updateFormData(),
           ),
         ],

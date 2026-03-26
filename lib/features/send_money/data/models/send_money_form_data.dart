@@ -10,15 +10,17 @@ import 'send_money_request_params.dart';
 class SendMoneyFormData extends Equatable {
   // Sender Information
   final String senderPhone;
+  final String senderWhatsApp;
   final String senderName;
   final String? senderAddress;
-  
+
   // Receiver Information
   final String receiverPhone;
+  final String receiverWhatsApp;
   final String receiverName;
   final String? receiverAddress;
   final String? receiverPhone2;
-  
+
   // Transaction Details
   final CurrencyModel? fromCurrency;
   final CurrencyModel? toCurrency;
@@ -29,27 +31,29 @@ class SendMoneyFormData extends Equatable {
   final String amountByChar;
   final List<Map<String, dynamic>> denominations;
   final String note;
-  
+
   // Commission & Payment
   final CommissionTypeEnum? commissionType;
   final double commissionAmount;
   final int? paymentMethodId;
-  
+
   // Delivery Type
   final DeliveryTypeEnum deliveryType;
 
   const SendMoneyFormData({
     // Sender Info
     this.senderPhone = '',
+    this.senderWhatsApp = '',
     this.senderName = '',
     this.senderAddress,
-    
+
     // Receiver Info
     this.receiverPhone = '',
+    this.receiverWhatsApp = '',
     this.receiverName = '',
     this.receiverAddress = '',
     this.receiverPhone2,
-    
+
     // Transaction
     this.fromCurrency,
     this.toCurrency,
@@ -60,12 +64,12 @@ class SendMoneyFormData extends Equatable {
     this.amountByChar = '',
     this.denominations = const [],
     this.note = '',
-    
+
     // Commission & Payment
     this.commissionType,
     this.commissionAmount = 0.0,
     this.paymentMethodId,
-    
+
     // Delivery Type
     this.deliveryType = DeliveryTypeEnum.inside,
   });
@@ -75,15 +79,17 @@ class SendMoneyFormData extends Equatable {
   SendMoneyFormData copyWith({
     // Sender Info
     String? senderPhone,
+    String? senderWhatsApp,
     String? senderName,
     String? senderAddress,
-    
+
     // Receiver Info
     String? receiverPhone,
+    String? receiverWhatsApp,
     String? receiverName,
     String? receiverAddress,
     String? receiverPhone2,
-    
+
     // Transaction
     CurrencyModel? fromCurrency,
     CurrencyModel? toCurrency,
@@ -97,22 +103,24 @@ class SendMoneyFormData extends Equatable {
     // Commission & Payment
     CommissionTypeEnum? commissionType,
     int? paymentMethodId,
-    
+
     // Delivery Type
     DeliveryTypeEnum? deliveryType,
   }) {
     return SendMoneyFormData(
       // Sender Info
       senderPhone: senderPhone ?? this.senderPhone,
+      senderWhatsApp: senderWhatsApp ?? this.senderWhatsApp,
       senderName: senderName ?? this.senderName,
       senderAddress: senderAddress ?? this.senderAddress,
-      
+
       // Receiver Info
       receiverPhone: receiverPhone ?? this.receiverPhone,
+      receiverWhatsApp: receiverWhatsApp ?? this.receiverWhatsApp,
       receiverName: receiverName ?? this.receiverName,
       receiverAddress: receiverAddress ?? this.receiverAddress,
       receiverPhone2: receiverPhone2 ?? this.receiverPhone2,
-      
+
       // Transaction
       fromCurrency: fromCurrency ?? this.fromCurrency,
       toCurrency: toCurrency ?? this.toCurrency,
@@ -123,40 +131,44 @@ class SendMoneyFormData extends Equatable {
       amountByChar: amountByChar ?? this.amountByChar,
       denominations: denominations ?? this.denominations,
       note: note ?? this.note,
-      
+
       // Commission & Payment
       commissionType: commissionType ?? this.commissionType,
       paymentMethodId: paymentMethodId ?? this.paymentMethodId,
-      
+
       // Delivery Type
       deliveryType: deliveryType ?? this.deliveryType,
     );
   }
 
   // Validation getters
-  bool get hasSenderInfo => senderPhone.isNotEmpty && senderName.isNotEmpty;
-  
-  bool get hasReceiverInfo => 
-      receiverPhone.isNotEmpty && 
-      receiverName.isNotEmpty;
-  
-  bool get hasAmountDetails => 
-      amount.isNotEmpty && 
-      amountByChar.isNotEmpty && 
-      fromCurrency != null && 
+  bool get hasSenderInfo =>
+      senderPhone.isNotEmpty &&
+      senderName.isNotEmpty &&
+      senderWhatsApp.isNotEmpty;
+
+  bool get hasReceiverInfo =>
+      receiverPhone.isNotEmpty &&
+      receiverName.isNotEmpty &&
+      receiverWhatsApp.isNotEmpty;
+
+  bool get hasAmountDetails =>
+      amount.isNotEmpty &&
+      amountByChar.isNotEmpty &&
+      fromCurrency != null &&
       toCurrency != null;
-  
+
   bool get hasBranches => fromBranch != null && toBranch != null;
-  
+
   bool get hasCommissionDetails => commissionType != null;
-  
+
   // Payment method is only required for outside delivery
-  bool get hasPaymentMethod => 
+  bool get hasPaymentMethod =>
       deliveryType == DeliveryTypeEnum.inside || paymentMethodId != null;
-  
+
   bool get hasDenominations => denominations.isNotEmpty;
-  
-  bool get hasRequiredFields => 
+
+  bool get hasRequiredFields =>
       hasSenderInfo &&
       hasReceiverInfo &&
       hasAmountDetails &&
@@ -178,6 +190,7 @@ class SendMoneyFormData extends Equatable {
 
     return SendMoneyRequestParams(
       senderPhone: senderPhone,
+      senderWhatsApp: senderWhatsApp,
       senderName: senderName,
       senderAddress: senderAddress,
       fromCurrencyId: fromCurrency!.id!,
@@ -187,6 +200,7 @@ class SendMoneyFormData extends Equatable {
       denominations: denominationParams,
       note: note,
       receiverPhone: receiverPhone,
+      receiverWhatsApp: receiverWhatsApp,
       receiverName: receiverName,
       receiverAddress: receiverAddress,
       fromBranchId: fromBranch!,
@@ -201,9 +215,11 @@ class SendMoneyFormData extends Equatable {
   @override
   List<Object?> get props => [
     senderPhone,
+    senderWhatsApp,
     senderName,
     senderAddress,
     receiverPhone,
+    receiverWhatsApp,
     receiverName,
     receiverAddress,
     receiverPhone2,
