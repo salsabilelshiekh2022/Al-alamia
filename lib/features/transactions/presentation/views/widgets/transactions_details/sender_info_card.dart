@@ -52,6 +52,12 @@ class SenderInfoCard extends StatelessWidget {
               ),
               24.verticalSizedBox,
               InfoWidget(
+                title: "رقم الواتساب",
+                value: state.transactionDetails?.sender.whatsappNumber ?? '--',
+                icon: AppAssets.svgsPhone,
+              ),
+              24.verticalSizedBox,
+              InfoWidget(
                 title: context.address,
                 value: state.transactionDetails?.sender.address ?? '--',
                 icon: AppAssets.svgsMapIcon,

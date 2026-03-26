@@ -51,6 +51,13 @@ class BeneficiaryInfoCard extends StatelessWidget {
               ),
               24.verticalSizedBox,
               InfoWidget(
+                title: "رقم الواتساب",
+                value:
+                    state.transactionDetails?.receiver.whatsappNumber ?? '--',
+                icon: AppAssets.svgsPhone,
+              ),
+              24.verticalSizedBox,
+              InfoWidget(
                 title: context.phone2,
                 value: state.transactionDetails?.receiver.phone_2 ?? '--',
                 icon: AppAssets.svgsAdditionalPhoneIcon,
