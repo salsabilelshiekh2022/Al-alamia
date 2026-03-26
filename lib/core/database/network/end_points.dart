@@ -21,23 +21,31 @@ class EndPoints {
   static String getFeeDetails = '/employee/transactions/get-fee-details';
   static String getAllDenominations = '/employee/general/get-all-denominations';
   static String transferMoney = '/employee/transactions/transfering-money';
-  static  String getExpenses = '/employee/transactions/expenses'; 
-  static String getExpensesByCurrency({required int id}) => '/employee/general/currencies/$id/expenses';
-  static String getDebtsByCurrency({required int id}) => '/employee/general/currencies/$id/debts';
-  static String getDebtsTransactions ({required String type}) => '/employee/transactions/debts?type=$type';
+  static String getExpenses = '/employee/transactions/expenses';
+  static String getExpensesByCurrency({required int id}) =>
+      '/employee/general/currencies/$id/expenses';
+  static String getDebtsByCurrency({required int id}) =>
+      '/employee/general/currencies/$id/debts';
+  static String getDebtsTransactions({required String type}) =>
+      '/employee/transactions/debts?type=$type';
   static String getAllBranches = '/employee/general/get-all-branches';
-  static String getPaymentMethods = '/employee/general/get-all-payment-methods';
+  static String getPaymentMethods({required int branchId}) =>
+      '/employee/general/get-all-payment-methods?branch_id=$branchId';
   static String sendMoney = '/employee/transactions/sending-money';
   static String inAndOutTransaction = '/employee/transactions/add-in-out';
 
   static String getNotifications = '/employee/notifications';
-  static String getTransactionList({required TransactionsEnum transaction}) => '/employee/transactions?type=${transaction.name}';
-  static String showTransactionDetails({required String transactionId}) => '/employee/transactions/$transactionId/client-transaction';
-  static String getReports({required ReportsEnum type}) => '/employee/reports?type=${type.name}';
+  static String getTransactionList({required TransactionsEnum transaction}) =>
+      '/employee/transactions?type=${transaction.name}';
+  static String showTransactionDetails({required String transactionId}) =>
+      '/employee/transactions/$transactionId/client-transaction';
+  static String getReports({required ReportsEnum type}) =>
+      '/employee/reports?type=${type.name}';
   static String sendMessage = '/employee/ticket-messages';
   static String getMessages = '/employee/ticket-messages';
   static String changePassword = '/employee/auth/change-password';
-  static String updateTransactionStatus({required int transactionId}) => '/employee/transactions/$transactionId/update-status';
+  static String updateTransactionStatus({required int transactionId}) =>
+      '/employee/transactions/$transactionId/update-status';
   static String sendOtp = '/employee/auth/send-code';
   static String verifyOtp = '/employee/auth/verify-code';
   static String resetPassword = '/employee/auth/reset-password';

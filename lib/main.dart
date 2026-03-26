@@ -20,7 +20,7 @@ void main() async {
       child: RequestsInspector(
         hideInspectorBanner: true,
         navigatorKey: AppKeys.navigatorKey,
-        enabled: false,
+        enabled: true,
         child: AlalamiaApp(),
       ),
     ),

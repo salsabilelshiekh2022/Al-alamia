@@ -60,15 +60,19 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     commissionController = TextEditingController();
     toCurrencyController = TextEditingController();
     converterAmountController = TextEditingController();
-   selectedCurrencyId = context.read<HomeCubit>().state.currenciesList.first.id;
-   
+    selectedCurrencyId = context
+        .read<HomeCubit>()
+        .state
+        .currenciesList
+        .first
+        .id;
+
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     context.read<GeneralCubit>().getAllBranches();
-    context.read<GeneralCubit>().getPaymentMethods();
     super.didChangeDependencies();
   }
 
@@ -105,12 +109,17 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     _getFeeDetails();
   }
 
-  void _showCurrencyBottomSheet(List<CurrencyModel> currencies, {bool isToCurrency = false}) {
+  void _showCurrencyBottomSheet(
+    List<CurrencyModel> currencies, {
+    bool isToCurrency = false,
+  }) {
     GlobalUiUtils.showBottomSheet(
       context,
       child: CurrencySelectionBottomSheet(
         currencies: currencies,
-        selectedCurrencyId: isToCurrency ? selectedToCurrencyId : selectedCurrencyId,
+        selectedCurrencyId: isToCurrency
+            ? selectedToCurrencyId
+            : selectedCurrencyId,
         onCurrencySelected: (currency) {
           if (isToCurrency) {
             _onToCurrencySelected(currency);
@@ -178,10 +187,9 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
         amount: int.parse(amountController.text),
       ),
     );
-    
   }
 
-    void _onAmountChanged(String value) {
+  void _onAmountChanged(String value) {
     final homeState = context.read<HomeCubit>().state;
     final double amount = double.tryParse(value) ?? 0;
     final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
@@ -189,18 +197,18 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     converterAmountController.text = result;
 
     // Calculate commission
-      final branch = getIt<CacheServices>()
-          .getDataFromCache<UserModel>(
-            boxName: CacheBoxes.userModelBox,
-            key: "user",
-          )
-          ?.branch;
-      
-      final double commissionPercentage = 
-          double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
-      
-      final double commissionAmount = (amount * commissionPercentage) / 100;
-      commissionController.text = commissionAmount.toStringAsFixed(2);
+    final branch = getIt<CacheServices>()
+        .getDataFromCache<UserModel>(
+          boxName: CacheBoxes.userModelBox,
+          key: "user",
+        )
+        ?.branch;
+
+    final double commissionPercentage =
+        double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
+
+    final double commissionAmount = (amount * commissionPercentage) / 100;
+    commissionController.text = commissionAmount.toStringAsFixed(2);
 
     _updateFormData();
     _getFeeDetails();
@@ -227,8 +235,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
               orElse: () => homeCubit.state.currenciesList.first,
             )
           : cubit.state.deliveryType == DeliveryTypeEnum.inside
-              ? fromCurrency // For inside delivery, to currency is same as from currency
-              : null;
+          ? fromCurrency // For inside delivery, to currency is same as from currency
+          : null;
 
       // Get branch models
       final fromBranch = getIt<CacheServices>()
@@ -236,7 +244,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
             boxName: CacheBoxes.userModelBox,
             key: "user",
           )
-          ?.branch?.id;
+          ?.branch
+          ?.id;
 
       final toBranch = selectedDestinationId;
 
@@ -247,7 +256,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
         currentFormData.copyWith(
           fromCurrency: fromCurrency,
           toCurrency: toCurrency,
-          fromBranch: fromBranch ,
+          fromBranch: fromBranch,
           toBranch: toBranch,
           amount: amountController.text,
           amountByChar: amountByCharController.text,
@@ -262,8 +271,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
   }
 
   void _getFeeDetails() {
-    if (amountController.text.isEmpty ||
-        selectedCurrencyId == null) {
+    if (amountController.text.isEmpty || selectedCurrencyId == null) {
       return;
     }
 
@@ -276,18 +284,18 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
 
     if (toCurrencyId == null) return;
 
-    CommissionTypeEnum commissionType = selectedCommissionType ?? CommissionTypeEnum.none;
+    CommissionTypeEnum commissionType =
+        selectedCommissionType ?? CommissionTypeEnum.none;
 
     context.read<GeneralCubit>().getFeeDetails(
-          params: FeeDetailsRequestParams(
-            fromCurrencyId: selectedCurrencyId!,
-            toCurrencyId: toCurrencyId,
-            amount: amountController.text,
-            commissionType: commissionType,
-          ),
-        );
+      params: FeeDetailsRequestParams(
+        fromCurrencyId: selectedCurrencyId!,
+        toCurrencyId: toCurrencyId,
+        amount: amountController.text,
+        commissionType: commissionType,
+      ),
+    );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -307,10 +315,20 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                 children: [
                   Expanded(
                     child: CustomTextFieldWithLabel(
-                     // controller: currencyController,
+                      // controller: currencyController,
                       label: context.currency,
                       hintText: context.currenyHint,
-                     initialValue: context.read<HomeCubit>().state.currenciesList.firstWhere((c) => c.id == selectedCurrencyId, orElse: () => CurrencyModel(name: '')).name ?? '',
+                      initialValue:
+                          context
+                              .read<HomeCubit>()
+                              .state
+                              .currenciesList
+                              .firstWhere(
+                                (c) => c.id == selectedCurrencyId,
+                                orElse: () => CurrencyModel(name: ''),
+                              )
+                              .name ??
+                          '',
                       prefixWidget: AppAssets.svgsDollarIcon,
                       isRequired: true,
                       isReadOnly: true,
@@ -410,20 +428,20 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      child: CustomTextFieldWithLabel(
-                        onTap: () {
-                          setState(() {
-                            // openCommissionTypesDropDown =
-                            //     !openCommissionTypesDropDown;
-                          });
-                        },
-                        controller: commissionController,
-                        label: context.commission,
-                        hintText: "\$0.00",
-                        enabled: false,
-                        prefixWidget: AppAssets.svgsCoinsIcon,
-                        isRequired: true,
-                      ),
+                    child: CustomTextFieldWithLabel(
+                      onTap: () {
+                        setState(() {
+                          // openCommissionTypesDropDown =
+                          //     !openCommissionTypesDropDown;
+                        });
+                      },
+                      controller: commissionController,
+                      label: context.commission,
+                      hintText: "\$0.00",
+                      enabled: false,
+                      prefixWidget: AppAssets.svgsCoinsIcon,
+                      isRequired: true,
+                    ),
                   ),
                   14.horizontalSizedBox,
                   Expanded(
@@ -450,70 +468,75 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                     ),
                   ),
 
-              context.read<SendMoneyCubit>().state.deliveryType ==
-                      DeliveryTypeEnum.outside
-                  ? Column(
-                      children: [
-                        16.verticalSizedBox,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  context.read<SendMoneyCubit>().state.deliveryType ==
+                          DeliveryTypeEnum.outside
+                      ? Column(
                           children: [
-                            BlocBuilder<HomeCubit, HomeState>(
-                              builder: (context, state) {
-                                return Expanded(
-                                  child: CustomTextFieldWithLabel(
-                                    onTap: () {
-                                      _showCurrencyBottomSheet(state.currenciesList, isToCurrency: true);
-                                    },
-                                    controller: toCurrencyController,
-                                    label: context.convertedCurrency,
-                                    hintText: context.convertedCurrency,
-                                    prefixWidget: AppAssets.svgsDollarIcon,
-                                    isRequired: true,
-                                    isReadOnly: true,
-                                    suffixWidget: InkWell(
-                                      splashColor: Colors.transparent,
-                                      onTap: () {
-                                        _showCurrencyBottomSheet(state.currenciesList, isToCurrency: true);
-                                      },
-                                      child: Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: context.colors.grayColor,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            14.horizontalSizedBox,
-                            BlocBuilder<HomeCubit, HomeState>(
-                              builder: (context, state) {
-                                return Expanded(
-                                  child: CustomTextFieldWithLabel(
-                                   controller: converterAmountController,
-                                    label: context.convertedAmount,
-                                    hintText: context.convertedAmount,
-                                    prefixWidget: AppAssets.svgsDollarIcon,
-                                    isRequired: true,
-                                    isReadOnly: true,
-                                    keyboardType: TextInputType.number,
-                                    validator: (value) =>
-                                        Validator.validateAnotherField(
-                                          value,
-                                          context,
+                            16.verticalSizedBox,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                BlocBuilder<HomeCubit, HomeState>(
+                                  builder: (context, state) {
+                                    return Expanded(
+                                      child: CustomTextFieldWithLabel(
+                                        onTap: () {
+                                          _showCurrencyBottomSheet(
+                                            state.currenciesList,
+                                            isToCurrency: true,
+                                          );
+                                        },
+                                        controller: toCurrencyController,
+                                        label: context.convertedCurrency,
+                                        hintText: context.convertedCurrency,
+                                        prefixWidget: AppAssets.svgsDollarIcon,
+                                        isRequired: true,
+                                        isReadOnly: true,
+                                        suffixWidget: InkWell(
+                                          splashColor: Colors.transparent,
+                                          onTap: () {
+                                            _showCurrencyBottomSheet(
+                                              state.currenciesList,
+                                              isToCurrency: true,
+                                            );
+                                          },
+                                          child: Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color: context.colors.grayColor,
+                                          ),
                                         ),
-                                  ),
-                                );
-                              },
+                                      ),
+                                    );
+                                  },
+                                ),
+                                14.horizontalSizedBox,
+                                BlocBuilder<HomeCubit, HomeState>(
+                                  builder: (context, state) {
+                                    return Expanded(
+                                      child: CustomTextFieldWithLabel(
+                                        controller: converterAmountController,
+                                        label: context.convertedAmount,
+                                        hintText: context.convertedAmount,
+                                        prefixWidget: AppAssets.svgsDollarIcon,
+                                        isRequired: true,
+                                        isReadOnly: true,
+                                        keyboardType: TextInputType.number,
+                                        validator: (value) =>
+                                            Validator.validateAnotherField(
+                                              value,
+                                              context,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-
-                      ],
-                    )
-                  : 0.verticalSizedBox,
-            ],
-          ),
+                        )
+                      : 0.verticalSizedBox,
+                ],
+              ),
             ],
           ),
         );

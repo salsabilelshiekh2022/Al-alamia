@@ -75,9 +75,9 @@ class GeneralCubit extends Cubit<GeneralState> {
     );
   }
 
-  Future<void> getPaymentMethods() async {
+  Future<void> getPaymentMethods({required int branchId}) async {
     emit(state.copyWith(getPaymentMethodsStatus: RequestStatus.loading));
-    final result = await generalRepo.getPaymentMethods();
+    final result = await generalRepo.getPaymentMethods(branchId: branchId);
     result.fold(
       (failure) =>
           emit(state.copyWith(getPaymentMethodsStatus: RequestStatus.error)),
@@ -85,7 +85,18 @@ class GeneralCubit extends Cubit<GeneralState> {
         state.copyWith(
           getPaymentMethodsStatus: RequestStatus.success,
           paymentMethods: paymentMethods,
+          selectedBranchId: branchId,
         ),
+      ),
+    );
+  }
+
+  void clearPaymentMethods() {
+    emit(
+      state.copyWith(
+        paymentMethods: [],
+        getPaymentMethodsStatus: RequestStatus.initial,
+        selectedBranchId: null,
       ),
     );
   }

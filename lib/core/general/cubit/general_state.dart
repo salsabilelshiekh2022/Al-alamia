@@ -18,6 +18,7 @@ class GeneralState extends Equatable {
   final List<DenominationModel?>? denominations;
   final List<BranchModel?>? branches;
   final List<PaymentMethodModel?>? paymentMethods;
+  final int? selectedBranchId;
 
   static GeneralState initial() {
     return const GeneralState();
@@ -34,6 +35,7 @@ class GeneralState extends Equatable {
     this.denominations,
     this.branches,
     this.paymentMethods,
+    this.selectedBranchId,
   });
 
   GeneralState copyWith({
@@ -47,6 +49,7 @@ class GeneralState extends Equatable {
     List<DenominationModel?>? denominations,
     List<BranchModel?>? branches,
     List<PaymentMethodModel?>? paymentMethods,
+    int? selectedBranchId,
   }) {
     return GeneralState(
       getUserByPhoneStatus: getUserByPhoneStatus ?? this.getUserByPhoneStatus,
@@ -61,6 +64,7 @@ class GeneralState extends Equatable {
       denominations: denominations ?? this.denominations,
       branches: branches ?? this.branches,
       paymentMethods: paymentMethods ?? this.paymentMethods,
+      selectedBranchId: selectedBranchId,
     );
   }
 
@@ -75,6 +79,7 @@ class GeneralState extends Equatable {
     getAllBranchesStatus,
     branches,
     getPaymentMethodsStatus,
-    paymentMethods
+    paymentMethods,
+    selectedBranchId,
   ];
 }

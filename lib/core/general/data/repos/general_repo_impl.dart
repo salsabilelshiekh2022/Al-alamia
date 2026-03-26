@@ -74,9 +74,12 @@ class GeneralRepoImpl extends GeneralRepo {
   }
 
   @override
-  Future<Either<Failure, List<PaymentMethodModel>>> getPaymentMethods() {
+  Future<Either<Failure, List<PaymentMethodModel>>> getPaymentMethods({
+    required int branchId,
+  }) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getPaymentMethods),
+      request: () =>
+          apiConsumer.get(EndPoints.getPaymentMethods(branchId: branchId)),
       onSuccess: (result) {
         return List<PaymentMethodModel>.from(
           result['data'].map((x) => PaymentMethodModel.fromJson(x)),

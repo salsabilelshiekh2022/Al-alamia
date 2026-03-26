@@ -46,7 +46,7 @@ class _ExternalTransactionDetailsCardState
   late TextEditingController toCurrencyController;
   late TextEditingController converterAmountController;
   late TextEditingController destinationController;
-    late TextEditingController paymentMethodController;
+  late TextEditingController paymentMethodController;
   late TextEditingController amountController;
   late TextEditingController amountByCharController;
   late TextEditingController commissionTypeController;
@@ -67,8 +67,13 @@ class _ExternalTransactionDetailsCardState
     toCurrencyController = TextEditingController();
     converterAmountController = TextEditingController();
     paymentMethodController = TextEditingController();
-    selectedCurrencyId = context.read<HomeCubit>().state.currenciesList.first.id;
-    selectedPaymentMethodId = context.read<GeneralCubit>().state.paymentMethods?.first?.id;
+    selectedCurrencyId = context
+        .read<HomeCubit>()
+        .state
+        .currenciesList
+        .first
+        .id;
+    // Don't set initial payment method ID - will be set after branch selection
     super.initState();
   }
 
@@ -77,7 +82,7 @@ class _ExternalTransactionDetailsCardState
     context.read<GeneralCubit>().getAllBranches(
       queryParameters: {'type': "company"},
     );
-    context.read<GeneralCubit>().getPaymentMethods();
+    // Don't fetch payment methods initially - wait for branch selection
     super.didChangeDependencies();
   }
 
@@ -115,12 +120,17 @@ class _ExternalTransactionDetailsCardState
     _getFeeDetails();
   }
 
-  void _showCurrencyBottomSheet(List<CurrencyModel> currencies, {bool isToCurrency = false}) {
+  void _showCurrencyBottomSheet(
+    List<CurrencyModel> currencies, {
+    bool isToCurrency = false,
+  }) {
     GlobalUiUtils.showBottomSheet(
       context,
       child: CurrencySelectionBottomSheet(
         currencies: currencies,
-        selectedCurrencyId: isToCurrency ? selectedToCurrencyId : selectedCurrencyId,
+        selectedCurrencyId: isToCurrency
+            ? selectedToCurrencyId
+            : selectedCurrencyId,
         onCurrencySelected: (currency) {
           if (isToCurrency) {
             _onToCurrencySelected(currency);
@@ -137,8 +147,16 @@ class _ExternalTransactionDetailsCardState
     setState(() {
       destinationController.text = branch.name ?? '';
       selectedDestinationId = branch.id;
+      // Clear payment method selection when branch changes
+      paymentMethodController.clear();
+      selectedPaymentMethodId = null;
     });
     _updateFormData();
+
+    // Fetch payment methods for the selected branch
+    if (branch.id != null) {
+      context.read<GeneralCubit>().getPaymentMethods(branchId: branch.id!);
+    }
   }
 
   void _showBranchBottomSheet(List<BranchModel?> branches) {
@@ -157,13 +175,15 @@ class _ExternalTransactionDetailsCardState
 
   void _onPaymentMethodSelected(PaymentMethodModel paymentMethod) {
     setState(() {
-      paymentMethodController.text = paymentMethod.name ;
+      paymentMethodController.text = paymentMethod.name;
       selectedPaymentMethodId = paymentMethod.id;
     });
     _updateFormData();
   }
 
-  void _showPaymentMethodBottomSheet(List<PaymentMethodModel?>? paymentMethods) {
+  void _showPaymentMethodBottomSheet(
+    List<PaymentMethodModel?>? paymentMethods,
+  ) {
     GlobalUiUtils.showBottomSheet(
       context,
       child: PaymentMethodBottomSheet(
@@ -178,12 +198,10 @@ class _ExternalTransactionDetailsCardState
   }
 
   void _calculateExchangeRate() {
-  
     if (selectedCurrencyId == null ||
         selectedToCurrencyId == null ||
         amountController.text.isEmpty)
       return;
-    
 
     final cubit = context.read<HomeCubit>();
     cubit.transferCurrency(
@@ -198,7 +216,9 @@ class _ExternalTransactionDetailsCardState
   void _onAmountChanged(String value) {
     final homeState = context.read<HomeCubit>().state;
     final double amount = double.tryParse(value) ?? 0;
-    final num exchangeRate =homeState.transferCurrencyStatus.isSuccess ? homeState.transferCurrency?.exchangePriceUsed ?? 0 : 0;
+    final num exchangeRate = homeState.transferCurrencyStatus.isSuccess
+        ? homeState.transferCurrency?.exchangePriceUsed ?? 0
+        : 0;
     final result = (amount * exchangeRate).toStringAsFixed(2);
     converterAmountController.text = result;
 
@@ -264,14 +284,18 @@ class _ExternalTransactionDetailsCardState
           toCurrency: toCurrency,
           fromBranch: fromBranch,
           toBranch: toBranch,
+          deliveryType: DeliveryTypeEnum
+              .outside, // Assuming inside delivery for external transactions
           amount: amountController.text,
           amountByChar: amountByCharController.text,
           commissionType: fromCurrency != toCurrency
               ? CommissionTypeEnum.none
               : commissionType,
+          paymentMethodId: paymentMethodController.text.isNotEmpty
+              ? selectedPaymentMethodId
+              : null,
         ),
       );
-   
     } catch (e, stackTrace) {
       print('ERROR in _updateFormData: $e');
       print('Stack trace: $stackTrace');
@@ -287,7 +311,8 @@ class _ExternalTransactionDetailsCardState
 
     if (toCurrencyId == null) return;
 
-    CommissionTypeEnum commissionType = selectedCommissionType ?? CommissionTypeEnum.none;
+    CommissionTypeEnum commissionType =
+        selectedCommissionType ?? CommissionTypeEnum.none;
 
     context.read<GeneralCubit>().getFeeDetails(
       params: FeeDetailsRequestParams(
@@ -302,216 +327,294 @@ class _ExternalTransactionDetailsCardState
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeCubit, HomeState>(
-    
       listener: (context, state) {
         _onAmountChanged(amountController.text);
       },
       child: BlocBuilder<SendMoneyCubit, SendMoneyState>(
         builder: (context, state) {
           return CardWithPurpleShadow(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.transactionDetails,
-                style: context.textStyles.font16SemiBoldSecondaryColor,
-              ),
-              12.verticalSizedBox,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: CustomTextFieldWithLabel(
-                     // controller: currencyController,
-                      label: context.currency,
-                      hintText: context.currenyHint,
-                      initialValue: context.read<HomeCubit>().state.currenciesList.firstWhere((c) => c.id == selectedCurrencyId, orElse: () => CurrencyModel(name: '')).name ?? '',
-                      prefixWidget: AppAssets.svgsDollarIcon,
-                      isRequired: true,
-                      isReadOnly: true,
-                      // onTap: () {
-                      //   _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);`
-                      // },
-                      // suffixWidget: InkWell(
-                      //   splashColor: Colors.transparent,
-                      //   onTap: () {
-                      //     _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
-                      //   },
-                      //   child: Icon(
-                      //     Icons.keyboard_arrow_down_rounded,
-                      //     color: context.colors.grayColor,
-                      //   ),
-                      // ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.transactionDetails,
+                  style: context.textStyles.font16SemiBoldSecondaryColor,
+                ),
+                12.verticalSizedBox,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: CustomTextFieldWithLabel(
+                        // controller: currencyController,
+                        label: context.currency,
+                        hintText: context.currenyHint,
+                        initialValue:
+                            context
+                                .read<HomeCubit>()
+                                .state
+                                .currenciesList
+                                .firstWhere(
+                                  (c) => c.id == selectedCurrencyId,
+                                  orElse: () => CurrencyModel(name: ''),
+                                )
+                                .name ??
+                            '',
+                        prefixWidget: AppAssets.svgsDollarIcon,
+                        isRequired: true,
+                        isReadOnly: true,
+                        // onTap: () {
+                        //   _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);`
+                        // },
+                        // suffixWidget: InkWell(
+                        //   splashColor: Colors.transparent,
+                        //   onTap: () {
+                        //     _showCurrencyBottomSheet(context.read<HomeCubit>().state.currenciesList);
+                        //   },
+                        //   child: Icon(
+                        //     Icons.keyboard_arrow_down_rounded,
+                        //     color: context.colors.grayColor,
+                        //   ),
+                        // ),
+                      ),
                     ),
-                  ),
-                  14.horizontalSizedBox,
-                  Expanded(
-                    child: CustomTextFieldWithLabel(
-                      onChanged: (val) {
-                        _onAmountChanged(val);
-                      },
-                      controller: amountController,
-                      label: context.amount,
-                      hintText: context.amountHint,
-                      prefixWidget: AppAssets.svgsDollarIcon,
-                      isRequired: true,
-                      keyboardType: TextInputType.number,
-                      validator: (value) =>
-                          Validator.validateAnotherField(value, context),
+                    14.horizontalSizedBox,
+                    Expanded(
+                      child: CustomTextFieldWithLabel(
+                        onChanged: (val) {
+                          _onAmountChanged(val);
+                        },
+                        controller: amountController,
+                        label: context.amount,
+                        hintText: context.amountHint,
+                        prefixWidget: AppAssets.svgsDollarIcon,
+                        isRequired: true,
+                        keyboardType: TextInputType.number,
+                        validator: (value) =>
+                            Validator.validateAnotherField(value, context),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-              16.verticalSizedBox,
-              CustomTextFieldWithLabel(
-                controller: amountByCharController,
-                label: context.amountByChar,
-                hintText: context.amountHint,
-                prefixWidget: AppAssets.svgsDollarIcon,
-                isRequired: true,
-                keyboardType: TextInputType.text,
-                validator: (value) =>
-                    Validator.validateAnotherField(value, context),
-                onChanged: (_) => _updateFormData(),
-              ),
-              16.verticalSizedBox,
-              CustomTextFieldWithLabel(
-                label: context.resource,
-                hintText: context.recourseHint,
-                prefixWidget: AppAssets.svgsBank,
-                isRequired: true,
-                initialValue:
-                    getIt<CacheServices>()
-                        .getDataFromCache<UserModel>(
-                          boxName: CacheBoxes.userModelBox,
-                          key: "user",
-                        )
-                        ?.branch
-                        ?.name ??
-                    "",
-                isReadOnly: true,
-              ),
-              16.verticalSizedBox,
-              // DeliveryTypeWidget(),
-              // 16.verticalSizedBox,
-              BlocBuilder<GeneralCubit, GeneralState>(
-                builder: (context, state) {
-                  return CustomTextFieldWithLabel(
-                    onTap: () {
-                      _showBranchBottomSheet(state.branches ?? []);
-                    },
-                    label: context.destination,
-                    controller: destinationController,
-                    hintText: context.distinctionHint,
-                    prefixWidget: AppAssets.svgsBank,
-                    isReadOnly: true,
-                    isRequired: true,
-                    suffixWidget: InkWell(
-                      splashColor: Colors.transparent,
+                16.verticalSizedBox,
+                CustomTextFieldWithLabel(
+                  controller: amountByCharController,
+                  label: context.amountByChar,
+                  hintText: context.amountHint,
+                  prefixWidget: AppAssets.svgsDollarIcon,
+                  isRequired: true,
+                  keyboardType: TextInputType.text,
+                  validator: (value) =>
+                      Validator.validateAnotherField(value, context),
+                  onChanged: (_) => _updateFormData(),
+                ),
+                16.verticalSizedBox,
+                CustomTextFieldWithLabel(
+                  label: context.resource,
+                  hintText: context.recourseHint,
+                  prefixWidget: AppAssets.svgsBank,
+                  isRequired: true,
+                  initialValue:
+                      getIt<CacheServices>()
+                          .getDataFromCache<UserModel>(
+                            boxName: CacheBoxes.userModelBox,
+                            key: "user",
+                          )
+                          ?.branch
+                          ?.name ??
+                      "",
+                  isReadOnly: true,
+                ),
+                16.verticalSizedBox,
+                // DeliveryTypeWidget(),
+                // 16.verticalSizedBox,
+                BlocBuilder<GeneralCubit, GeneralState>(
+                  builder: (context, state) {
+                    return CustomTextFieldWithLabel(
                       onTap: () {
                         _showBranchBottomSheet(state.branches ?? []);
                       },
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: context.colors.grayColor,
+                      label: context.destination,
+                      controller: destinationController,
+                      hintText: context.distinctionHint,
+                      prefixWidget: AppAssets.svgsBank,
+                      isReadOnly: true,
+                      isRequired: true,
+                      suffixWidget: InkWell(
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          _showBranchBottomSheet(state.branches ?? []);
+                        },
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: context.colors.grayColor,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
 
-               16.verticalSizedBox,
-              // DeliveryTypeWidget(),
-              // 16.verticalSizedBox,
-              BlocBuilder<GeneralCubit, GeneralState>(
-                builder: (context, state) {
-                  return CustomTextFieldWithLabel(
-                    onTap: () {
-                      _showPaymentMethodBottomSheet(state.paymentMethods ?? []);
-                    },
-                    label: "طرق التسليم",
-                    controller: paymentMethodController,
-                    hintText: "اختر طريقة التسليم",
-                    prefixWidget: AppAssets.svgsBank,
-                    isReadOnly: true,
-                    isRequired: true,
-                    suffixWidget: InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        _showPaymentMethodBottomSheet(state.paymentMethods ?? []);
-                      },
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: context.colors.grayColor,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              Column(
-                children: [
-                  16.verticalSizedBox,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                            BlocBuilder<HomeCubit, HomeState>(
-                              builder: (context, state) {
-                                return Expanded(
-                                  child: CustomTextFieldWithLabel(
-                                    onTap: () {
-                                      _showCurrencyBottomSheet(state.currenciesList, isToCurrency: true);
-                                    },
-                                    controller: toCurrencyController,
-                                    label: context.toCurrency,
-                                    hintText: context.toCurrency,
-                                    prefixWidget: AppAssets.svgsDollarIcon,
-                                    isRequired: true,
-                                    isReadOnly: true,
-                                    suffixWidget: InkWell(
-                                      splashColor: Colors.transparent,
-                                      onTap: () {
-                                        _showCurrencyBottomSheet(state.currenciesList, isToCurrency: true);
-                                      },
-                                      child: Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: context.colors.grayColor,
+                16.verticalSizedBox,
+                // Payment Methods Field - Only enabled when branch is selected
+                BlocBuilder<GeneralCubit, GeneralState>(
+                  builder: (context, state) {
+                    final bool isBranchSelected = selectedDestinationId != null;
+                    final bool isLoading =
+                        state.getPaymentMethodsStatus == RequestStatus.loading;
+                    final bool hasError =
+                        state.getPaymentMethodsStatus == RequestStatus.error;
+                    final bool hasPaymentMethods =
+                        state.paymentMethods != null &&
+                        state.paymentMethods!.isNotEmpty;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomTextFieldWithLabel(
+                          onTap: () {
+                            if (isBranchSelected &&
+                                hasPaymentMethods &&
+                                !isLoading) {
+                              _showPaymentMethodBottomSheet(
+                                state.paymentMethods ?? [],
+                              );
+                            }
+                          },
+                          label: "طرق التسليم",
+                          controller: paymentMethodController,
+                          hintText: !isBranchSelected
+                              ? "اختر الوجهة أولاً"
+                              : isLoading
+                              ? "جاري التحميل..."
+                              : hasError
+                              ? "حدث خطأ، حاول مرة أخرى"
+                              : hasPaymentMethods
+                              ? "اختر طريقة التسليم"
+                              : "لا توجد طرق تسليم متاحة",
+                          prefixWidget: AppAssets.svgsBank,
+                          isReadOnly: true,
+                          isRequired: true,
+                          enabled:
+                              isBranchSelected &&
+                              hasPaymentMethods &&
+                              !isLoading,
+                          suffixWidget: isLoading
+                              ? Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        context.colors.primaryColor,
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                      14.horizontalSizedBox,
-                      BlocBuilder<HomeCubit, HomeState>(
-                        builder: (context, state) {
-                          return Expanded(
-                            child: CustomTextFieldWithLabel(
-                              controller: converterAmountController,
-                              label: context.amount,
-                              hintText: context.amountHint,
-                              prefixWidget: AppAssets.svgsDollarIcon,
-                              isRequired: true,
-                              isReadOnly: true,
-                              keyboardType: TextInputType.number,
-                              validator: (value) =>
-                                  Validator.validateAnotherField(
-                                    value,
-                                    context,
+                                )
+                              : InkWell(
+                                  splashColor: Colors.transparent,
+                                  onTap: () {
+                                    if (isBranchSelected &&
+                                        hasPaymentMethods &&
+                                        !isLoading) {
+                                      _showPaymentMethodBottomSheet(
+                                        state.paymentMethods ?? [],
+                                      );
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: isBranchSelected && hasPaymentMethods
+                                        ? context.colors.grayColor
+                                        : context.colors.grayColor.withOpacity(
+                                            0.3,
+                                          ),
                                   ),
+                                ),
+                        ),
+                        if (hasError && isBranchSelected)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              "فشل تحميل طرق الدفع للشركة المحددة",
+                              style: TextStyle(color: Colors.red, fontSize: 12),
                             ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    ));
+                          ),
+                      ],
+                    );
+                  },
+                ),
+                Column(
+                  children: [
+                    16.verticalSizedBox,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BlocBuilder<HomeCubit, HomeState>(
+                          builder: (context, state) {
+                            return Expanded(
+                              child: CustomTextFieldWithLabel(
+                                onTap: () {
+                                  _showCurrencyBottomSheet(
+                                    state.currenciesList,
+                                    isToCurrency: true,
+                                  );
+                                },
+                                controller: toCurrencyController,
+                                label: context.toCurrency,
+                                hintText: context.toCurrency,
+                                prefixWidget: AppAssets.svgsDollarIcon,
+                                isRequired: true,
+                                isReadOnly: true,
+                                suffixWidget: InkWell(
+                                  splashColor: Colors.transparent,
+                                  onTap: () {
+                                    _showCurrencyBottomSheet(
+                                      state.currenciesList,
+                                      isToCurrency: true,
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: context.colors.grayColor,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        14.horizontalSizedBox,
+                        BlocBuilder<HomeCubit, HomeState>(
+                          builder: (context, state) {
+                            return Expanded(
+                              child: CustomTextFieldWithLabel(
+                                controller: converterAmountController,
+                                label: context.amount,
+                                hintText: context.amountHint,
+                                prefixWidget: AppAssets.svgsDollarIcon,
+                                isRequired: true,
+                                isReadOnly: true,
+                                keyboardType: TextInputType.number,
+                                validator: (value) =>
+                                    Validator.validateAnotherField(
+                                      value,
+                                      context,
+                                    ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
