@@ -19,17 +19,14 @@ import '../../data/models/transfer_money_data_params.dart';
 import '../../data/models/transfer_money_request_params.dart';
 
 /// View for entering transfer amounts by denomination.
-/// 
+///
 /// Displays two denomination panels:
 /// - "المبلغ قبل التحويل" (Amount before transfer) - denominationsIn
 /// - "المبلغ بعد التحويل" (Amount after transfer) - denominationsOut
-/// 
+///
 /// Shows confirm button only when both amounts are complete (remaining = 0).
 class AddAmountByDenominationView extends StatefulWidget {
-  const AddAmountByDenominationView({
-    super.key,
-    required this.transferData,
-  });
+  const AddAmountByDenominationView({super.key, required this.transferData});
 
   final TransferMoneyDataParams transferData;
 
@@ -56,6 +53,7 @@ class _AddAmountByDenominationViewState
     if (!_canSubmit) return;
 
     final requestParams = TransferMoneyRequestParams(
+      whatsappNumber: widget.transferData.whatsappNumber,
       clientPhone: widget.transferData.clientPhone,
       clientName: widget.transferData.clientName,
       fromCurrencyId: widget.transferData.fromCurrencyId,
@@ -69,13 +67,15 @@ class _AddAmountByDenominationViewState
     );
 
     context.read<TransferCurrencyCubit>().transferMoney(
-          transferMoneyRequestParams: requestParams,
-        );
+      transferMoneyRequestParams: requestParams,
+    );
   }
 
   /// Update denomination in status and list
   void _onAmountInStatusChanged(
-      bool isComplete, List<DenominationsRequestParams> denominations) {
+    bool isComplete,
+    List<DenominationsRequestParams> denominations,
+  ) {
     setState(() {
       _isAmountInComplete = isComplete;
       _denominationsIn = denominations;
@@ -84,7 +84,9 @@ class _AddAmountByDenominationViewState
 
   /// Update denomination out status and list
   void _onAmountOutStatusChanged(
-      bool isComplete, List<DenominationsRequestParams> denominations) {
+    bool isComplete,
+    List<DenominationsRequestParams> denominations,
+  ) {
     setState(() {
       _isAmountOutComplete = isComplete;
       _denominationsOut = denominations;
@@ -101,7 +103,7 @@ class _AddAmountByDenominationViewState
           child: Scaffold(
             appBar: _buildAppBar(context),
             body: _buildBody(context),
-          ), 
+          ),
         );
       },
     );
@@ -122,9 +124,8 @@ class _AddAmountByDenominationViewState
         state: SnackBarStates.success,
       );
       context.pop();
-        context.pop();
-          context.read<HomeCubit>().getBranchCurrencies();
-
+      context.pop();
+      context.read<HomeCubit>().getBranchCurrencies();
     }
   }
 
@@ -185,10 +186,7 @@ class _AddAmountByDenominationViewState
 
           // Confirm Button - only visible when both amounts are complete
           if (_canSubmit) ...[
-            MainButton(
-              title: context.confirm,
-              onTap: _handleConfirm,
-            ),
+            MainButton(title: context.confirm, onTap: _handleConfirm),
             32.verticalSizedBox,
           ],
         ],
@@ -197,9 +195,6 @@ class _AddAmountByDenominationViewState
   }
 
   Widget _buildSectionTitle(BuildContext context, String title) {
-    return Text(
-      title,
-      style: context.textStyles.font16MediumSecondaryColor,
-    );
+    return Text(title, style: context.textStyles.font16MediumSecondaryColor);
   }
 }

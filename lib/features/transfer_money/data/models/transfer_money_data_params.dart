@@ -2,6 +2,7 @@
 /// Contains all required information from TransferMoneyView to pass to AddAmountByDenominationView.
 class TransferMoneyDataParams {
   final String clientPhone;
+  final String whatsappNumber;
   final String clientName;
   final int fromCurrencyId;
   final int toCurrencyId;
@@ -12,6 +13,7 @@ class TransferMoneyDataParams {
 
   const TransferMoneyDataParams({
     required this.clientPhone,
+    required this.whatsappNumber,
     required this.clientName,
     required this.fromCurrencyId,
     required this.toCurrencyId,
@@ -23,7 +25,7 @@ class TransferMoneyDataParams {
 
   @override
   String toString() {
-    return 'TransferMoneyDataParams(clientPhone: $clientPhone, clientName: $clientName, '
+    return 'TransferMoneyDataParams(clientPhone: $clientPhone, whatsappNumber: $whatsappNumber, clientName: $clientName, '
         'fromCurrencyId: $fromCurrencyId, toCurrencyId: $toCurrencyId, '
         'amount: $amount, totalPrice: $totalPrice, amountByChar: $amountByChar, note: $note)';
   }

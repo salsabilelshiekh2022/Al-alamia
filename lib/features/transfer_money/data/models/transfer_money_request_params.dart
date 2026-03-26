@@ -1,17 +1,19 @@
 class TransferMoneyRequestParams {
   final String clientPhone;
   final String clientName;
+  final String whatsappNumber;
   final int fromCurrencyId;
   final int toCurrencyId;
   final String amount;
   final String totalPrice;
   final String amountByChar;
   final List<DenominationsRequestParams> denominations;
-  final List<DenominationsRequestParams> denominationsOut ;
+  final List<DenominationsRequestParams> denominationsOut;
   final String? note;
 
   TransferMoneyRequestParams({
     required this.clientPhone,
+    required this.whatsappNumber,
     required this.clientName,
     required this.fromCurrencyId,
     required this.toCurrencyId,
@@ -26,6 +28,7 @@ class TransferMoneyRequestParams {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['client_phone'] = clientPhone;
+    data['whatsapp_number'] = whatsappNumber;
     data['client_name'] = clientName;
     data['from_currency_id'] = fromCurrencyId;
     data['to_currency_id'] = toCurrencyId;
@@ -33,7 +36,9 @@ class TransferMoneyRequestParams {
     data['total_price'] = totalPrice;
     data['amount_by_char'] = amountByChar;
     data['denominations'] = denominations.map((v) => v.toJson()).toList();
-    data['denominations_out'] = denominationsOut.map((v) => v.toJson()).toList();
+    data['denominations_out'] = denominationsOut
+        .map((v) => v.toJson())
+        .toList();
     data['note'] = note;
     return data;
   }
@@ -52,10 +57,8 @@ class DenominationsRequestParams {
     return data;
   }
 
-@override
+  @override
   String toString() {
     return 'DenominationsRequestParams{id: $id, quantity: $quantity}';
   }
-
-
 }

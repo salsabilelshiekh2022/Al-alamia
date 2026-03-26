@@ -17,10 +17,12 @@ class ClientInfoSection extends StatefulWidget {
     super.key,
     required this.phoneController,
     required this.nameController,
+    required this.whatsAppNumberController,
   });
 
   final TextEditingController phoneController;
   final TextEditingController nameController;
+  final TextEditingController whatsAppNumberController;
 
   @override
   State<ClientInfoSection> createState() => _ClientInfoSectionState();
@@ -38,7 +40,7 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
       listener: (context, state) {
         if (state.getUserByPhoneStatus.isSuccess) {
           widget.nameController.text = state.userByPhone?.name ?? '';
-        } 
+        }
       },
       builder: (context, state) {
         return CardWithPurpleShadow(
@@ -65,6 +67,15 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
                 validator: (val) => Validator.validatePhone(val, context),
               ),
               16.verticalSizedBox,
+              CustomTextFieldWithLabel(
+                controller: widget.whatsAppNumberController,
+                label: "رقم الواتساب",
+                hintText: "أدخل رقم الواتساب",
+                isRequired: true,
+                prefixWidget: AppAssets.svgsPhone,
+                keyboardType: TextInputType.phone,
+                validator: (val) => Validator.validatePhone(val, context),
+              ),
               CustomTextFieldWithLabel(
                 controller: widget.nameController,
                 label: context.clientName,

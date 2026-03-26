@@ -32,28 +32,27 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
   // Currency calculator controllers
   late TextEditingController _amountController;
   late TextEditingController _resultController;
-  
+
   // Client info controllers
   late TextEditingController _phoneController;
   late TextEditingController _nameController;
-  
+  late TextEditingController _whatsAppNumberController;
+
   // Amount by char controller
   late TextEditingController _amountByCharController;
-  
+
   // Notes controller
   late TextEditingController _notesController;
-  
+
   CurrencyModel? _fromCurrency;
   CurrencyModel? _toCurrency;
-
-  /// The from-currency name that must always be selected.
-  static const _lockedFromCurrencyName = 'دينار ليبي';
 
   @override
   void initState() {
     _amountController = TextEditingController();
     _resultController = TextEditingController();
     _phoneController = TextEditingController();
+    _whatsAppNumberController = TextEditingController();
     _nameController = TextEditingController();
     _amountByCharController = TextEditingController();
     _notesController = TextEditingController();
@@ -61,22 +60,12 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     super.initState();
   }
 
-  /// Finds the "دينار ليبي" currency from the loaded list.
-  CurrencyModel? _findLibyanDinar(List<CurrencyModel> currencies) {
-    try {
-      return currencies.firstWhere(
-        (c) => c.name == _lockedFromCurrencyName,
-      );
-    } catch (_) {
-      return currencies.isNotEmpty ? currencies.first : null;
-    }
-  }
-
   @override
   void dispose() {
     _amountController.dispose();
     _resultController.dispose();
     _phoneController.dispose();
+    _whatsAppNumberController.dispose();
     _nameController.dispose();
     _amountByCharController.dispose();
     _notesController.dispose();
@@ -102,6 +91,10 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       _showError('يرجى إدخال رقم الهاتف');
       return;
     }
+    if (_whatsAppNumberController.text.trim().isEmpty) {
+      _showError('يرجى إدخال رقم الواتساب');
+      return;
+    }
     if (_nameController.text.trim().isEmpty) {
       _showError('يرجى إدخال اسم العميل');
       return;
@@ -123,13 +116,14 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     final transferData = TransferMoneyDataParams(
       clientPhone: _phoneController.text.trim(),
       clientName: _nameController.text.trim(),
+      whatsappNumber: _whatsAppNumberController.text.trim(),
       fromCurrencyId: _fromCurrency!.id!,
       toCurrencyId: _toCurrency!.id!,
       amount: _amountController.text.trim(),
       totalPrice: _resultController.text.trim(),
       amountByChar: _amountByCharController.text.trim(),
-      note: _notesController.text.trim().isNotEmpty 
-          ? _notesController.text.trim() 
+      note: _notesController.text.trim().isNotEmpty
+          ? _notesController.text.trim()
           : null,
     );
 
@@ -148,42 +142,23 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     );
   }
 
-  /// Initializes currencies if not already set.
-  void _initializeCurrencies(List<CurrencyModel> currenciesList) {
-    if (currenciesList.isEmpty ||
-        _fromCurrency != null ||
-        _toCurrency != null) {
-      return;
-    }
-
-    final libyanDinar = _findLibyanDinar(currenciesList);
-    _fromCurrency = libyanDinar;
-    _toCurrency = currenciesList.firstWhere(
-      (c) => c.id != libyanDinar?.id,
-      orElse: () => currenciesList.first,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeState>(
+    return BlocListener<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state.currenciesList.isNotEmpty &&
             _fromCurrency == null &&
             _toCurrency == null) {
           setState(() {
-            _initializeCurrencies(state.currenciesList);
+            _fromCurrency = state.currenciesList[0];
+            _toCurrency = state.currenciesList.length > 1
+                ? state.currenciesList[1]
+                : state.currenciesList[0];
           });
           _getFeeDetails();
         }
       },
-      builder: (context, state) {
-        // Also try to initialize on build in case the listener missed it
-        if (_fromCurrency == null && _toCurrency == null) {
-          _initializeCurrencies(state.currenciesList);
-        }
-
-        return CustomPage(
+      child: CustomPage(
         title: context.currencyTransfer,
         isBack: true,
         hasActions: false,
@@ -194,19 +169,19 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
             ClientInfoSection(
               phoneController: _phoneController,
               nameController: _nameController,
+              whatsAppNumberController: _whatsAppNumberController,
             ),
             20.verticalSizedBox,
             CurrencyCalculator(
               title: context.conversionData,
               amountController: _amountController,
               resultController: _resultController,
-              isFromCurrencyLocked: true,
-              initialFromCurrency: _fromCurrency,
               onAmountChanged: (val) {
                 _getFeeDetails();
               },
               onFromCurrencyChanged: (c) {
-                // From currency is locked — no action needed.
+                setState(() => _fromCurrency = c);
+                _getFeeDetails();
               },
               onToCurrencyChanged: (c) {
                 setState(() => _toCurrency = c);
@@ -222,37 +197,27 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
               ],
             ),
             20.verticalSizedBox,
-            if (_fromCurrency != null && _toCurrency != null)
-              ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _resultController,
-                builder: (_, value, __) => TotalSection(
-                  fromCurrency: _fromCurrency!,
-                  toCurrency: _toCurrency!,
-                  total: value.text,
-                  exchangePrice: 0.0,
-                ),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _resultController,
+              builder: (_, value, __) => TotalSection(
+                fromCurrency: _fromCurrency!,
+                toCurrency: _toCurrency!,
+                total: value.text,
+                exchangePrice: 0.0,
               ),
-              
-            20.verticalSizedBox,
-            AmountSection(
-              amountByCharController: _amountByCharController,
             ),
             20.verticalSizedBox,
-            NotesSection(
-              notesController: _notesController,
-            ),
+            AmountSection(amountByCharController: _amountByCharController),
+            20.verticalSizedBox,
+            NotesSection(notesController: _notesController),
             20.verticalSizedBox,
             FeeDetailsCard(),
             24.verticalSizedBox,
-            MainButton(
-              title: context.confirm,
-              onTap: _handleConfirm,
-            ),
+            MainButton(title: context.confirm, onTap: _handleConfirm),
             40.verticalSizedBox,
           ],
         ),
-      );
-      },
+      ),
     );
   }
 }
