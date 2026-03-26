@@ -1,11 +1,11 @@
 import 'package:alalamia/core/enums/commission_type_enum.dart';
+import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/features/transactions/data/models/transaction_model.dart';
 
 import '../../../../core/enums/status_enum.dart';
 import '../../../../core/general/data/models/branch_model.dart';
 
 class TransactionDetailsModel {
-
   TransactionDetailsModel({
     required this.amountSent,
     required this.currency,
@@ -17,7 +17,8 @@ class TransactionDetailsModel {
     required this.receiver,
     required this.details,
     this.pdfUrl,
-    required this.recievingBranch
+    required this.recievingBranch,
+    this.recieveType,
   });
 
   final String amountSent;
@@ -31,10 +32,12 @@ class TransactionDetailsModel {
   final DetailModel details;
   final String? pdfUrl;
   final bool recievingBranch;
+  final DeliveryTypeEnum? recieveType;
 
-
-
-  factory TransactionDetailsModel.fromJson(Map<String, dynamic> json, {String? pdfUrl}) => TransactionDetailsModel(
+  factory TransactionDetailsModel.fromJson(
+    Map<String, dynamic> json, {
+    String? pdfUrl,
+  }) => TransactionDetailsModel(
     amountSent: json["amount_sent"],
     currency: json["currency"],
     amountReceived: json["amount_received"],
@@ -46,11 +49,13 @@ class TransactionDetailsModel {
     details: DetailModel.fromJson(json["details"]),
     pdfUrl: pdfUrl,
     recievingBranch: json["recieving_branch"],
+    recieveType: json["recieve_type"] != null
+        ? DeliveryTypeEnum.values.firstWhere(
+            (e) => e.name == json['recieve_type'],
+          )
+        : null,
   );
-
-
 }
-
 
 class DetailModel {
   DetailModel({
@@ -74,7 +79,7 @@ class DetailModel {
   final String exchangeRate;
   final int transferFees;
   final double totalAmount;
-  final CommissionTypeEnum commissionType ;
+  final CommissionTypeEnum commissionType;
   final StatusEnum status;
 
   factory DetailModel.fromJson(Map<String, dynamic> json) => DetailModel(
@@ -86,11 +91,12 @@ class DetailModel {
     exchangeRate: json["exchange_rate"],
     transferFees: json["transfer_fees"],
     totalAmount: json["total_amount"].toDouble(),
-    commissionType: CommissionTypeEnum.values.firstWhere((e) => e.name == json['commission_type']),
+    commissionType: CommissionTypeEnum.values.firstWhere(
+      (e) => e.name == json['commission_type'],
+    ),
     status: StatusEnum.values.firstWhere((e) => e.name == json['status']),
   );
 }
-
 
 TransactionDetailsModel dummyTransactionModel = TransactionDetailsModel(
   amountSent: '9.20',
