@@ -6,19 +6,19 @@ import '../helper/translation_extensions.dart';
 
 enum StatusEnum {
   approved,
-  waiting_approved,
+  waiting_approval,
   waiting_recieval,
   recieved,
   pending,
   completed,
   in_progress,
   canceled;
-  
+
   String translate(BuildContext context) {
     switch (this) {
       case StatusEnum.approved:
         return context.approved;
-      case StatusEnum.waiting_approved:
+      case StatusEnum.waiting_approval:
         return context.waitingApproved;
       case StatusEnum.waiting_recieval:
         return context.waitingRecieval;
@@ -31,15 +31,15 @@ enum StatusEnum {
       case StatusEnum.canceled:
         return context.canceled;
       case StatusEnum.in_progress:
-        return context.pendingg;   
+        return context.pendingg;
     }
   }
 
-   Color chooseColor(BuildContext context) {
+  Color chooseColor(BuildContext context) {
     switch (this) {
       case StatusEnum.approved:
         return context.colors.greenColor;
-      case StatusEnum.waiting_approved:
+      case StatusEnum.waiting_approval:
         return context.colors.yellowColor;
       case StatusEnum.waiting_recieval:
         return context.colors.yellowColor;
@@ -51,7 +51,7 @@ enum StatusEnum {
         return context.colors.greenColor;
       case StatusEnum.canceled:
         return context.colors.redColor;
-        case StatusEnum.in_progress:
+      case StatusEnum.in_progress:
         return context.colors.orangeColor;
     }
   }
@@ -60,7 +60,7 @@ enum StatusEnum {
     switch (this) {
       case StatusEnum.approved:
         return AppAssets.svgsSuccess;
-      case StatusEnum.waiting_approved:
+      case StatusEnum.waiting_approval:
         return AppAssets.svgsPending;
       case StatusEnum.waiting_recieval:
         return AppAssets.svgsPending;
@@ -73,9 +73,7 @@ enum StatusEnum {
       case StatusEnum.canceled:
         return AppAssets.svgsCancelled;
       case StatusEnum.in_progress:
-        return AppAssets.svgsWaiting;  
+        return AppAssets.svgsWaiting;
     }
   }
-
-
 }
