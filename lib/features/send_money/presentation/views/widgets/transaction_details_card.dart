@@ -127,7 +127,9 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
               orElse: () => null,
             );
             if (branch != null) {
-              destinationController.text = branch.name ?? '';
+              setState(() {
+                destinationController.text = branch.name ?? '';
+              });
             }
           }
         });

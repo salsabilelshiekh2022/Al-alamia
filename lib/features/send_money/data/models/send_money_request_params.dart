@@ -65,7 +65,7 @@ class SendMoneyRequestParams {
     data['amount'] = amount;
     data['amount_by_char'] = amountByChar;
     data['denominations'] = denominations.map((v) => v.toJson()).toList();
-    data['note'] = note;
+    data['notes'] = note;
     data['sender_address'] = senderAddress;
     data['reciever_phone'] = receiverPhone;
     data['receiver_whatsapp_number'] = receiverWhatsApp;
