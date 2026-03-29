@@ -65,6 +65,35 @@ class _ExternalTransactionDetailsCardState
     return null;
   }
 
+  PaymentMethodModel? _findPaymentMethodById(
+    List<PaymentMethodModel?> paymentMethods,
+    int? paymentMethodId,
+  ) {
+    if (paymentMethodId == null) return null;
+    for (final method in paymentMethods) {
+      if (method?.id == paymentMethodId) return method;
+    }
+    return null;
+  }
+
+  void _syncPaymentMethodText(List<PaymentMethodModel?> paymentMethods) {
+    if (selectedPaymentMethodId == null) return;
+    if (paymentMethodController.text.trim().isNotEmpty) return;
+    if (paymentMethods.isEmpty) return;
+
+    final method =
+      _findPaymentMethodById(paymentMethods, selectedPaymentMethodId);
+    final name = method?.name.trim() ?? '';
+    if (name.isEmpty) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (paymentMethodController.text.trim().isEmpty) {
+        paymentMethodController.text = name;
+      }
+    });
+  }
+
   void _syncDestinationText(List<BranchModel?> branches) {
     if (selectedDestinationId == null) return;
     if (destinationController.text.trim().isNotEmpty) return;
@@ -615,6 +644,12 @@ class _ExternalTransactionDetailsCardState
                   // Payment Methods Field - Only enabled when branch is selected
                   BlocBuilder<GeneralCubit, GeneralState>(
                     builder: (context, state) {
+                      _syncPaymentMethodText(
+                        state.paymentMethods
+                                ?.cast<PaymentMethodModel?>()
+                                .toList() ??
+                            [],
+                      );
                       final bool isBranchSelected =
                           selectedDestinationId != null;
                       final bool isLoading =

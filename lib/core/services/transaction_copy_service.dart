@@ -55,6 +55,7 @@ class TransactionCopyService {
 
         // Commission & Payment
         commissionType: transaction.details.commissionType,
+        paymentMethodId: transaction.paymentMethod?.id,
 
         // Delivery Type
         deliveryType: transaction.recieveType ?? DeliveryTypeEnum.inside,

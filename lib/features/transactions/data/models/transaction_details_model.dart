@@ -16,6 +16,7 @@ class TransactionDetailsModel {
     required this.sender,
     required this.receiver,
     required this.details,
+    this.paymentMethod,
     this.pdfUrl,
     required this.recievingBranch,
     this.recieveType,
@@ -31,6 +32,7 @@ class TransactionDetailsModel {
   final ClientModel sender;
   final ClientModel receiver;
   final DetailModel details;
+  final PaymentMethodModel? paymentMethod;
   final String? pdfUrl;
   final bool recievingBranch;
   final DeliveryTypeEnum? recieveType;
@@ -57,6 +59,9 @@ class TransactionDetailsModel {
           )
         : null,
     notes: json["notes"],
+    paymentMethod: json["payment_method"] != null
+        ? PaymentMethodModel.fromJson(json["payment_method"])
+        : null,
   );
 }
 
@@ -98,6 +103,20 @@ class DetailModel {
       (e) => e.name == json['commission_type'],
     ),
     status: StatusEnum.values.firstWhere((e) => e.name == json['status']),
+  );
+}
+class PaymentMethodModel {
+  PaymentMethodModel({
+    required this.id,
+    required this.name,
+  });
+
+  final int id;
+  final String name;
+
+  factory PaymentMethodModel.fromJson(Map<String, dynamic> json) => PaymentMethodModel(
+    id: json["id"],
+    name: json["name"],
   );
 }
 
