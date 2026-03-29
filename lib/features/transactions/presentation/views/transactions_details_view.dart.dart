@@ -1,11 +1,16 @@
 import 'package:alalamia/core/components/widgets/custom_modal_hub.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
+import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/enums/update_transaction_state_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/core/routes/routes.dart';
+import 'package:alalamia/core/services/transaction_copy_service.dart';
+import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
+import 'package:alalamia/features/transactions/data/models/transaction_details_model.dart';
 import 'package:alalamia/features/transactions/data/models/update_transaction_request_params.dart';
 import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +74,88 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
     );
   }
 
+  /// Handle copying transaction data and navigating to appropriate screen
+  void _handleCopyTransaction(
+    BuildContext context,
+    TransactionDetailsModel transaction,
+  ) {
+    final transactionType = TransactionCopyService.getTransactionType(
+      transaction,
+    );
+    final isExternal = TransactionCopyService.isExternalDelivery(transaction);
+
+    // Navigate based on transaction type
+    if (transactionType == 'transfering') {
+      // Map to transfer money data
+      final transferData = TransactionCopyService.mapToTransferMoneyData(
+        transaction,
+      );
+
+      if (transferData == null) {
+        AppSnackBar.showSnackBar(
+          context: context,
+          message: 'Failed to copy transaction data',
+          state: SnackBarStates.error,
+        );
+        return;
+      }
+
+      // Navigate to transfer money screen
+      context.pushNamed(Routes.transferCurrencyView, arguments: transferData);
+
+      // Show success feedback
+      AppSnackBar.showSnackBar(
+        context: context,
+        message: 'Transaction data copied successfully',
+        state: SnackBarStates.success,
+      );
+    } else if (transactionType == 'sending') {
+      // Map to send money form data
+      final formData = TransactionCopyService.mapToSendMoneyFormData(
+        transaction,
+      );
+
+      if (formData == null) {
+        AppSnackBar.showSnackBar(
+          context: context,
+          message: 'Failed to copy transaction data',
+          state: SnackBarStates.error,
+        );
+        return;
+      }
+
+      // Get or create SendMoneyCubit with initial data
+      final sendMoneyCubit = getIt<SendMoneyCubit>();
+      sendMoneyCubit.updateFormData(formData);
+
+      // Navigate to send money first step with the appropriate delivery type
+      context.pushNamed(
+        Routes.sendMoneyFristStepView,
+        arguments: {
+          'deliveryType': isExternal
+              ? DeliveryTypeEnum.outside
+              : DeliveryTypeEnum.inside,
+          'cubit': sendMoneyCubit,
+          'initialData': formData,
+        },
+      );
+
+      // Show success feedback
+      AppSnackBar.showSnackBar(
+        context: context,
+        message: 'Transaction data copied successfully',
+        state: SnackBarStates.success,
+      );
+    } else {
+      // Unknown transaction type
+      AppSnackBar.showSnackBar(
+        context: context,
+        message: 'Cannot copy this transaction type',
+        state: SnackBarStates.error,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomModelProgressIndecator(
@@ -91,10 +178,30 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                 builder: (context, state) {
                   return Column(
                     children: [
-                      CustomAppBar(
-                        title: context.transactions,
-                        hasActions: false,
-                        isBack: true,
+                      // Custom AppBar with Copy button
+                      AppBar(
+                        title: Text(
+                          context.transactions,
+                          style: context.textStyles.font18SemiBoldWhiteColor,
+                        ),
+                        leading: const CustomBackButton(),
+                        actions: [
+                          if (state.transactionDetails != null)
+                            IconButton(
+                              icon: const Icon(
+                                Icons.copy_rounded,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                              onPressed: () => _handleCopyTransaction(
+                                context,
+                                state.transactionDetails!,
+                              ),
+                            ),
+                        ],
+                        centerTitle: true,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
                       ).onlyPadding(bottomPadding: 24),
 
                       Skeletonizer(
@@ -188,14 +295,15 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
           current.updateTransactionRequestStatus,
       listener: (context, state) {
         if (state.updateTransactionRequestStatus.isSuccess) {
-           context.read<TransactionsCubit>().getTransactionList(transaction: TransactionsEnum.recieving);
+          context.read<TransactionsCubit>().getTransactionList(
+            transaction: TransactionsEnum.recieving,
+          );
           context.pop();
           AppSnackBar.showSnackBar(
             context: context,
             message: state.message ?? 'تمت العملية بنجاح',
             state: SnackBarStates.success,
           );
-         
         }
       },
       child: MainButton(

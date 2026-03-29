@@ -19,6 +19,7 @@ class TransactionDetailsModel {
     this.pdfUrl,
     required this.recievingBranch,
     this.recieveType,
+    this.notes,
   });
 
   final String amountSent;
@@ -33,6 +34,7 @@ class TransactionDetailsModel {
   final String? pdfUrl;
   final bool recievingBranch;
   final DeliveryTypeEnum? recieveType;
+  final String? notes;
 
   factory TransactionDetailsModel.fromJson(
     Map<String, dynamic> json, {
@@ -54,6 +56,7 @@ class TransactionDetailsModel {
             (e) => e.name == json['recieve_type'],
           )
         : null,
+    notes: json["notes"],
   );
 }
 

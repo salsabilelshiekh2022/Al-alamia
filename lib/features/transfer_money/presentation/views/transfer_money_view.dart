@@ -24,7 +24,10 @@ import '../../../home/presentation/cubit/home_cubit.dart';
 import '../../../home/presentation/cubit/home_state.dart';
 
 class TransferMoneyView extends StatefulWidget {
-  const TransferMoneyView({super.key});
+  const TransferMoneyView({super.key, this.initialData});
+
+  /// Initial data to prefill the form when copying a transaction
+  final TransferMoneyDataParams? initialData;
 
   @override
   State<TransferMoneyView> createState() => _TransferMoneyViewState();
@@ -58,6 +61,20 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     _nameController = TextEditingController();
     _amountByCharController = TextEditingController();
     _notesController = TextEditingController();
+
+    // Prefill form if initial data is provided
+    if (widget.initialData != null) {
+      _phoneController.text = widget.initialData!.clientPhone;
+      _nameController.text = widget.initialData!.clientName;
+      _whatsAppNumberController.text = widget.initialData!.whatsappNumber;
+      _amountController.text = widget.initialData!.amount;
+      _resultController.text = widget.initialData!.totalPrice;
+      _amountByCharController.text = widget.initialData!.amountByChar;
+      if (widget.initialData!.note != null) {
+        _notesController.text = widget.initialData!.note!;
+      }
+    }
+
     context.read<HomeCubit>().getCurrencies();
     super.initState();
   }
@@ -122,6 +139,9 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       builder: (context) => const MessageTypeSelectionBottomSheet(),
     );
 
+    // Check if widget is still mounted after async operation
+    if (!mounted) return;
+
     // If user cancelled, do not proceed
     if (selectedMessageType == null) {
       return;
@@ -166,10 +186,25 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
             _fromCurrency == null &&
             _toCurrency == null) {
           setState(() {
-            _fromCurrency = state.currenciesList[0];
-            _toCurrency = state.currenciesList.length > 1
-                ? state.currenciesList[1]
-                : state.currenciesList[0];
+            // If initial data is provided, try to match currencies
+            if (widget.initialData != null) {
+              _fromCurrency = state.currenciesList.firstWhere(
+                (c) => c.id == widget.initialData!.fromCurrencyId,
+                orElse: () => state.currenciesList[0],
+              );
+              _toCurrency = state.currenciesList.firstWhere(
+                (c) => c.id == widget.initialData!.toCurrencyId,
+                orElse: () => state.currenciesList.length > 1
+                    ? state.currenciesList[1]
+                    : state.currenciesList[0],
+              );
+            } else {
+              // Default behavior
+              _fromCurrency = state.currenciesList[0];
+              _toCurrency = state.currenciesList.length > 1
+                  ? state.currenciesList[1]
+                  : state.currenciesList[0];
+            }
           });
           _getFeeDetails();
         }

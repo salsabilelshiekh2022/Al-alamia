@@ -80,29 +80,41 @@ abstract class AppRouter {
           ),
         );
       case Routes.transferCurrencyView:
+        // Can receive optional TransferMoneyDataParams as argument
+        final initialData = settings.arguments as TransferMoneyDataParams?;
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<HomeCubit>(),
             child: BlocProvider.value(
               value: getIt<GeneralCubit>(),
-              child: const TransferMoneyView(),
+              child: TransferMoneyView(initialData: initialData),
             ),
           ),
         );
       case Routes.transactionReciptView:
         return MaterialPageRoute(builder: (_) => const TransactionReciptView());
       case Routes.sendMoneyFristStepView:
-       final deliveryType = settings.arguments as DeliveryTypeEnum;
+        // Can receive DeliveryTypeEnum alone or a Map with deliveryType, cubit, and initialData
+        final args = settings.arguments;
+        DeliveryTypeEnum deliveryType;
+        SendMoneyCubit? cubit;
+
+        if (args is Map<String, dynamic>) {
+          deliveryType = args['deliveryType'] as DeliveryTypeEnum;
+          cubit = args['cubit'] as SendMoneyCubit?;
+          // initialData is already set in the cubit, so we don't need to pass it separately
+        } else {
+          deliveryType = args as DeliveryTypeEnum;
+        }
+
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider.value(value: getIt<HomeCubit>()),
               BlocProvider.value(value: getIt<GeneralCubit>()),
-              BlocProvider.value(value: getIt<SendMoneyCubit>()),
+              BlocProvider.value(value: cubit ?? getIt<SendMoneyCubit>()),
             ],
-            child:  SendMoneyFristStepView(
-              deliveryType: deliveryType,
-            ),
+            child: SendMoneyFristStepView(deliveryType: deliveryType),
           ),
         );
       case Routes.sendMoneySecondStepView:
@@ -177,9 +189,9 @@ abstract class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider.value(value: getIt<GeneralCubit>()), 
+              BlocProvider.value(value: getIt<GeneralCubit>()),
               BlocProvider(create: (_) => getIt<TransferCurrencyCubit>()),
-              BlocProvider.value(value: getIt<HomeCubit>()), 
+              BlocProvider.value(value: getIt<HomeCubit>()),
             ],
             child: AddAmountByDenominationView(transferData: transferData),
           ),
@@ -215,7 +227,7 @@ abstract class AppRouter {
             child: const ChatSupportView(),
           ),
         );
-          case Routes.externalSendMoneySecoundStepView:
+      case Routes.externalSendMoneySecoundStepView:
         final cubit = settings.arguments as SendMoneyCubit;
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
@@ -227,10 +239,8 @@ abstract class AppRouter {
             child: ExternalSendMoneySecoundStepView(),
           ),
         );
-        case Routes.notificationsView:
-        return MaterialPageRoute(
-          builder: (_) => const NotificationsView(),
-        );
+      case Routes.notificationsView:
+        return MaterialPageRoute(builder: (_) => const NotificationsView());
       default:
         return MaterialPageRoute(builder: (_) => const SplashView());
     }

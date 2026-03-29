@@ -82,8 +82,8 @@ class SendMoneyRequestParams {
 
     data['reciever_phone_2'] = receiverPhone2;
 
-    // Send delivery type as receive_type to backend
-    data['receive_type'] = deliveryType == DeliveryTypeEnum.inside
+    // Send delivery type as recieve_type to backend
+    data['recieve_type'] = deliveryType == DeliveryTypeEnum.inside
         ? 'inside'
         : 'outside';
 
