@@ -30,6 +30,23 @@ class _CommitionCardState extends State<CommitionCard> {
   late TextEditingController commissionController;
   CommissionTypeEnum? selectedCommissionType;
 
+  void _syncCommissionTypeFromFormData(SendMoneyFormData? formData) {
+    final type = formData?.commissionType;
+    if (type == null) return;
+    if (selectedCommissionType != null) return;
+    if (commissionTypeController.text.trim().isNotEmpty) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (selectedCommissionType == null) {
+        setState(() {
+          selectedCommissionType = type;
+          commissionTypeController.text = type.getCommissionType(context);
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -119,6 +136,7 @@ class _CommitionCardState extends State<CommitionCard> {
   Widget build(BuildContext context) {
     return BlocBuilder<SendMoneyCubit, SendMoneyState>(
       builder: (context, state) {
+        _syncCommissionTypeFromFormData(state.formData);
         return CardWithPurpleShadow(
           child: Column(
             children: [

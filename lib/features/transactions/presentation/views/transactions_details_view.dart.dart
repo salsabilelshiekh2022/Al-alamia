@@ -10,6 +10,8 @@ import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/core/routes/routes.dart';
 import 'package:alalamia/core/services/transaction_copy_service.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
+import 'package:alalamia/features/home/data/models/currency_model.dart';
+import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:alalamia/features/transactions/data/models/transaction_details_model.dart';
 import 'package:alalamia/features/transactions/data/models/update_transaction_request_params.dart';
 import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
@@ -124,9 +126,38 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
         return;
       }
 
+      CurrencyModel? matchCurrencyByName(
+        List<CurrencyModel> currencies,
+        String name,
+      ) {
+        final normalized = name.trim();
+        if (normalized.isEmpty) return null;
+        for (final currency in currencies) {
+          final currencyName = (currency.name ?? '').trim();
+          if (currencyName.isEmpty) continue;
+          if (currencyName == normalized) return currency;
+        }
+        return null;
+      }
+
+      final currencies = getIt<HomeCubit>().state.currenciesList;
+      final fromCurrency = matchCurrencyByName(
+        currencies,
+        TransactionCopyService.getFromCurrencyName(transaction),
+      );
+      final toCurrency = matchCurrencyByName(
+        currencies,
+        TransactionCopyService.getToCurrencyName(transaction),
+      );
+
+      final enrichedFormData = formData.copyWith(
+        fromCurrency: fromCurrency,
+        toCurrency: toCurrency,
+      );
+
       // Get or create SendMoneyCubit with initial data
       final sendMoneyCubit = getIt<SendMoneyCubit>();
-      sendMoneyCubit.updateFormData(formData);
+      sendMoneyCubit.updateFormData(enrichedFormData);
 
       // Navigate to send money first step with the appropriate delivery type
       context.pushNamed(
@@ -136,7 +167,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
               ? DeliveryTypeEnum.outside
               : DeliveryTypeEnum.inside,
           'cubit': sendMoneyCubit,
-          'initialData': formData,
+          'initialData': enrichedFormData,
         },
       );
 

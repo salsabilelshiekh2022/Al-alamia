@@ -94,6 +94,24 @@ class _ExternalTransactionDetailsCardState
     });
   }
 
+  void _syncToCurrencyFromFormData(SendMoneyFormData? formData) {
+    final toCurrency = formData?.toCurrency;
+    if (toCurrency == null) return;
+
+    selectedToCurrencyId ??= toCurrency.id;
+
+    final name = toCurrency.name?.trim() ?? '';
+    if (name.isEmpty) return;
+    if (toCurrencyController.text.trim().isNotEmpty) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (toCurrencyController.text.trim().isEmpty) {
+        toCurrencyController.text = name;
+      }
+    });
+  }
+
   void _syncDestinationText(List<BranchModel?> branches) {
     if (selectedDestinationId == null) return;
     if (destinationController.text.trim().isNotEmpty) return;
@@ -345,12 +363,15 @@ class _ExternalTransactionDetailsCardState
         amountController.text.isEmpty)
       return;
 
+    final amount = num.tryParse(amountController.text.trim());
+    if (amount == null) return;
+
     final cubit = context.read<HomeCubit>();
     cubit.transferCurrency(
       transferCurrencyRequestParams: TransferCurrencyRequestParams(
         fromCurrencyId: selectedCurrencyId!,
         toCurrencyId: selectedToCurrencyId!,
-        amount: int.parse(amountController.text),
+        amount: amount,
       ),
     );
   }
@@ -497,12 +518,10 @@ class _ExternalTransactionDetailsCardState
             generalState.paymentMethods!.isNotEmpty &&
             paymentMethodController.text.isEmpty) {
           // Only update if still empty
-          final paymentMethod = generalState.paymentMethods!
-              .cast<PaymentMethodModel?>()
-              .firstWhere(
-                (pm) => pm?.id == selectedPaymentMethodId,
-                orElse: () => null,
-              );
+          final paymentMethod = _findPaymentMethodById(
+            generalState.paymentMethods!.cast<PaymentMethodModel?>(),
+            selectedPaymentMethodId,
+          );
           if (paymentMethod != null && paymentMethod.name.isNotEmpty) {
             setState(() {
               paymentMethodController.text = paymentMethod.name;
@@ -516,6 +535,7 @@ class _ExternalTransactionDetailsCardState
         },
         child: BlocBuilder<SendMoneyCubit, SendMoneyState>(
           builder: (context, state) {
+            _syncToCurrencyFromFormData(state.formData);
             return CardWithPurpleShadow(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

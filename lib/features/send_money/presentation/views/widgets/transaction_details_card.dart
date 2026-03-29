@@ -277,13 +277,17 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
 
   void _calculateExchangeRate() {
     if (selectedCurrencyId == null || selectedToCurrencyId == null) return;
+    if (amountController.text.trim().isEmpty) return;
+
+    final amount = num.tryParse(amountController.text.trim());
+    if (amount == null) return;
 
     final cubit = context.read<HomeCubit>();
     cubit.transferCurrency(
       transferCurrencyRequestParams: TransferCurrencyRequestParams(
         fromCurrencyId: selectedCurrencyId!,
         toCurrencyId: selectedToCurrencyId!,
-        amount: int.parse(amountController.text),
+        amount: amount,
       ),
     );
   }
