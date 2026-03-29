@@ -56,6 +56,31 @@ class _ExternalTransactionDetailsCardState
   int? selectedDestinationId;
   int? selectedPaymentMethodId;
   CommissionTypeEnum? selectedCommissionType;
+
+  BranchModel? _findBranchById(List<BranchModel?> branches, int? branchId) {
+    if (branchId == null) return null;
+    for (final branch in branches) {
+      if (branch?.id == branchId) return branch;
+    }
+    return null;
+  }
+
+  void _syncDestinationText(List<BranchModel?> branches) {
+    if (selectedDestinationId == null) return;
+    if (destinationController.text.trim().isNotEmpty) return;
+    if (branches.isEmpty) return;
+
+    final branch = _findBranchById(branches, selectedDestinationId);
+    final name = branch?.name?.trim();
+    if (name == null || name.isEmpty) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (destinationController.text.trim().isEmpty) {
+        destinationController.text = name;
+      }
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -133,10 +158,8 @@ class _ExternalTransactionDetailsCardState
           final generalState = context.read<GeneralCubit>().state;
           if (generalState.branches != null &&
               generalState.branches!.isNotEmpty) {
-            final branch = generalState.branches!.firstWhere(
-              (b) => b?.id == formData.toBranch,
-              orElse: () => null,
-            );
+            final branch =
+                _findBranchById(generalState.branches!, formData.toBranch);
             if (branch != null) {
               destinationController.text = branch.name ?? '';
               // Also fetch payment methods for this branch
@@ -424,10 +447,8 @@ class _ExternalTransactionDetailsCardState
             generalState.branches!.isNotEmpty &&
             destinationController.text.isEmpty) {
           // Only update if still empty
-          final branch = generalState.branches!.firstWhere(
-            (b) => b?.id == selectedDestinationId,
-            orElse: () => null,
-          );
+          final branch =
+              _findBranchById(generalState.branches!, selectedDestinationId);
           if (branch != null) {
             setState(() {
               destinationController.text = branch.name ?? '';
@@ -565,6 +586,7 @@ class _ExternalTransactionDetailsCardState
                   // 16.verticalSizedBox,
                   BlocBuilder<GeneralCubit, GeneralState>(
                     builder: (context, state) {
+                      _syncDestinationText(state.branches ?? []);
                       return CustomTextFieldWithLabel(
                         onTap: () {
                           _showBranchBottomSheet(state.branches ?? []);
