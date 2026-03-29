@@ -20,7 +20,7 @@ class TransactionCopyService {
         amount: transaction.amountSent,
         totalPrice: transaction.amountReceived,
         amountByChar: transaction.details.amountCharacter,
-        note: null, // Notes are not copied to allow fresh notes
+        note: transaction.notes ?? '', // Notes are not copied to allow fresh notes
         sendingMessageType: null, // User will select new message type
       );
     } catch (e) {
