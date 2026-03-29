@@ -41,7 +41,7 @@ class TransferMoneyRequestParams {
     data['denominations_out'] = denominationsOut
         .map((v) => v.toJson())
         .toList();
-    data['note'] = note;
+    data['notes'] = note;
     data['sending_message_type'] = sendingMessageType;
     return data;
   }
