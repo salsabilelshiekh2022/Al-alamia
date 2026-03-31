@@ -67,8 +67,9 @@ class _AddAmountByDenominationViewState
       sendingMessageType: widget.transferData.sendingMessageType ?? 'sms',
     );
 
-    context.read<TransferCurrencyCubit>().transferMoney(
+    context.read<TransferCurrencyCubit>().submitTransaction(
       transferMoneyRequestParams: requestParams,
+      transactionId: widget.transferData.transactionId,
     );
   }
 

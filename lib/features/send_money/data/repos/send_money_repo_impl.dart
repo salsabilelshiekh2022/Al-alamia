@@ -27,4 +27,21 @@ class SendMoneyRepoImpl extends SendMoneyRepo {
       },
     );
   }
+
+  @override
+  Future<Either<Failure, String>> updateTransaction({
+    required int transactionId,
+    required SendMoneyRequestParams params,
+  }) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.updateTransaction(transactionId: transactionId),
+        data: params.toJson(),
+        isFromData: true,
+      ),
+      onSuccess: (result) {
+        return result['meta']['message'] ?? 'Success';
+      },
+    );
+  }
 }

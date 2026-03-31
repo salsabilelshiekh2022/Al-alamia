@@ -38,15 +38,23 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
     return BlocListener<SendMoneyCubit, SendMoneyState>(
       listener: (context, state) {
         if (state.sendMoneyStatus.isSuccess) {
+          final isEditMode = state.formData?.transactionId != null;
           context.pop();
           context.pop();
-                    context.read<HomeCubit>().getBranchCurrencies();
+          context.read<HomeCubit>().getBranchCurrencies();
 
-          GlobalUiUtils.showCustomDialog(
-            context,
-            child: SendMoneySuccessfullyDialog(),
-          );
-
+          if (isEditMode) {
+            AppSnackBar.showSnackBar(
+              context: context,
+              message: state.message ?? 'Transaction updated successfully',
+              state: SnackBarStates.success,
+            );
+          } else {
+            GlobalUiUtils.showCustomDialog(
+              context,
+              child: SendMoneySuccessfullyDialog(),
+            );
+          }
         } else if (state.sendMoneyStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,
@@ -56,7 +64,11 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
         }
       },
       child: ModalProgressHUD(
-        inAsyncCall: context.watch<SendMoneyCubit>().state.sendMoneyStatus.isLoading,
+        inAsyncCall: context
+            .watch<SendMoneyCubit>()
+            .state
+            .sendMoneyStatus
+            .isLoading,
         child: CustomPage(
           title: context.sendMoney,
           hasActions: false,
@@ -79,7 +91,7 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
                     title: context.confirm,
                     // isLoading: state.sendMoneyStatus.isLoading,
                     onTap: state.sendMoneyStatus.isLoading
-                        ? (){}
+                        ? () {}
                         : () => _handleConfirm(context),
                   );
                 },
@@ -97,7 +109,6 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
     final cubit = context.read<SendMoneyCubit>();
     final formData = cubit.state.formData;
 
-
     // Validate that we have all required data
     if (formData == null) {
       AppSnackBar.showSnackBar(
@@ -110,14 +121,14 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
 
     // Check specific requirements and show detailed error
     final missingFields = <String>[];
-    
+
     if (!formData.hasSenderInfo) missingFields.add('Sender information');
     if (!formData.hasReceiverInfo) missingFields.add('Receiver information');
     if (!formData.hasAmountDetails) missingFields.add('Amount and currency');
     if (!formData.hasBranches) missingFields.add('Branch information');
     if (!formData.hasCommissionDetails) missingFields.add('Commission type');
     if (!formData.hasPaymentMethod) missingFields.add('Payment method');
-    
+
     // Note: We don't check hasDenominations here because we are about to collect them
 
     if (missingFields.isNotEmpty) {
@@ -166,7 +177,12 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
         child: AllDenominationsBottomSheet(
           amount: amount,
           onConfirm: (denominations) {
-            _sendRequestWithDenominations(context, cubit, updatedFormData, denominations);
+            _sendRequestWithDenominations(
+              context,
+              cubit,
+              updatedFormData,
+              denominations,
+            );
           },
         ),
       ),
@@ -174,27 +190,31 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
   }
 
   void _sendRequestWithDenominations(
-    BuildContext context, 
-    SendMoneyCubit cubit, 
+    BuildContext context,
+    SendMoneyCubit cubit,
     SendMoneyFormData formData,
     List<DenominationsRequestParams> denominations,
   ) {
     try {
       // Map denominations to the format expected by SendMoneyFormData
-      final denominationsMap = denominations.map((d) => {
-        'id': d.id,
-        'quantity': d.quantity,
-      }).toList();
+      final denominationsMap = denominations
+          .map((d) => {'id': d.id, 'quantity': d.quantity})
+          .toList();
 
       // Update form data with denominations
-      final updatedFormData = formData.copyWith(denominations: denominationsMap);
-      
+      final updatedFormData = formData.copyWith(
+        denominations: denominationsMap,
+      );
+
       // Update cubit state
       cubit.updateFormData(updatedFormData);
 
       // Convert form data to request params and send
       final requestParams = updatedFormData.toRequestParams();
-      cubit.sendMoney(sendMoneyRequestParams: requestParams);
+      cubit.submitTransaction(
+        sendMoneyRequestParams: requestParams,
+        transactionId: updatedFormData.transactionId,
+      );
     } catch (e) {
       AppSnackBar.showSnackBar(
         context: context,
@@ -234,6 +254,4 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
       ],
     );
   }
-
 }
-

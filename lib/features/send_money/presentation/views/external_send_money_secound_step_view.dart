@@ -44,14 +44,23 @@ class _ExternalSendMoneySecoundStepViewState
     return BlocListener<SendMoneyCubit, SendMoneyState>(
       listener: (context, state) {
         if (state.sendMoneyStatus.isSuccess) {
+          final isEditMode = state.formData?.transactionId != null;
           context.pop();
           context.pop();
-          GlobalUiUtils.showCustomDialog(
-            context,
-            child: SendMoneySuccessfullyDialog(),
-          );
-                    context.read<HomeCubit>().getBranchCurrencies();
+          context.read<HomeCubit>().getBranchCurrencies();
 
+          if (isEditMode) {
+            AppSnackBar.showSnackBar(
+              context: context,
+              message: state.message ?? 'Transaction updated successfully',
+              state: SnackBarStates.success,
+            );
+          } else {
+            GlobalUiUtils.showCustomDialog(
+              context,
+              child: SendMoneySuccessfullyDialog(),
+            );
+          }
         } else if (state.sendMoneyStatus.isError) {
           AppSnackBar.showSnackBar(
             context: context,
@@ -218,7 +227,10 @@ class _ExternalSendMoneySecoundStepViewState
 
       // Convert form data to request params and send
       final requestParams = updatedFormData.toRequestParams();
-      cubit.sendMoney(sendMoneyRequestParams: requestParams);
+      cubit.submitTransaction(
+        sendMoneyRequestParams: requestParams,
+        transactionId: updatedFormData.transactionId,
+      );
     } catch (e) {
       AppSnackBar.showSnackBar(
         context: context,

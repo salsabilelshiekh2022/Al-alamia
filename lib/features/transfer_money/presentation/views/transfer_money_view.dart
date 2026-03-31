@@ -161,6 +161,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
           ? _notesController.text.trim()
           : null,
       sendingMessageType: selectedMessageType.apiValue,
+      transactionId: widget.initialData?.transactionId,
     );
 
     // Navigate to denomination view with data

@@ -26,4 +26,20 @@ class TransferMoneyRepoImpl extends TransferMoneyRepo {
       },
     );
   }
+
+  @override
+  Future<Either<Failure, String>> updateTransaction({
+    required int transactionId,
+    required TransferMoneyRequestParams transferMoneyRequestParams,
+  }) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.updateTransaction(transactionId: transactionId),
+        data: transferMoneyRequestParams.toJson(),
+      ),
+      onSuccess: (result) {
+        return result['meta']['message'] ?? 'Success';
+      },
+    );
+  }
 }

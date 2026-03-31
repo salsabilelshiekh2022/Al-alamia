@@ -43,6 +43,9 @@ class SendMoneyFormData extends Equatable {
   // Message Type
   final String? sendingMessageType;
 
+  // Edit mode
+  final int? transactionId;
+
   const SendMoneyFormData({
     // Sender Info
     this.senderPhone = '',
@@ -78,6 +81,9 @@ class SendMoneyFormData extends Equatable {
 
     // Message Type
     this.sendingMessageType,
+
+    // Edit mode
+    this.transactionId,
   });
 
   factory SendMoneyFormData.empty() => const SendMoneyFormData();
@@ -115,6 +121,9 @@ class SendMoneyFormData extends Equatable {
 
     // Message Type
     String? sendingMessageType,
+
+    // Edit mode
+    int? transactionId,
   }) {
     return SendMoneyFormData(
       // Sender Info
@@ -150,6 +159,9 @@ class SendMoneyFormData extends Equatable {
 
       // Message Type
       sendingMessageType: sendingMessageType ?? this.sendingMessageType,
+
+      // Edit mode
+      transactionId: transactionId ?? this.transactionId,
     );
   }
 
@@ -250,5 +262,6 @@ class SendMoneyFormData extends Equatable {
     paymentMethodId,
     deliveryType,
     sendingMessageType,
+    transactionId,
   ];
 }

@@ -15,10 +15,25 @@ class TransferCurrencyCubit extends Cubit<TransferMoneyState> {
   Future<void> transferMoney({
     required TransferMoneyRequestParams transferMoneyRequestParams,
   }) async {
-    emit(state.copyWith(transferMoneyState: RequestStatus.loading));
-    final result = await transferMoneyRepo.transferMoney(
+    await submitTransaction(
       transferMoneyRequestParams: transferMoneyRequestParams,
     );
+  }
+
+  Future<void> submitTransaction({
+    required TransferMoneyRequestParams transferMoneyRequestParams,
+    int? transactionId,
+  }) async {
+    emit(state.copyWith(transferMoneyState: RequestStatus.loading));
+    final result = transactionId == null
+        ? await transferMoneyRepo.transferMoney(
+            transferMoneyRequestParams: transferMoneyRequestParams,
+          )
+        : await transferMoneyRepo.updateTransaction(
+            transactionId: transactionId,
+            transferMoneyRequestParams: transferMoneyRequestParams,
+          );
+
     result.fold(
       (failure) => emit(
         state.copyWith(

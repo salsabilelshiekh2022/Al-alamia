@@ -10,16 +10,16 @@ import 'send_money_state.dart';
 
 @injectable
 class SendMoneyCubit extends Cubit<SendMoneyState> {
-  SendMoneyCubit({required this.sendMoneyRepo}) : super(SendMoneyState.initial());
+  SendMoneyCubit({required this.sendMoneyRepo})
+    : super(SendMoneyState.initial());
   final SendMoneyRepo sendMoneyRepo;
 
   /// Change delivery type and sync with form data
   void changeDeliveryType(DeliveryTypeEnum deliveryType) {
-    final updatedFormData = state.formData?.copyWith(deliveryType: deliveryType);
-    emit(state.copyWith(
+    final updatedFormData = state.formData?.copyWith(
       deliveryType: deliveryType,
-      formData: updatedFormData,
-    ));
+    );
+    emit(state.copyWith(deliveryType: deliveryType, formData: updatedFormData));
   }
 
   /// Update form data
@@ -31,10 +31,22 @@ class SendMoneyCubit extends Cubit<SendMoneyState> {
   Future<void> sendMoney({
     required SendMoneyRequestParams sendMoneyRequestParams,
   }) async {
+    await submitTransaction(sendMoneyRequestParams: sendMoneyRequestParams);
+  }
+
+  /// Create a new transaction or update an existing one based on transactionId.
+  Future<void> submitTransaction({
+    required SendMoneyRequestParams sendMoneyRequestParams,
+    int? transactionId,
+  }) async {
     emit(state.copyWith(sendMoneyStatus: RequestStatus.loading));
-    final result = await sendMoneyRepo.sendMoney(
-      params: sendMoneyRequestParams,
-    );
+    final result = transactionId == null
+        ? await sendMoneyRepo.sendMoney(params: sendMoneyRequestParams)
+        : await sendMoneyRepo.updateTransaction(
+            transactionId: transactionId,
+            params: sendMoneyRequestParams,
+          );
+
     result.fold(
       (failure) => emit(
         state.copyWith(

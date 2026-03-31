@@ -76,76 +76,130 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
     );
   }
 
-  /// Handle copying transaction data and navigating to appropriate screen
-  void _handleCopyTransaction(
-    BuildContext context,
-    TransactionDetailsModel transaction,
+  CurrencyModel? _matchCurrencyByName(
+    List<CurrencyModel> currencies,
+    String name,
   ) {
+    final normalized = name.trim();
+    if (normalized.isEmpty) return null;
+
+    for (final currency in currencies) {
+      final currencyName = (currency.name ?? '').trim();
+      if (currencyName.isEmpty) continue;
+      if (currencyName == normalized) return currency;
+    }
+
+    return null;
+  }
+
+  bool _isTransferType(String transactionType) {
+    final normalizedType = transactionType.trim().toLowerCase();
+    return normalizedType == 'transfering' || normalizedType == 'transferring';
+  }
+
+  bool _canEditTransaction(TransactionDetailsModel transaction) {
+    const editableStatuses = {
+      StatusEnum.waiting_approval,
+      StatusEnum.in_progress,
+      StatusEnum.pending,
+    };
+
+    final status = transaction.details.status;
+    final transactionType = transaction.details.transactionType;
+
+    final isEditableType =
+        transactionType.trim().toLowerCase() == 'sending' ||
+        _isTransferType(transactionType);
+
+    return isEditableType && editableStatuses.contains(status);
+  }
+
+  void _openTransactionForm(
+    BuildContext context,
+    TransactionDetailsModel transaction, {
+    required bool isEdit,
+  }) {
     final transactionType = TransactionCopyService.getTransactionType(
       transaction,
     );
+    final normalizedType = transactionType.trim().toLowerCase();
     final isExternal = TransactionCopyService.isExternalDelivery(transaction);
+    final transactionId = isEdit ? widget.id : null;
+    final successMessage = isEdit
+        ? 'Transaction loaded for editing'
+        : 'Transaction data copied successfully';
+    final failedMessage = isEdit
+        ? 'Failed to load transaction data for editing'
+        : 'Failed to copy transaction data';
 
     // Navigate based on transaction type
-    if (transactionType == 'transfering') {
+    if (_isTransferType(normalizedType)) {
       // Map to transfer money data
       final transferData = TransactionCopyService.mapToTransferMoneyData(
         transaction,
+        transactionId: transactionId,
+        preserveNote: isEdit,
       );
 
       if (transferData == null) {
         AppSnackBar.showSnackBar(
           context: context,
-          message: 'Failed to copy transaction data',
+          message: failedMessage,
           state: SnackBarStates.error,
         );
         return;
       }
 
+      final currencies = getIt<HomeCubit>().state.currenciesList;
+      final fromCurrency = _matchCurrencyByName(
+        currencies,
+        TransactionCopyService.getFromCurrencyName(transaction),
+      );
+      final toCurrency = _matchCurrencyByName(
+        currencies,
+        TransactionCopyService.getToCurrencyName(transaction),
+      );
+
+      final enrichedTransferData = transferData.copyWith(
+        fromCurrencyId: fromCurrency?.id ?? transferData.fromCurrencyId,
+        toCurrencyId: toCurrency?.id ?? transferData.toCurrencyId,
+      );
+
       // Navigate to transfer money screen
-      context.pushNamed(Routes.transferCurrencyView, arguments: transferData);
+      context.pushNamed(
+        Routes.transferCurrencyView,
+        arguments: enrichedTransferData,
+      );
 
       // Show success feedback
       AppSnackBar.showSnackBar(
         context: context,
-        message: 'Transaction data copied successfully',
+        message: successMessage,
         state: SnackBarStates.success,
       );
-    } else if (transactionType == 'sending') {
+    } else if (normalizedType == 'sending') {
       // Map to send money form data
       final formData = TransactionCopyService.mapToSendMoneyFormData(
         transaction,
+        transactionId: transactionId,
+        preserveNote: isEdit,
       );
 
       if (formData == null) {
         AppSnackBar.showSnackBar(
           context: context,
-          message: 'Failed to copy transaction data',
+          message: failedMessage,
           state: SnackBarStates.error,
         );
         return;
       }
 
-      CurrencyModel? matchCurrencyByName(
-        List<CurrencyModel> currencies,
-        String name,
-      ) {
-        final normalized = name.trim();
-        if (normalized.isEmpty) return null;
-        for (final currency in currencies) {
-          final currencyName = (currency.name ?? '').trim();
-          if (currencyName.isEmpty) continue;
-          if (currencyName == normalized) return currency;
-        }
-        return null;
-      }
-
       final currencies = getIt<HomeCubit>().state.currenciesList;
-      final fromCurrency = matchCurrencyByName(
+      final fromCurrency = _matchCurrencyByName(
         currencies,
         TransactionCopyService.getFromCurrencyName(transaction),
       );
-      final toCurrency = matchCurrencyByName(
+      final toCurrency = _matchCurrencyByName(
         currencies,
         TransactionCopyService.getToCurrencyName(transaction),
       );
@@ -168,13 +222,14 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
               : DeliveryTypeEnum.inside,
           'cubit': sendMoneyCubit,
           'initialData': enrichedFormData,
+          'transactionId': transactionId,
         },
       );
 
       // Show success feedback
       AppSnackBar.showSnackBar(
         context: context,
-        message: 'Transaction data copied successfully',
+        message: successMessage,
         state: SnackBarStates.success,
       );
     } else {
@@ -185,6 +240,22 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
         state: SnackBarStates.error,
       );
     }
+  }
+
+  /// Handle copying transaction data and navigating to appropriate screen.
+  void _handleCopyTransaction(
+    BuildContext context,
+    TransactionDetailsModel transaction,
+  ) {
+    _openTransactionForm(context, transaction, isEdit: false);
+  }
+
+  /// Handle editing transaction data and navigating to appropriate screen.
+  void _handleEditTransaction(
+    BuildContext context,
+    TransactionDetailsModel transaction,
+  ) {
+    _openTransactionForm(context, transaction, isEdit: true);
   }
 
   @override
@@ -217,6 +288,19 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                         ),
                         leading: const CustomBackButton(),
                         actions: [
+                          if (state.transactionDetails != null &&
+                              _canEditTransaction(state.transactionDetails!))
+                            IconButton(
+                              icon: const Icon(
+                                Icons.edit_rounded,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                              onPressed: () => _handleEditTransaction(
+                                context,
+                                state.transactionDetails!,
+                              ),
+                            ),
                           if (state.transactionDetails != null)
                             IconButton(
                               icon: const Icon(

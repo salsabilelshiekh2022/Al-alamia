@@ -7,8 +7,10 @@ import 'package:alalamia/features/transfer_money/data/models/transfer_money_data
 class TransactionCopyService {
   /// Map transaction details to TransferMoneyDataParams for transfering type
   static TransferMoneyDataParams? mapToTransferMoneyData(
-    TransactionDetailsModel transaction,
-  ) {
+    TransactionDetailsModel transaction, {
+    int? transactionId,
+    bool preserveNote = false,
+  }) {
     try {
       return TransferMoneyDataParams(
         clientPhone: transaction.receiver.phone ?? '',
@@ -20,8 +22,11 @@ class TransactionCopyService {
         amount: transaction.amountSent,
         totalPrice: transaction.amountReceived,
         amountByChar: transaction.details.amountCharacter,
-        note: transaction.notes ?? '', // Notes are not copied to allow fresh notes
+        note: preserveNote
+            ? transaction.notes
+            : '', // Notes are not copied in copy mode to allow fresh notes
         sendingMessageType: null, // User will select new message type
+        transactionId: transactionId,
       );
     } catch (e) {
       print('Error mapping to transfer money data: $e');
@@ -31,8 +36,10 @@ class TransactionCopyService {
 
   /// Map transaction details to SendMoneyFormData for sending type
   static SendMoneyFormData? mapToSendMoneyFormData(
-    TransactionDetailsModel transaction,
-  ) {
+    TransactionDetailsModel transaction, {
+    int? transactionId,
+    bool preserveNote = false,
+  }) {
     try {
       return SendMoneyFormData(
         // Sender Info - Keep original sender info
@@ -52,6 +59,7 @@ class TransactionCopyService {
         amount: transaction.amountSent,
         totalPrice: transaction.amountReceived,
         amountByChar: transaction.details.amountCharacter,
+        note: preserveNote ? transaction.notes ?? '' : '',
 
         // Commission & Payment
         commissionType: transaction.details.commissionType,
@@ -72,6 +80,7 @@ class TransactionCopyService {
         toCurrency: null, // To be matched by currency name
         fromBranch: transaction.fromBranch.id, // Branch ID for matching
         toBranch: transaction.toBranch.id, // Branch ID for matching
+        transactionId: transactionId,
       );
     } catch (e) {
       print('Error mapping to send money form data: $e');

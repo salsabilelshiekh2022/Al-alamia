@@ -7,4 +7,9 @@ abstract class TransferMoneyRepo {
   Future<Either<Failure, String>> transferMoney({
     required TransferMoneyRequestParams transferMoneyRequestParams,
   });
+
+  Future<Either<Failure, String>> updateTransaction({
+    required int transactionId,
+    required TransferMoneyRequestParams transferMoneyRequestParams,
+  });
 }

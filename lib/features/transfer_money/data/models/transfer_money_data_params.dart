@@ -11,6 +11,7 @@ class TransferMoneyDataParams {
   final String amountByChar;
   final String? note;
   final String? sendingMessageType;
+  final int? transactionId;
 
   const TransferMoneyDataParams({
     required this.clientPhone,
@@ -23,12 +24,42 @@ class TransferMoneyDataParams {
     required this.amountByChar,
     this.note,
     this.sendingMessageType,
+    this.transactionId,
   });
+
+  TransferMoneyDataParams copyWith({
+    String? clientPhone,
+    String? whatsappNumber,
+    String? clientName,
+    int? fromCurrencyId,
+    int? toCurrencyId,
+    String? amount,
+    String? totalPrice,
+    String? amountByChar,
+    String? note,
+    String? sendingMessageType,
+    int? transactionId,
+  }) {
+    return TransferMoneyDataParams(
+      clientPhone: clientPhone ?? this.clientPhone,
+      whatsappNumber: whatsappNumber ?? this.whatsappNumber,
+      clientName: clientName ?? this.clientName,
+      fromCurrencyId: fromCurrencyId ?? this.fromCurrencyId,
+      toCurrencyId: toCurrencyId ?? this.toCurrencyId,
+      amount: amount ?? this.amount,
+      totalPrice: totalPrice ?? this.totalPrice,
+      amountByChar: amountByChar ?? this.amountByChar,
+      note: note ?? this.note,
+      sendingMessageType: sendingMessageType ?? this.sendingMessageType,
+      transactionId: transactionId ?? this.transactionId,
+    );
+  }
 
   @override
   String toString() {
     return 'TransferMoneyDataParams(clientPhone: $clientPhone, whatsappNumber: $whatsappNumber, clientName: $clientName, '
         'fromCurrencyId: $fromCurrencyId, toCurrencyId: $toCurrencyId, '
-        'amount: $amount, totalPrice: $totalPrice, amountByChar: $amountByChar, note: $note, sendingMessageType: $sendingMessageType)';
+        'amount: $amount, totalPrice: $totalPrice, amountByChar: $amountByChar, note: $note, '
+        'sendingMessageType: $sendingMessageType, transactionId: $transactionId)';
   }
 }

@@ -49,6 +49,8 @@ class EndPoints {
   static String changePassword = '/employee/auth/change-password';
   static String updateTransactionStatus({required int transactionId}) =>
       '/employee/transactions/$transactionId/update-status';
+  static String updateTransaction({required int transactionId}) =>
+      '/employee/transactions/$transactionId/update';
   static String sendOtp = '/employee/auth/send-code';
   static String verifyOtp = '/employee/auth/verify-code';
   static String resetPassword = '/employee/auth/reset-password';
