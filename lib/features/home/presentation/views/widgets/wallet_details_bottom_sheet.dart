@@ -24,7 +24,8 @@ class WalletDetailsBottomSheet extends StatefulWidget {
   final String totalBalance;
 
   @override
-  State<WalletDetailsBottomSheet> createState() => _WalletDetailsBottomSheetState();
+  State<WalletDetailsBottomSheet> createState() =>
+      _WalletDetailsBottomSheetState();
 }
 
 class _WalletDetailsBottomSheetState extends State<WalletDetailsBottomSheet> {
@@ -80,14 +81,18 @@ class _WalletDetailsBottomSheetState extends State<WalletDetailsBottomSheet> {
                   });
                 },
                 child: Icon(
-               showBalanceDetails ? Icons.keyboard_arrow_up_rounded :   Icons.keyboard_arrow_down_rounded,
+                  showBalanceDetails
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded,
                   size: 20,
                   color: context.colors.primaryColor,
                 ),
               ),
             ],
           ),
-         showBalanceDetails ? _buildBalanceDetails(context) : const SizedBox.shrink(),
+          showBalanceDetails
+              ? _buildBalanceDetails(context)
+              : const SizedBox.shrink(),
           32.verticalSizedBox,
           Expanded(
             child: BlocBuilder<HomeCubit, HomeState>(
@@ -104,42 +109,132 @@ class _WalletDetailsBottomSheetState extends State<WalletDetailsBottomSheet> {
   Widget _buildBalanceDetails(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        return CardWithGrayBorder(
-          color: context.colors.backgroundFieldColor,
-          child: Column(
-            children: [
-              Row(
+        return Column(
+          children: [
+            CardWithGrayBorder(
+              color: context.colors.backgroundFieldColor,
+              child: Column(
                 children: [
-                  Text(
-                    context.baseBalance,
-                    style: context.textStyles.font14MediumGrayColor,
-                  ),
-                  Spacer(),
-                  Text(
-                    state.denominationsMeta?.balanceDetails?.baseBalance ?? '----',
-                    style: context.textStyles.font17SemiBoldSecondaryColor,
-                  ),
+               Row(
+      children: [
+        Text(context.baseBalance, style: context.textStyles.font14MediumGrayColor),
+        Spacer(),
+        Text(state.denominationsMeta?.balanceDetails?.baseBalance ?? '----', style: context.textStyles.font17SemiBoldSecondaryColor),
+      ],
+    )
                 ],
               ),
-              14.verticalSizedBox,
-              Row(
-                children: [
-                  Text(
-                    context.commission,
-                    style: context.textStyles.font14MediumGrayColor,
+            ),
+            12.verticalSizedBox,
+            Row(
+              children: [
+                Expanded(
+                  child: CardWithGrayBorder(
+                    color: context.colors.backgroundFieldColor,
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          context,
+                          state,
+                          title: "العمولة",
+                          value:
+                              state
+                                  .denominationsMeta
+                                  ?.balanceDetails
+                                  ?.commissionValue ??
+                              '----',
+                        ),
+                      ],
+                    ),
                   ),
-                  Spacer(),
-                  Text(
-                    state.denominationsMeta?.balanceDetails?.commissionValue ??
-                        '----',
-                    style: context.textStyles.font17SemiBoldSecondaryColor,
+                ),
+                12.horizontalSpace,
+                Expanded(
+                  child: CardWithGrayBorder(
+                    color: context.colors.backgroundFieldColor,
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          context,
+                          state,
+                          title: "القيمة المعلقة",
+                          value:
+                              state
+                                  .denominationsMeta
+                                  ?.balanceDetails
+                                  ?.pendingBalance.toString() ??
+                              '----',
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            12.verticalSizedBox,
+             Row(
+              children: [
+                Expanded(
+                  child: CardWithGrayBorder(
+                    color: context.colors.backgroundFieldColor,
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          context,
+                          state,
+                          title: "العجز",
+                          value:
+                              state
+                                  .denominationsMeta
+                                  ?.balanceDetails
+                                  ?.deficitBalance ??
+                              '----',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                12.horizontalSpace,
+                Expanded(
+                  child: CardWithGrayBorder(
+                    color: context.colors.backgroundFieldColor,
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          context,
+                          state,
+                          title: "الفائض",
+                          value:
+                              state
+                                  .denominationsMeta
+                                  ?.balanceDetails
+                                  ?.surplusBalance.toString() ??
+                              '----',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         );
       },
     ).onlyPadding(topPadding: 20);
+  }
+
+  Row _buildInfoRow(
+    BuildContext context,
+    HomeState state, {
+    required String? title,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Text(title ?? '', style: context.textStyles.font14MediumGrayColor.copyWith(fontSize: 12)),
+        Spacer(),
+        Expanded(child: Center(child: Text(value, style: context.textStyles.font14SemiBoldSecondaryColor))),
+      ],
+    );
   }
 }

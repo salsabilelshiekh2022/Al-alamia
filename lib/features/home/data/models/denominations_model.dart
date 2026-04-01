@@ -13,7 +13,9 @@ class DenominationsResponseModel {
       });
     }
     success = json['success'];
-    meta = json['meta'] != null ? DenominationsMeta.fromJson(json['meta']) : null;
+    meta = json['meta'] != null
+        ? DenominationsMeta.fromJson(json['meta'])
+        : null;
   }
 }
 
@@ -36,12 +38,24 @@ class DenominationsMeta {
 class BalanceDetails {
   String? baseBalance;
   String? commissionValue;
+  int? pendingBalance;
+  String? surplusBalance;
+  String? deficitBalance;
 
-  BalanceDetails({this.baseBalance, this.commissionValue});
+  BalanceDetails({
+    this.baseBalance,
+    this.commissionValue,
+    this.pendingBalance,
+    this.surplusBalance,
+    this.deficitBalance,
+  });
 
   BalanceDetails.fromJson(Map<String, dynamic> json) {
     baseBalance = json['base_balance'];
     commissionValue = json['commission_value'];
+    pendingBalance = json['pending_balance'];
+    surplusBalance = json['surplus_balance'];
+    deficitBalance = json['deficit_balance'];
   }
 }
 
