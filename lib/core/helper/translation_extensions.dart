@@ -219,4 +219,6 @@ extension TranslationExtension on BuildContext {
   String get baseBalance => tr("base_balance");
   String get expenseType => tr("expense_type");
   String get salaryDetails => tr("salary_details");
+  String get cancelTransactionTitle => tr("cancel_transaction_title");
+  String get cancelTransactionBody => tr("cancel_transaction_body");
 }

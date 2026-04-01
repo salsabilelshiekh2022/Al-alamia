@@ -213,6 +213,8 @@
   "balance_details" : "Balance Details",
   "base_balance" : "Base Balance",
   "expense_type" : "Expense Type",
-  "salary_details" : "Salary Details"
+  "salary_details" : "Salary Details",
+  "cancel_transaction_title": "Cancel Transaction",
+  "cancel_transaction_body": "Are you sure you want to cancel this transaction?"
 
 }

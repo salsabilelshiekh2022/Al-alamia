@@ -181,7 +181,7 @@
   "waiting_approved" : "في انتظار القبول",
   "waiting_recieval" : "في انتظار الاستلام",
   "recivedd" :"مستلمة",
-  "pendingg" : "معلقة",
+  "pendingg" : "قيد التنفيذ",
   "completed" : "مكتملة" ,
   "canceled": "ملغاة",
   "not_found_transactions":"لا توجد معاملات",
@@ -212,7 +212,9 @@
   "balance_details" : "تفاصيل الرصيد",
   "base_balance" : "الرصيد الأساسي",
   "expense_type" : "نوع المصروف",
-  "salary_details" : "تفاصيل الراتب"
+  "salary_details" : "تفاصيل الراتب",
+  "cancel_transaction_title": "الغاء المعاملة",
+  "cancel_transaction_body": "هل انت متأكد من الغاء هذه المعاملة؟"
 
 
 }

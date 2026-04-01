@@ -7,13 +7,17 @@ import '../../../../core/enums/transactions_enum.dart';
 import '../../data/models/transaction_model.dart';
 import '../../data/models/update_transaction_request_params.dart';
 import '../../data/repos/transactions_repo.dart';
+import '../../domain/usecases/cancel_transaction_usecase.dart';
 import 'transactions_state.dart';
 
 @injectable
 class TransactionsCubit extends Cubit<TransactionsState>{
 
-  TransactionsCubit({required this.transactionRepo}) : super(const TransactionsState());
+  TransactionsCubit({required this.transactionRepo})
+      : cancelTransactionUseCase = CancelTransactionUseCase(transactionRepo),
+        super(const TransactionsState());
   final TransactionsRepo transactionRepo;
+  final CancelTransactionUseCase cancelTransactionUseCase;
 
   Future<void> fetchTransactionList({required TransactionsEnum transaction}) async {
     emit(state.copyWith(transactionsStatus: RequestStatus.loading, currentFilter: transaction));
@@ -142,6 +146,25 @@ class TransactionsCubit extends Cubit<TransactionsState>{
     result.fold(
       (failure) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.error, message: failure.message)),
       (message) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.success, message: message)),
+    );
+  }
+
+  Future<void> cancelTransaction({required int transactionId}) async {
+    emit(state.copyWith(cancelTransactionStatus: RequestStatus.loading));
+    final result = await cancelTransactionUseCase(transactionId: transactionId);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          cancelTransactionStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (message) => emit(
+        state.copyWith(
+          cancelTransactionStatus: RequestStatus.success,
+          message: message,
+        ),
+      ),
     );
   }
 }

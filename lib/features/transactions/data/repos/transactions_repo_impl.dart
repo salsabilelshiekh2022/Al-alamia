@@ -51,5 +51,17 @@ final ApiConsumer apiConsumer;
       },
     );
   }
+
+  @override
+  Future<Either<Failure, String>> cancelTransaction({required int transactionId}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.cancelTransaction(transactionId: transactionId),
+      ),
+      onSuccess: (result) {
+        return result['meta']?['message'] ?? 'Success';
+      },
+    );
+  }
   
 }

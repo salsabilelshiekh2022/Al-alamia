@@ -12,6 +12,7 @@ class TransactionsState extends Equatable{
   final List<TransactionModel>? transactions;
   final TransactionDetailsModel ? transactionDetails;
   final RequestStatus updateTransactionRequestStatus;
+  final RequestStatus cancelTransactionStatus;
   
   // Pagination fields
   final TransactionsResponseModel? transactionsResponse;
@@ -27,6 +28,7 @@ class TransactionsState extends Equatable{
     this.transactions, 
     this.transactionDetails, 
     this.updateTransactionRequestStatus = RequestStatus.initial,
+    this.cancelTransactionStatus = RequestStatus.initial,
     this.transactionsResponse,
     this.transactionsList = const [],
     this.currentPage = 1,
@@ -41,6 +43,7 @@ class TransactionsState extends Equatable{
     List<TransactionModel>? transactions, 
     TransactionDetailsModel? transactionDetails, 
     RequestStatus? updateTransactionRequestStatus,
+    RequestStatus? cancelTransactionStatus,
     TransactionsResponseModel? transactionsResponse,
     List<TransactionModel>? transactionsList,
     int? currentPage,
@@ -54,6 +57,7 @@ class TransactionsState extends Equatable{
       transactions: transactions ?? this.transactions,
       transactionDetails: transactionDetails ?? this.transactionDetails,
       updateTransactionRequestStatus: updateTransactionRequestStatus ?? this.updateTransactionRequestStatus,
+      cancelTransactionStatus: cancelTransactionStatus ?? this.cancelTransactionStatus,
       transactionsResponse: transactionsResponse ?? this.transactionsResponse,
       transactionsList: transactionsList ?? this.transactionsList,
       currentPage: currentPage ?? this.currentPage,
@@ -79,6 +83,7 @@ class TransactionsState extends Equatable{
     transactions, 
     transactionDetails, 
     updateTransactionRequestStatus,
+    cancelTransactionStatus,
     transactionsResponse,
     transactionsList,
     currentPage,

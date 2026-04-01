@@ -1,4 +1,5 @@
 import 'package:alalamia/core/components/widgets/custom_modal_hub.dart';
+import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/components/widgets/main_button.dart';
 import 'package:alalamia/core/enums/delivery_type_enum.dart';
 import 'package:alalamia/core/enums/request_status.dart';
@@ -99,9 +100,9 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
 
   bool _canEditTransaction(TransactionDetailsModel transaction) {
     const editableStatuses = {
-      StatusEnum.waiting_approval,
+     
       StatusEnum.in_progress,
-      StatusEnum.pending,
+      
     };
 
     final status = transaction.details.status;
@@ -112,6 +113,93 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
         _isTransferType(transactionType);
 
     return isEditableType && editableStatuses.contains(status);
+  }
+
+  bool _canCancelTransaction(TransactionDetailsModel transaction) {
+    return _canEditTransaction(transaction);
+  }
+
+  Future<void> _showCancelConfirmation(BuildContext context) async {
+    await GlobalUiUtils.showBottomSheet(
+      context,
+      child: _buildCancelBottomSheet(context),
+    );
+  }
+
+  Widget _buildCancelBottomSheet(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 70.w,
+          height: 70.w,
+          decoration: BoxDecoration(
+            color: context.colors.redColor.withValues(alpha: 0.08),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: CustomSvgBuilder(
+              path: AppAssets.svgsCancelled,
+              width: 36.w,
+              height: 36.w,
+              color: context.colors.redColor,
+            ),
+          ),
+        ),
+        16.verticalSizedBox,
+        Text(
+          context.cancelTransactionTitle,
+          style: context.textStyles.font18SemiBoldSecondaryColor,
+          textAlign: TextAlign.center,
+        ),
+        8.verticalSizedBox,
+        Text(
+          context.cancelTransactionBody,
+          style: context.textStyles.font15RegularGrayColor,
+          textAlign: TextAlign.center,
+        ),
+        24.verticalSizedBox,
+        Row(
+          children: [
+            Expanded(
+              child: MainButton(
+                title: context.confirm,
+                color: context.colors.redColor,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  context.read<TransactionsCubit>().cancelTransaction(
+                        transactionId: widget.id,
+                      );
+                },
+              ),
+            ),
+            10.horizontalSpace,
+            Expanded(
+              child: InkWell(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 12.w),
+                  decoration: BoxDecoration(
+                    color: context.colors.whiteColor,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: context.colors.primaryColor,
+                      width: 1,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      context.cancle,
+                      style: context.textStyles.font16RegularSecondaryColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   void _openTransactionForm(
@@ -260,26 +348,55 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    final transactionsState = context.watch<TransactionsCubit>().state;
     return CustomModelProgressIndecator(
-      inAsyncCall: context
-          .watch<TransactionsCubit>()
-          .state
-          .updateTransactionRequestStatus
-          .isLoading,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Image.asset(
-              AppAssets.imagesBackground,
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ),
-            SingleChildScrollView(
-              child: BlocBuilder<TransactionsCubit, TransactionsState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
+      inAsyncCall:
+          transactionsState.updateTransactionRequestStatus.isLoading ||
+          transactionsState.cancelTransactionStatus.isLoading,
+      child: BlocListener<TransactionsCubit, TransactionsState>(
+        listenWhen: (previous, current) =>
+            previous.cancelTransactionStatus !=
+            current.cancelTransactionStatus,
+        listener: (context, state) {
+          if (state.cancelTransactionStatus.isSuccess) {
+            context.read<TransactionsCubit>().showTransactionDetails(
+                  transactionId: widget.id.toString(),
+                );
+            context.read<TransactionsCubit>().refreshTransactions();
+            AppSnackBar.showSnackBar(
+              context: context,
+              message: state.message ?? 'Transaction canceled successfully',
+              state: SnackBarStates.success,
+            );
+          } else if (state.cancelTransactionStatus.isError) {
+            AppSnackBar.showSnackBar(
+              context: context,
+              message: state.message ?? 'Failed to cancel transaction',
+              state: SnackBarStates.error,
+            );
+          }
+        },
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Image.asset(
+                AppAssets.imagesBackground,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              SingleChildScrollView(
+                child: BlocBuilder<TransactionsCubit, TransactionsState>(
+                  builder: (context, state) {
+                    final transaction = state.transactionDetails;
+                    final canCancel =
+                        transaction != null && _canCancelTransaction(transaction);
+                    final showReceivingButton =
+                        transaction?.recievingBranch == true &&
+                        transaction?.details.status == StatusEnum.pending;
+
+                    return Column(
+                      children: [
                       // Custom AppBar with Copy button
                       AppBar(
                         title: Text(
@@ -355,27 +472,28 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                   20.verticalSizedBox,
                                   TransactionInfoCard(),
                                   32.verticalSizedBox,
-                                  context
-                                                  .read<TransactionsCubit>()
-                                                  .state
-                                                  .transactionDetails
-                                                  ?.recievingBranch ==
-                                              true &&
-                                          context
-                                                  .read<TransactionsCubit>()
-                                                  .state
-                                                  .transactionDetails
-                                                  ?.details
-                                                  .status ==
-                                              StatusEnum.pending
-                                      ? recivingButton()
-                                      : MainButton(
-                                          title: context.printReceipt,
-                                          onTap: () => _launchUrl(
-                                            state.transactionDetails?.pdfUrl ??
-                                                '',
-                                          ),
+                                  Column(
+                                    children: [
+                                      showReceivingButton
+                                          ? recivingButton()
+                                          : MainButton(
+                                              title: context.printReceipt,
+                                              onTap: () => _launchUrl(
+                                                state.transactionDetails?.pdfUrl ??
+                                                    '',
+                                              ),
+                                            ),
+                                      if (canCancel) ...[
+                                        12.verticalSizedBox,
+                                        MainButton(
+                                          title: context.cancle,
+                                          color: context.colors.redColor,
+                                          onTap: () =>
+                                              _showCancelConfirmation(context),
                                         ),
+                                      ],
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -393,11 +511,12 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                         ),
                       ),
                     ],
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

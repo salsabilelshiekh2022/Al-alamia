@@ -10,4 +10,5 @@ abstract class TransactionsRepo {
   Future<Either<Failure, TransactionsResponseModel>> getTransactionList({required TransactionsEnum transaction, int page = 1});
   Future<Either<Failure, TransactionDetailsModel>> showTransactionDetails({required String transactionId});  
   Future<Either<Failure, String>> updateTransactionStatus({required UpdateTransactionRequestParams params , required int transactionId});
+  Future<Either<Failure, String>> cancelTransaction({required int transactionId});
 }
