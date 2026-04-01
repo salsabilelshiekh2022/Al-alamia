@@ -51,6 +51,8 @@ class EndPoints {
       '/employee/transactions/$transactionId/update-status';
   static String cancelTransaction({required int transactionId}) =>
       '/employee/transactions/$transactionId/cancel';
+  static String payBackTransaction({required String transactionId}) =>
+      '/employee/transactions/$transactionId/pay-back-money';
   static String updateTransaction({required int transactionId}) =>
       '/employee/transactions/$transactionId/update';
   static String sendOtp = '/employee/auth/send-code';

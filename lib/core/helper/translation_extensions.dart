@@ -221,4 +221,8 @@ extension TranslationExtension on BuildContext {
   String get salaryDetails => tr("salary_details");
   String get cancelTransactionTitle => tr("cancel_transaction_title");
   String get cancelTransactionBody => tr("cancel_transaction_body");
+  String get payBackTransactionLabel => tr("pay_back_transaction_label");
+  String get payBackTransactionTitle => tr("pay_back_transaction_title");
+  String get payBackTransactionBody => tr("pay_back_transaction_body");
+  String get hold => tr("hold");
 }

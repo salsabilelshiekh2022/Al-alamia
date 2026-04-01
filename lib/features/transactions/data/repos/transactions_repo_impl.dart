@@ -63,5 +63,17 @@ final ApiConsumer apiConsumer;
       },
     );
   }
+
+  @override
+  Future<Either<Failure, String>> payBackTransaction({required String transactionId}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.post(
+        path: EndPoints.payBackTransaction(transactionId: transactionId),
+      ),
+      onSuccess: (result) {
+        return result['meta']?['message'] ?? 'Success';
+      },
+    );
+  }
   
 }

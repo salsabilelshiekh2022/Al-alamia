@@ -119,14 +119,59 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
     return _canEditTransaction(transaction);
   }
 
-  Future<void> _showCancelConfirmation(BuildContext context) async {
+  bool _canPayBackTransaction(TransactionDetailsModel transaction) {
+    return transaction.details.status == StatusEnum.pending;
+  }
+
+  Future<void> _showConfirmationBottomSheet(
+    BuildContext context, {
+    required String title,
+    required String body,
+    required VoidCallback onConfirm,
+  }) async {
     await GlobalUiUtils.showBottomSheet(
       context,
-      child: _buildCancelBottomSheet(context),
+      child: _buildConfirmationBottomSheet(
+        context,
+        title: title,
+        body: body,
+        onConfirm: onConfirm,
+      ),
     );
   }
 
-  Widget _buildCancelBottomSheet(BuildContext context) {
+  Future<void> _showCancelConfirmation(BuildContext context) async {
+    await _showConfirmationBottomSheet(
+      context,
+      title: context.cancelTransactionTitle,
+      body: context.cancelTransactionBody,
+      onConfirm: () {
+        context.read<TransactionsCubit>().cancelTransaction(
+              transactionId: widget.id,
+            );
+      },
+    );
+  }
+
+  Future<void> _showPayBackConfirmation(BuildContext context) async {
+    await _showConfirmationBottomSheet(
+      context,
+      title: context.payBackTransactionTitle,
+      body: context.payBackTransactionBody,
+      onConfirm: () {
+        context.read<TransactionsCubit>().payBackTransaction(
+              transactionId: widget.id.toString(),
+            );
+      },
+    );
+  }
+
+  Widget _buildConfirmationBottomSheet(
+    BuildContext context, {
+    required String title,
+    required String body,
+    required VoidCallback onConfirm,
+  }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -148,13 +193,13 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
         ),
         16.verticalSizedBox,
         Text(
-          context.cancelTransactionTitle,
+          title,
           style: context.textStyles.font18SemiBoldSecondaryColor,
           textAlign: TextAlign.center,
         ),
         8.verticalSizedBox,
         Text(
-          context.cancelTransactionBody,
+          body,
           style: context.textStyles.font15RegularGrayColor,
           textAlign: TextAlign.center,
         ),
@@ -167,9 +212,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                 color: context.colors.redColor,
                 onTap: () {
                   Navigator.of(context).pop();
-                  context.read<TransactionsCubit>().cancelTransaction(
-                        transactionId: widget.id,
-                      );
+                  onConfirm();
                 },
               ),
             ),
@@ -352,7 +395,8 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
     return CustomModelProgressIndecator(
       inAsyncCall:
           transactionsState.updateTransactionRequestStatus.isLoading ||
-          transactionsState.cancelTransactionStatus.isLoading,
+          transactionsState.cancelTransactionStatus.isLoading ||
+          transactionsState.payBackTransactionStatus.isLoading,
       child: BlocListener<TransactionsCubit, TransactionsState>(
         listenWhen: (previous, current) =>
             previous.cancelTransactionStatus !=
@@ -376,27 +420,52 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
             );
           }
         },
-        child: Scaffold(
-          body: Stack(
-            children: [
-              Image.asset(
-                AppAssets.imagesBackground,
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
-              SingleChildScrollView(
-                child: BlocBuilder<TransactionsCubit, TransactionsState>(
-                  builder: (context, state) {
-                    final transaction = state.transactionDetails;
-                    final canCancel =
-                        transaction != null && _canCancelTransaction(transaction);
-                    final showReceivingButton =
-                        transaction?.recievingBranch == true &&
-                        transaction?.details.status == StatusEnum.pending;
+        child: BlocListener<TransactionsCubit, TransactionsState>(
+          listenWhen: (previous, current) =>
+              previous.payBackTransactionStatus !=
+              current.payBackTransactionStatus,
+          listener: (context, state) {
+            if (state.payBackTransactionStatus.isSuccess) {
+              context.read<TransactionsCubit>().showTransactionDetails(
+                    transactionId: widget.id.toString(),
+                  );
+              context.read<TransactionsCubit>().refreshTransactions();
+              AppSnackBar.showSnackBar(
+                context: context,
+                message: state.message ?? context.success,
+                state: SnackBarStates.success,
+              );
+            } else if (state.payBackTransactionStatus.isError) {
+              AppSnackBar.showSnackBar(
+                context: context,
+                message: state.message ?? context.failed,
+                state: SnackBarStates.error,
+              );
+            }
+          },
+          child: Scaffold(
+            body: Stack(
+              children: [
+                Image.asset(
+                  AppAssets.imagesBackground,
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                SingleChildScrollView(
+                  child: BlocBuilder<TransactionsCubit, TransactionsState>(
+                    builder: (context, state) {
+                      final transaction = state.transactionDetails;
+                      final canCancel = transaction != null &&
+                          _canCancelTransaction(transaction);
+                      final canPayBack = transaction != null &&
+                          _canPayBackTransaction(transaction);
+                      final showReceivingButton =
+                          transaction?.recievingBranch == true &&
+                          transaction?.details.status == StatusEnum.pending;
 
-                    return Column(
-                      children: [
+                      return Column(
+                        children: [
                       // Custom AppBar with Copy button
                       AppBar(
                         title: Text(
@@ -492,6 +561,15 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                               _showCancelConfirmation(context),
                                         ),
                                       ],
+                                      if (canPayBack) ...[
+                                        12.verticalSizedBox,
+                                        MainButton(
+                                          title: context.payBackTransactionLabel,
+                                          color: context.colors.redColor,
+                                          onTap: () =>
+                                              _showPayBackConfirmation(context),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ],
@@ -511,11 +589,12 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                         ),
                       ),
                     ],
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

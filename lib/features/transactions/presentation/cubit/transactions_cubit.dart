@@ -8,6 +8,7 @@ import '../../data/models/transaction_model.dart';
 import '../../data/models/update_transaction_request_params.dart';
 import '../../data/repos/transactions_repo.dart';
 import '../../domain/usecases/cancel_transaction_usecase.dart';
+import '../../domain/usecases/pay_back_transaction_usecase.dart';
 import 'transactions_state.dart';
 
 @injectable
@@ -15,9 +16,11 @@ class TransactionsCubit extends Cubit<TransactionsState>{
 
   TransactionsCubit({required this.transactionRepo})
       : cancelTransactionUseCase = CancelTransactionUseCase(transactionRepo),
+        payBackTransactionUseCase = PayBackTransactionUseCase(transactionRepo),
         super(const TransactionsState());
   final TransactionsRepo transactionRepo;
   final CancelTransactionUseCase cancelTransactionUseCase;
+  final PayBackTransactionUseCase payBackTransactionUseCase;
 
   Future<void> fetchTransactionList({required TransactionsEnum transaction}) async {
     emit(state.copyWith(transactionsStatus: RequestStatus.loading, currentFilter: transaction));
@@ -162,6 +165,27 @@ class TransactionsCubit extends Cubit<TransactionsState>{
       (message) => emit(
         state.copyWith(
           cancelTransactionStatus: RequestStatus.success,
+          message: message,
+        ),
+      ),
+    );
+  }
+
+  Future<void> payBackTransaction({required String transactionId}) async {
+    emit(state.copyWith(payBackTransactionStatus: RequestStatus.loading));
+    final result = await payBackTransactionUseCase(
+      transactionId: transactionId,
+    );
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          payBackTransactionStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (message) => emit(
+        state.copyWith(
+          payBackTransactionStatus: RequestStatus.success,
           message: message,
         ),
       ),

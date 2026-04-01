@@ -215,6 +215,10 @@
   "expense_type" : "Expense Type",
   "salary_details" : "Salary Details",
   "cancel_transaction_title": "Cancel Transaction",
-  "cancel_transaction_body": "Are you sure you want to cancel this transaction?"
+  "cancel_transaction_body": "Are you sure you want to cancel this transaction?",
+  "hold": "Hold",
+  "pay_back_transaction_label": "Pay back transaction amount",
+  "pay_back_transaction_title": "Pay back transaction amount",
+  "pay_back_transaction_body": "Are you sure you want to pay back this transaction amount?"
 
 }

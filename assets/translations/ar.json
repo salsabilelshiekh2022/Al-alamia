@@ -214,7 +214,11 @@
   "expense_type" : "نوع المصروف",
   "salary_details" : "تفاصيل الراتب",
   "cancel_transaction_title": "الغاء المعاملة",
-  "cancel_transaction_body": "هل انت متأكد من الغاء هذه المعاملة؟"
+  "cancel_transaction_body": "هل انت متأكد من الغاء هذه المعاملة؟",
+  "hold": "معلقة",
+  "pay_back_transaction_label": "استرجاع مبلغ المعاملة",
+  "pay_back_transaction_title": "استرجاع مبلغ المعاملة",
+  "pay_back_transaction_body": "هل انت متأكد من استرجاع مبلغ المعاملة؟"
 
 
 }

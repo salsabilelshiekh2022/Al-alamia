@@ -11,4 +11,5 @@ abstract class TransactionsRepo {
   Future<Either<Failure, TransactionDetailsModel>> showTransactionDetails({required String transactionId});  
   Future<Either<Failure, String>> updateTransactionStatus({required UpdateTransactionRequestParams params , required int transactionId});
   Future<Either<Failure, String>> cancelTransaction({required int transactionId});
+  Future<Either<Failure, String>> payBackTransaction({required String transactionId});
 }
