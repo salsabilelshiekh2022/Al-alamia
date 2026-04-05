@@ -1,11 +1,8 @@
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/routes/routes.dart';
-import 'package:alalamia/core/utils/global_ui_utils.dart';
 import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
-
-import '../../presentation/views/widgets/settings/change_language_bottom_sheet.dart';
 
 class SettingItemModel {
   final String title;
@@ -51,17 +48,17 @@ List<SettingItemModel> secoundSettingGroup(BuildContext context) => [
       context.pushNamed(Routes.notificationsView);
     },
   ),
-  SettingItemModel(
-    title: context.language,
-    iconPath: AppAssets.svgsWorldIcon,
-    subtitle: context.arabic,
-    onTap: () {
-      GlobalUiUtils.showBottomSheet(
-        context,
-        child: ChangeLanguageBottomSheet(),
-      );
-    },
-  ),
+  // SettingItemModel(
+  //   title: context.language,
+  //   iconPath: AppAssets.svgsWorldIcon,
+  //   subtitle: context.arabic,
+  //   onTap: () {
+  //     GlobalUiUtils.showBottomSheet(
+  //       context,
+  //       child: ChangeLanguageBottomSheet(),
+  //     );
+  //   },
+  // ),
 ];
 List<SettingItemModel> thirdSettingGroup(BuildContext context) => [
   SettingItemModel(

@@ -130,6 +130,10 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       _showError('يرجى اختيار العملات');
       return;
     }
+    if (_fromCurrency?.id == _toCurrency?.id) {
+      _showError('يرجى اختيار عملتين مختلفتين');
+      return;
+    }
 
     // Show message type selection bottom sheet
     final selectedMessageType = await showModalBottomSheet<MessageTypeEnum>(
