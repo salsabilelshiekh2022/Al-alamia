@@ -175,7 +175,10 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
       child: BlocProvider.value(
         value: getIt<GeneralCubit>(),
         child: AllDenominationsBottomSheet(
-          amount: amount,
+          // pass total not the amount, as the bottom sheet will calculate the total based on denominations
+          amount:
+              context.read<GeneralCubit>().state.feeDetails?.finalAmount ??
+              amount,
           onConfirm: (denominations) {
             _sendRequestWithDenominations(
               context,

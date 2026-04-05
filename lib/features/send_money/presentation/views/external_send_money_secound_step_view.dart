@@ -191,7 +191,9 @@ class _ExternalSendMoneySecoundStepViewState
       child: BlocProvider.value(
         value: getIt<GeneralCubit>(),
         child: AllDenominationsBottomSheet(
-          amount: amount,
+          amount:
+              context.read<GeneralCubit>().state.feeDetails?.finalAmount ??
+              amount,
           onConfirm: (denominations) {
             _sendRequestWithDenominations(
               context,
