@@ -55,7 +55,7 @@ class ExpensesRepoImpl extends ExpensesRepo {
   @override
   Future<Either<Failure, List<ExpenseTypeModel>>> getAllExpense() {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getAllExpenses),
+      request: () => apiConsumer.get(EndPoints.getAllExpensesTypes),
       onSuccess: (result) {
         final data = result['data'] as List;
         return data.map((e) => ExpenseTypeModel.fromJson(e)).toList();

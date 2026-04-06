@@ -59,5 +59,5 @@ class EndPoints {
   static String verifyOtp = '/employee/auth/verify-code';
   static String resetPassword = '/employee/auth/reset-password';
   static String toggleNotifications = '/employee/auth/toggle-notifications';
-  static String getAllExpenses = "/employee/general/get-all-expenses";
+  static String getAllExpensesTypes = "/employee/general/get-all-expenses";
 }

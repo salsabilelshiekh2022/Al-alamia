@@ -9,6 +9,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../database/network/end_points.dart';
 import '../../../database/network/failure.dart';
+import '../models/expenses_type_model.dart';
 import '../models/user_by_phone_model.dart';
 import 'general_repo.dart';
 
@@ -86,5 +87,18 @@ class GeneralRepoImpl extends GeneralRepo {
         );
       },
     );
+  }
+
+  @override
+  Future<Either<Failure, List<ExpensesTypeModel>>> getExpensesTypes() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getAllExpensesTypes),
+      onSuccess: (result) {
+        return List<ExpensesTypeModel>.from(
+          result['data'].map((x) => ExpensesTypeModel.fromJson(x)),
+        );
+      },
+    );
+  
   }
 }

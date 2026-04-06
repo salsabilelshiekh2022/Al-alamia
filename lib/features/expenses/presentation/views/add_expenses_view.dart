@@ -1,4 +1,5 @@
 import 'package:alalamia/core/enums/request_status.dart';
+import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,9 +8,19 @@ import '../../../../core/components/widgets/custom_page.dart';
 import '../cubit/expenses_cubit.dart';
 import 'widgets/expenses_form.dart';
 
-class AddExpensesView extends StatelessWidget {
+class AddExpensesView extends StatefulWidget {
   const AddExpensesView({super.key});
 
+  @override
+  State<AddExpensesView> createState() => _AddExpensesViewState();
+}
+
+class _AddExpensesViewState extends State<AddExpensesView> {
+  @override
+  void initState() {
+    context.read<GeneralCubit>().getExpensesTypes();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(

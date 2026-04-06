@@ -164,10 +164,13 @@ abstract class AppRouter {
       case Routes.addExpensesView:
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
-            value: getIt<HomeCubit>(),
-            child: BlocProvider(
-              create: (context) => getIt<ExpensesCubit>(),
-              child: const AddExpensesView(),
+            value: getIt<GeneralCubit>(),
+            child: BlocProvider.value(
+              value: getIt<HomeCubit>(),
+              child: BlocProvider(
+                create: (context) => getIt<ExpensesCubit>(),
+                child: const AddExpensesView(),
+              ),
             ),
           ),
         );

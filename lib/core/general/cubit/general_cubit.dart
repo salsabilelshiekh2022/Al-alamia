@@ -100,4 +100,19 @@ class GeneralCubit extends Cubit<GeneralState> {
       ),
     );
   }
+
+  Future<void> getExpensesTypes() async {
+    emit(state.copyWith(getAllBranchesStatus: RequestStatus.loading));
+    final result = await generalRepo.getExpensesTypes();
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(getAllBranchesStatus: RequestStatus.error)),
+      (expensesTypes) => emit(
+        state.copyWith(
+          getAllBranchesStatus: RequestStatus.success,
+          expensesTypes: expensesTypes,
+        ),
+      ),
+    );
+  }
 }

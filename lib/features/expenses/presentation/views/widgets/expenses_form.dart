@@ -1,4 +1,5 @@
 import 'package:alalamia/core/enums/request_status.dart';
+import 'package:alalamia/core/general/data/models/expenses_type_model.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
@@ -8,9 +9,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/components/widgets/app_snack_bar.dart';
 // import '../../../../../core/components/widgets/currency_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
+import '../../../../../core/components/widgets/expenses_type_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/main_button.dart';
 import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/general/cubit/general_cubit.dart';
+import '../../../../../core/general/cubit/general_state.dart';
 import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
@@ -30,7 +33,6 @@ class ExpensesForm extends StatefulWidget {
   State<ExpensesForm> createState() => _ExpensesFormState();
 }
 
-
 class _ExpensesFormState extends State<ExpensesForm> {
   late TextEditingController amountController;
   late TextEditingController currencyController;
@@ -38,21 +40,32 @@ class _ExpensesFormState extends State<ExpensesForm> {
   final formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   int? selectedCurrencyId;
+  int? selectedExpensesTypeId;
 
   @override
   void initState() {
     super.initState();
     amountController = TextEditingController();
     currencyController = TextEditingController(
-      text: context.read<HomeCubit>().state.currenciesList.firstWhere(
+      text: context
+          .read<HomeCubit>()
+          .state
+          .currenciesList
+          .firstWhere(
             (currency) => currency.code == 'LYD',
             orElse: () => CurrencyModel(id: 0, name: ''),
-          ).name,
+          )
+          .name,
     );
-    selectedCurrencyId = context.read<HomeCubit>().state.currenciesList.firstWhere(
+    selectedCurrencyId = context
+        .read<HomeCubit>()
+        .state
+        .currenciesList
+        .firstWhere(
           (currency) => currency.code == 'LYD',
           orElse: () => CurrencyModel(id: 0, name: ''),
-        ).id;
+        )
+        .id;
     purposeController = TextEditingController();
   }
 
@@ -85,7 +98,30 @@ class _ExpensesFormState extends State<ExpensesForm> {
   //   );
   // }
 
-  void _onDenominationsConfirmed(List<DenominationsRequestParams> denominations) {
+  void _onExpensesTypeSelected(ExpensesTypeModel type) {
+    setState(() {
+      purposeController.text = type.name ?? '';
+      selectedExpensesTypeId = type.id;
+    });
+  }
+
+  void _showExpensesTypeBottomSheet(List<ExpensesTypeModel?> expensesTypes) {
+    GlobalUiUtils.showBottomSheet(
+      context,
+      child: ExpensesTypeSelectionBottomSheet(
+        expensesTypes: expensesTypes,
+        selectedExpensesTypeId: selectedExpensesTypeId,
+        onExpensesTypeSelected: (type) {
+          _onExpensesTypeSelected(type);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _onDenominationsConfirmed(
+    List<DenominationsRequestParams> denominations,
+  ) {
     final cubit = context.read<ExpensesCubit>();
     cubit.addExpense(
       expensesRequestParams: ExpensesRequestParams(
@@ -93,6 +129,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
         amount: amountController.text,
         notes: purposeController.text,
         denominations: denominations,
+        expensesTypeId: selectedExpensesTypeId ?? 0,
       ),
     );
   }
@@ -100,11 +137,11 @@ class _ExpensesFormState extends State<ExpensesForm> {
   void _handleSendButton() {
     if (formKey.currentState?.validate() ?? false) {
       final amount = double.tryParse(amountController.text);
-      
+
       if (amount == null || amount <= 0) {
         AppSnackBar.showSnackBar(
           context: context,
-          message:"pleaseEnterValidAmount",
+          message: "pleaseEnterValidAmount",
           state: SnackBarStates.error,
         );
         return;
@@ -145,7 +182,6 @@ class _ExpensesFormState extends State<ExpensesForm> {
           context.pop();
           context.pop();
           context.read<HomeCubit>().getBranchCurrencies();
-
         }
       },
       builder: (context, state) {
@@ -169,13 +205,29 @@ class _ExpensesFormState extends State<ExpensesForm> {
   }
 
   Widget _buildPurposeField() {
-    return CustomTextFieldWithLabel(
-      controller: purposeController,
-      label: context.purpose,
-      hintText: context.purposeHint,
-      isRequired: true,
-      keyboardType: TextInputType.text,
-      validator: (value) => Validator.validateAnotherField(value, context),
+    return BlocBuilder<GeneralCubit, GeneralState>(
+      builder: (context, state) {
+        final expensesTypes = state.expensesTypes ?? [];
+        return CustomTextFieldWithLabel(
+        
+          controller: purposeController,
+          label: "نوع المصروف ",
+          hintText: context.purposeHint,
+          isRequired: true,
+          isReadOnly: true,
+          keyboardType: TextInputType.text,
+          validator: (value) => Validator.validateAnotherField(value, context),
+          onTap: () => _showExpensesTypeBottomSheet(expensesTypes),
+          suffixWidget: InkWell(
+            splashColor: Colors.transparent,
+            onTap: () => _showExpensesTypeBottomSheet(expensesTypes),
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: context.colors.grayColor,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -193,8 +245,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
   Widget _buildSubmitButton(RequestStatus status) {
     return MainButton(
       title: context.send,
-      onTap: status.isLoading ? (){} : _handleSendButton,
-    
+      onTap: status.isLoading ? () {} : _handleSendButton,
     );
   }
 
@@ -202,7 +253,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return CustomTextFieldWithLabel(
-         // onTap: () => _showCurrencyBottomSheet(state.currenciesList),
+          // onTap: () => _showCurrencyBottomSheet(state.currenciesList),
           controller: currencyController,
           label: context.currency,
           hintText: context.currenyHint,
@@ -223,6 +274,4 @@ class _ExpensesFormState extends State<ExpensesForm> {
       },
     );
   }
-
-
 }

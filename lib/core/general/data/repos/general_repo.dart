@@ -5,6 +5,7 @@ import 'package:alalamia/core/general/data/models/payment_method_model.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../database/network/failure.dart';
+import '../models/expenses_type_model.dart';
 import '../models/fee_details_request_params.dart';
 import '../models/user_by_phone_model.dart';
 
@@ -24,4 +25,5 @@ abstract class GeneralRepo {
   Future<Either<Failure, List<PaymentMethodModel>>> getPaymentMethods({
     required int branchId,
   });
+  Future<Either<Failure, List<ExpensesTypeModel>>> getExpensesTypes();
 }

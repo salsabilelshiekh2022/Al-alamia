@@ -5,6 +5,7 @@ import 'package:alalamia/core/general/data/models/fee_details_model.dart';
 import 'package:alalamia/core/general/data/models/user_by_phone_model.dart';
 import 'package:equatable/equatable.dart';
 
+import '../data/models/expenses_type_model.dart';
 import '../data/models/payment_method_model.dart';
 
 class GeneralState extends Equatable {
@@ -18,6 +19,7 @@ class GeneralState extends Equatable {
   final List<DenominationModel?>? denominations;
   final List<BranchModel?>? branches;
   final List<PaymentMethodModel?>? paymentMethods;
+  final List<ExpensesTypeModel?>? expensesTypes;
   final int? selectedBranchId;
 
   static GeneralState initial() {
@@ -36,6 +38,7 @@ class GeneralState extends Equatable {
     this.branches,
     this.paymentMethods,
     this.selectedBranchId,
+  this.expensesTypes,
   });
 
   GeneralState copyWith({
@@ -50,6 +53,7 @@ class GeneralState extends Equatable {
     List<BranchModel?>? branches,
     List<PaymentMethodModel?>? paymentMethods,
     int? selectedBranchId,
+    List<ExpensesTypeModel?>? expensesTypes,
   }) {
     return GeneralState(
       getUserByPhoneStatus: getUserByPhoneStatus ?? this.getUserByPhoneStatus,
@@ -65,6 +69,7 @@ class GeneralState extends Equatable {
       branches: branches ?? this.branches,
       paymentMethods: paymentMethods ?? this.paymentMethods,
       selectedBranchId: selectedBranchId,
+      expensesTypes: expensesTypes ?? this.expensesTypes,
     );
   }
 
@@ -81,5 +86,6 @@ class GeneralState extends Equatable {
     getPaymentMethodsStatus,
     paymentMethods,
     selectedBranchId,
+    expensesTypes,
   ];
 }
