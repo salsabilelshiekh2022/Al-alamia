@@ -105,6 +105,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
 
   /// Validate all required fields and show message type selection
   void _handleConfirm() async {
+    !_formKey.currentState!.validate();
     // Validate required fields
     if (_phoneController.text.trim().isEmpty) {
       _showError('يرجى إدخال رقم الهاتف');
@@ -182,6 +183,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       state: SnackBarStates.error,
     );
   }
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -219,59 +221,62 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
         isBack: true,
         hasActions: false,
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClientInfoSection(
-              phoneController: _phoneController,
-              nameController: _nameController,
-              whatsAppNumberController: _whatsAppNumberController,
-            ),
-            20.verticalSizedBox,
-            CurrencyCalculator(
-              title: context.conversionData,
-              amountController: _amountController,
-              resultController: _resultController,
-              onAmountChanged: (val) {
-                _getFeeDetails();
-              },
-              onFromCurrencyChanged: (c) {
-                setState(() => _fromCurrency = c);
-                _getFeeDetails();
-              },
-              onToCurrencyChanged: (c) {
-                setState(() => _toCurrency = c);
-                _getFeeDetails();
-              },
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0x336E0084),
-                  blurRadius: 20,
-                  offset: Offset(0, 0),
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            20.verticalSizedBox,
-            ValueListenableBuilder<TextEditingValue>(
-              valueListenable: _resultController,
-              builder: (_, value, __) => TotalSection(
-                fromCurrency: _fromCurrency!,
-                toCurrency: _toCurrency!,
-                total: value.text,
-                exchangePrice: 0.0,
+        body: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClientInfoSection(
+                phoneController: _phoneController,
+                nameController: _nameController,
+                whatsAppNumberController: _whatsAppNumberController,
               ),
-            ),
-            20.verticalSizedBox,
-            AmountSection(amountByCharController: _amountByCharController),
-            20.verticalSizedBox,
-            NotesSection(notesController: _notesController),
-            20.verticalSizedBox,
-            FeeDetailsCard(),
-            24.verticalSizedBox,
-            MainButton(title: context.confirm, onTap: _handleConfirm),
-            40.verticalSizedBox,
-          ],
+              20.verticalSizedBox,
+              CurrencyCalculator(
+                title: context.conversionData,
+                amountController: _amountController,
+                resultController: _resultController,
+                onAmountChanged: (val) {
+                  _getFeeDetails();
+                },
+                onFromCurrencyChanged: (c) {
+                  setState(() => _fromCurrency = c);
+                  _getFeeDetails();
+                },
+                onToCurrencyChanged: (c) {
+                  setState(() => _toCurrency = c);
+                  _getFeeDetails();
+                },
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x336E0084),
+                    blurRadius: 20,
+                    offset: Offset(0, 0),
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              20.verticalSizedBox,
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _resultController,
+                builder: (_, value, __) => TotalSection(
+                  fromCurrency: _fromCurrency!,
+                  toCurrency: _toCurrency!,
+                  total: value.text,
+                  exchangePrice: 0.0,
+                ),
+              ),
+              20.verticalSizedBox,
+              AmountSection(amountByCharController: _amountByCharController),
+              20.verticalSizedBox,
+              NotesSection(notesController: _notesController),
+              20.verticalSizedBox,
+              FeeDetailsCard(),
+              24.verticalSizedBox,
+              MainButton(title: context.confirm, onTap: _handleConfirm),
+              40.verticalSizedBox,
+            ],
+          ),
         ),
       ),
     );
