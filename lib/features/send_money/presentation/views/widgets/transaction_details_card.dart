@@ -531,6 +531,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                       prefixWidget: AppAssets.svgsBank,
                       isReadOnly: true,
                       isRequired: true,
+                      validator: (value) =>
+                          Validator.validateAnotherField(value, context),
                       suffixWidget: InkWell(
                         splashColor: Colors.transparent,
                         onTap: () {
@@ -576,6 +578,8 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                         prefixWidget: AppAssets.svgsCoinsIcon,
                         isRequired: true,
                         isReadOnly: true,
+                        validator: (value) =>
+                          Validator.validateAnotherField(value, context),
                         suffixWidget: InkWell(
                           splashColor: Colors.transparent,
                           onTap: () {

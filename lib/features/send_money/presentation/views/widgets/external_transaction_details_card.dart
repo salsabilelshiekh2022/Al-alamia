@@ -646,6 +646,8 @@ class _ExternalTransactionDetailsCardState
                         prefixWidget: AppAssets.svgsBank,
                         isReadOnly: true,
                         isRequired: true,
+                         validator: (value) =>
+                          Validator.validateAnotherField(value, context),
                         suffixWidget: InkWell(
                           splashColor: Colors.transparent,
                           onTap: () {
@@ -708,6 +710,8 @@ class _ExternalTransactionDetailsCardState
                             prefixWidget: AppAssets.svgsBank,
                             isReadOnly: true,
                             isRequired: true,
+                   validator: (value) =>
+                          Validator.validateAnotherField(value, context),
                             enabled:
                                 isBranchSelected &&
                                 hasPaymentMethods &&
@@ -785,6 +789,8 @@ class _ExternalTransactionDetailsCardState
                                   prefixWidget: AppAssets.svgsDollarIcon,
                                   isRequired: true,
                                   isReadOnly: true,
+                                   validator: (value) =>
+                          Validator.validateAnotherField(value, context),
                                   suffixWidget: InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () {
@@ -813,6 +819,7 @@ class _ExternalTransactionDetailsCardState
                                   prefixWidget: AppAssets.svgsDollarIcon,
                                   isRequired: true,
                                   isReadOnly: true,
+                                  
                                   keyboardType: TextInputType.number,
                                   validator: (value) =>
                                       Validator.validateAnotherField(

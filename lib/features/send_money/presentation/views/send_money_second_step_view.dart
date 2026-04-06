@@ -33,6 +33,7 @@ class SendMoneySecondStepView extends StatefulWidget {
 }
 
 class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
+   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return BlocListener<SendMoneyCubit, SendMoneyState>(
@@ -73,31 +74,34 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
           title: context.sendMoney,
           hasActions: false,
           isBack: true,
-          body: Column(
-            children: [
-              _stepHeader(context),
-              12.verticalSizedBox,
-              _progressBar(context),
-              24.verticalSizedBox,
-              TransactionDetailsCard(),
-              20.verticalSizedBox,
-              NotesCard(),
-              20.verticalSizedBox,
-              FeeDetailsCard(),
-              24.verticalSizedBox,
-              BlocBuilder<SendMoneyCubit, SendMoneyState>(
-                builder: (context, state) {
-                  return MainButton(
-                    title: context.confirm,
-                    // isLoading: state.sendMoneyStatus.isLoading,
-                    onTap: state.sendMoneyStatus.isLoading
-                        ? () {}
-                        : () => _handleConfirm(context),
-                  );
-                },
-              ),
-              32.verticalSizedBox,
-            ],
+          body: Form(
+              key: _formKey,
+            child: Column(
+              children: [
+                _stepHeader(context),
+                12.verticalSizedBox,
+                _progressBar(context),
+                24.verticalSizedBox,
+                TransactionDetailsCard(),
+                20.verticalSizedBox,
+                NotesCard(),
+                20.verticalSizedBox,
+                FeeDetailsCard(),
+                24.verticalSizedBox,
+                BlocBuilder<SendMoneyCubit, SendMoneyState>(
+                  builder: (context, state) {
+                    return MainButton(
+                      title: context.confirm,
+                      // isLoading: state.sendMoneyStatus.isLoading,
+                      onTap: state.sendMoneyStatus.isLoading
+                          ? () {}
+                          : () => _handleConfirm(context),
+                    );
+                  },
+                ),
+                32.verticalSizedBox,
+              ],
+            ),
           ),
         ),
       ),
@@ -106,6 +110,9 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
 
   /// Handle confirm button tap - collect data and send request
   void _handleConfirm(BuildContext context) async {
+    
+    
+
     final cubit = context.read<SendMoneyCubit>();
     final formData = cubit.state.formData;
 
@@ -132,6 +139,7 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
     // Note: We don't check hasDenominations here because we are about to collect them
 
     if (missingFields.isNotEmpty) {
+      !_formKey.currentState!.validate();
       AppSnackBar.showSnackBar(
         context: context,
         message: 'Missing: ${missingFields.join(', ')}',

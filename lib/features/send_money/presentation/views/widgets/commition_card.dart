@@ -16,6 +16,7 @@ import '../../../../../core/components/widgets/commission_type_selection_bottom_
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/enums/commission_type_enum.dart';
 import '../../../../../core/utils/global_ui_utils.dart';
+import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
 
 class CommitionCard extends StatefulWidget {
@@ -170,6 +171,8 @@ class _CommitionCardState extends State<CommitionCard> {
                       prefixWidget: AppAssets.svgsCoinsIcon,
                       isRequired: true,
                       isReadOnly: true,
+                      validator: (value) =>
+                          Validator.validateAnotherField(value, context),
                       suffixWidget: InkWell(
                         splashColor: Colors.transparent,
                         onTap: () {

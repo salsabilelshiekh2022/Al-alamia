@@ -38,6 +38,7 @@ class ExternalSendMoneySecoundStepView extends StatefulWidget {
 
 class _ExternalSendMoneySecoundStepViewState
     extends State<ExternalSendMoneySecoundStepView> {
+      final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var formData = context.watch<SendMoneyCubit>().state.formData;
@@ -79,12 +80,14 @@ class _ExternalSendMoneySecoundStepViewState
           title: context.sendMoney,
           hasActions: false,
           isBack: true,
-          body: Column(
-            children: [
-              _stepHeader(context),
-              12.verticalSizedBox,
-              _progressBar(context),
-              24.verticalSizedBox,
+          body: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _stepHeader(context),
+                12.verticalSizedBox,
+                _progressBar(context),
+                24.verticalSizedBox,
               ExternalTransactionDetailsCard(),
               formData?.fromCurrency == null || formData?.toCurrency == null
                   ? SizedBox()
@@ -116,7 +119,7 @@ class _ExternalSendMoneySecoundStepViewState
             ],
           ),
         ),
-      ),
+      ),)
     );
   }
 
@@ -148,6 +151,7 @@ class _ExternalSendMoneySecoundStepViewState
     // Note: We don't check hasDenominations here because we are about to collect them
 
     if (missingFields.isNotEmpty) {
+      !_formKey.currentState!.validate();
       AppSnackBar.showSnackBar(
         context: context,
         message: 'Missing: ${missingFields.join(', ')}',
