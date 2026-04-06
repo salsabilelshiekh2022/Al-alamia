@@ -5,8 +5,6 @@ import 'package:alalamia/features/auth/presentation/views/widgets/sign_up_form.d
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../generated/app_assets.dart';
-
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
 
@@ -24,9 +22,9 @@ class SignUpView extends StatelessWidget {
           ),
           20.verticalSpace,
           Image.asset(
-            AppAssets.imagesLogo,
-            width: 230.w,
-            height: 64.h,
+            "assets/images/sp_logo.png",
+            width: 120.w,
+            height: 120.h,
             fit: BoxFit.cover,
           ),
           28.verticalSpace,

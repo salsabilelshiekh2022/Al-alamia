@@ -1,7 +1,6 @@
 import 'package:alalamia/core/enums/request_status.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
-import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,9 +29,9 @@ class LoginView extends StatelessWidget {
             ),
             20.verticalSpace,
             Image.asset(
-              AppAssets.imagesLogo,
-              width: 230.w,
-              height: 64.h,
+              "assets/images/sp_logo.png",
+              width: 120.w,
+              height: 120.h,
               fit: BoxFit.cover,
             ),
             28.verticalSpace,

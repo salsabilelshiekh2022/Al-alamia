@@ -1,4 +1,4 @@
-package com.example.alalamia
+package com.app.alalamia
 
 import io.flutter.embedding.android.FlutterActivity
 

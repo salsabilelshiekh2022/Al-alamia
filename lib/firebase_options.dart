@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '486759824037',
     projectId: 'al-alamia-af2d9',
     storageBucket: 'al-alamia-af2d9.firebasestorage.app',
-    iosBundleId: 'com.example.alalamia',
+    iosBundleId: 'com.app.alalamia',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '486759824037',
     projectId: 'al-alamia-af2d9',
     storageBucket: 'al-alamia-af2d9.firebasestorage.app',
-    iosBundleId: 'com.example.alalamia',
+    iosBundleId: 'com.app.alalamia',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
