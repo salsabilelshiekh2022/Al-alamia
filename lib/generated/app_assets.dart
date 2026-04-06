@@ -34,6 +34,10 @@ class AppAssets {
 
   static const String imagesLogo = "assets/images/logo.jpeg";
 
+  static const String imagesShareIcon = "assets/images/share_icon.png";
+
+  static const String imagesSpLogo = "assets/images/sp_logo.png";
+
   static const String imagesSuccess = "assets/images/success.png";
 
   static const String svgsAdditionalPhoneIcon = "assets/svgs/additional_phone_icon.svg";

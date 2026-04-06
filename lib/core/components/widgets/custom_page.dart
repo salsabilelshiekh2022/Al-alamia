@@ -11,7 +11,7 @@ class CustomPage extends StatelessWidget {
     required this.title,
     required this.hasActions,
     required this.isBack,
-    required this.body, this.padding, this.topMargin, this.bottomSheet,
+    required this.body, this.padding, this.topMargin, this.bottomSheet, this.actionWidget,
   });
 
   final String title;
@@ -21,6 +21,9 @@ class CustomPage extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? topMargin;
   final Widget? bottomSheet;
+  final Widget? actionWidget;
+
+   @override
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,7 @@ class CustomPage extends StatelessWidget {
                   title: title,
                   hasActions: hasActions,
                   isBack: isBack,
+                  actionWidget: actionWidget,
                 ).onlyPadding(bottomPadding: 24),
                 Container(
                   margin: EdgeInsets.only(top: topMargin ?? 0),

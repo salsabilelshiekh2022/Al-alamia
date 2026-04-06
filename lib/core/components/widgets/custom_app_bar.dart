@@ -9,11 +9,14 @@ class CustomAppBar extends StatelessWidget {
     super.key,
     required this.title,
     this.hasActions = false,
-    this.isBack = false,
+    this.isBack = false, this.actionWidget,
   });
   final String title;
   final bool hasActions;
   final bool isBack;
+  final Widget? actionWidget;
+
+   @override
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class CustomAppBar extends StatelessWidget {
           ? [
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 16),
-                child: InkWell(
+                child:actionWidget ?? InkWell(
                   child: CustomSvgBuilder(
                     path: AppAssets.svgsLangBtnIcon,
                     width: 44,

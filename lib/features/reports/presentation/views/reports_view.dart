@@ -52,7 +52,11 @@ class ReportsView extends StatelessWidget {
       title: context.reports,
       hasActions: false,
       isBack: false,
+      actionWidget: InkWell(
+     child: Image.asset(AppAssets.svgsShareIcon
+     ),),
       body: Column(
+        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ReportsFilterType(),
