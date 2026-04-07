@@ -22,6 +22,8 @@ class AppAssets {
 
   static const String imagesCalendar = "assets/images/calendar.png";
 
+  static const String imagesCalendarWhite = "assets/images/calendar_white.png";
+
   static const String imagesCheck = "assets/images/check.png";
 
   static const String imagesEmptyChat = "assets/images/empty_chat.png";

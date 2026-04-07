@@ -26,13 +26,16 @@ class NotificationsRepoImpl extends NotificationsRepo {
       },
     );
   }
-  
+
   @override
   Future<Either<Failure, String>> toggleNotification() {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.toggleNotifications),
+      request: () => apiConsumer.post(path: EndPoints.toggleNotifications),
       onSuccess: (result) {
-        return result['message'] ?? 'Success';
+        if (result is Map<String, dynamic>) {
+          return result['message'] ?? 'Success';
+        }
+        return 'Success';
       },
     );
   }

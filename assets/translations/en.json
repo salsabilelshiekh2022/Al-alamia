@@ -36,6 +36,8 @@
   "main": "Home",
   "transactions": "Transactions",
   "notifications": "Notifications",
+  "notifications_enabled": "ON",
+  "notifications_disabled": "OFF",
   "settings": "Settings",
   "account_settings": "Account Settings",
   "egypt_branch": "Egypt Branch",

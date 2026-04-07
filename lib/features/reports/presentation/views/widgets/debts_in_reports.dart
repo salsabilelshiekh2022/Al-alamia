@@ -65,7 +65,7 @@ class DebtItemInReport extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context.dailyDebt,
+            "الديون",
             style: context.textStyles.font16MediumSecondaryColor,
           ),
           14.verticalSizedBox,

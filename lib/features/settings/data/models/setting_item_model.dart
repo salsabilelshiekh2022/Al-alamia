@@ -9,7 +9,7 @@ class SettingItemModel {
   final String iconPath;
   final String? subtitle;
   final void Function()? onTap;
-  final bool? isNotification;
+  final bool isNotification;
 
   SettingItemModel({
     required this.title,
@@ -44,9 +44,6 @@ List<SettingItemModel> secoundSettingGroup(BuildContext context) => [
     title: context.notifications,
     iconPath: AppAssets.svgsBell,
     isNotification: true,
-    onTap: () {
-      context.pushNamed(Routes.notificationsView);
-    },
   ),
   // SettingItemModel(
   //   title: context.language,

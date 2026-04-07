@@ -29,7 +29,7 @@ extension TranslationExtension on BuildContext {
   String get notReceivedMessage => tr('not_received_message');
   String get preseHere => tr('prese_here');
   String get createNewPassword => tr('create_new_password');
-  String get enterNewPasswordWithoutSharing => 
+  String get enterNewPasswordWithoutSharing =>
       tr('enter_new_password_without_sharing');
   String get newPassword => tr('new_password');
   String get newPasswordHint => tr('new_password_hint');
@@ -41,6 +41,8 @@ extension TranslationExtension on BuildContext {
   String get main => tr('main');
   String get transactions => tr('transactions');
   String get notifications => tr('notifications');
+  String get notificationsEnabled => tr('notifications_enabled');
+  String get notificationsDisabled => tr('notifications_disabled');
   String get settings => tr('settings');
   String get accountSettings => tr('account_settings');
   String get egyptBranch => tr('egypt_branch');
@@ -190,7 +192,8 @@ extension TranslationExtension on BuildContext {
   String get completed => tr("completed");
   String get canceled => tr("canceled");
   String get notFoundTransactions => tr("not_found_transactions");
-  String get notFoundTransactionsDescription => tr("not_found_transactions_description");
+  String get notFoundTransactionsDescription =>
+      tr("not_found_transactions_description");
   String get amountSent => tr("amount_sent");
   String get transactionType => tr("transaction_type");
   String get fee => tr("fee");
@@ -209,10 +212,12 @@ extension TranslationExtension on BuildContext {
   String get inability => tr("inability");
   String get surplus => tr("surplus");
   String get notFoundNotifications => tr("not_found_notifications");
-  String get notFoundNotificationsDescription => tr("not_found_notifications_description");
+  String get notFoundNotificationsDescription =>
+      tr("not_found_notifications_description");
   String get type => tr("type");
   String get notFoundMessages => tr("not_found_messages");
-  String get notFoundMessagesDescription => tr("not_found_messages_description");
+  String get notFoundMessagesDescription =>
+      tr("not_found_messages_description");
   String get passwordNotMatch => tr("password_not_match");
   String get internalExternalDelivery => tr("internal_external_delivery");
   String get balanceDetails => tr("balance_details");

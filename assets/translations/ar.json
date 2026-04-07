@@ -36,6 +36,8 @@
   "main": "الرئيسية",
   "transactions": "المعاملات",
   "notifications": "الإشعارات",
+  "notifications_enabled": "مفعل",
+  "notifications_disabled": "معطل",
   "settings": "الإعدادات",
   "account_settings": "اعدادات الحساب",
   "egypt_branch": "فرع مصر",

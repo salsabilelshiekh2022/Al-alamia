@@ -8,7 +8,9 @@ import 'package:alalamia/generated/app_assets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/enums/request_status.dart';
 import '../../../../core/helper/app_extention.dart';
 import 'widgets/debts_in_reports.dart';
 import 'widgets/expenses_in_reports.dart';
@@ -46,17 +48,34 @@ class ReportsView extends StatelessWidget {
     }
   }
 
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomPage(
       title: context.reports,
-      hasActions: false,
+      hasActions: true,
       isBack: false,
-      actionWidget: InkWell(
-     child: Image.asset(AppAssets.svgsShareIcon
-     ),),
+      actionWidget: BlocBuilder<ReportsCubit, ReportsState>(
+        builder: (context, state) {
+          return state.requestStatus.isLoading ? SizedBox() : InkWell(
+            onTap: () => state.requestStatus.isLoading
+                ? null
+                : _launchUrl(state.reportsModel?.link ?? ""),
+
+            child: Image.asset(
+              AppAssets.imagesShareIcon,
+              width: 44,
+              height: 44,
+            ),
+          );
+        },
+      ),
       body: Column(
-        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ReportsFilterType(),
@@ -64,28 +83,41 @@ class ReportsView extends StatelessWidget {
           BlocBuilder<ReportsCubit, ReportsState>(
             builder: (context, state) {
               final displayDate = state.selectedDate ?? DateTime.now();
-
-              return InkWell(
-                onTap: () => _selectDate(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      AppAssets.imagesCalendar,
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.scaleDown,
+              return Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                    
+                      decoration: BoxDecoration(
+                        color: context.colors.primaryColor.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: InkWell(
+                        onTap: () => _selectDate(context),
+                        child: Text(
+                          DateFormat(
+                            'EEEE, d MMMM yyyy',
+                            EasyLocalization.of(context)!.locale.languageCode,
+                          ).format(displayDate),
+                          style: context.textStyles.font14SemiBoldPrimaryColor,
+                        ),
+                      ),
                     ),
+                  ),
                     4.horizontalSizedBox,
-                    Text(
-                      DateFormat(
-                        'EEEE, d MMMM yyyy',
-                        EasyLocalization.of(context)!.locale.languageCode,
-                      ).format(displayDate),
-                      style: context.textStyles.font14MediumPrimaryColor,
+                    InkWell(
+                      onTap: () => _selectDate(context),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: context.colors.primaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Image.asset(AppAssets.imagesCalendarWhite, width: 24, height: 24, fit: BoxFit.contain,),
+                      ),
                     ),
-                  ],
-                ),
+                ],
               );
             },
           ),
