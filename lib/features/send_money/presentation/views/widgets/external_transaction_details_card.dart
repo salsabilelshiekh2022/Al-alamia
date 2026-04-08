@@ -33,7 +33,14 @@ import '../../../../home/presentation/cubit/home_cubit.dart';
 import '../../../data/models/send_money_form_data.dart';
 
 class ExternalTransactionDetailsCard extends StatefulWidget {
-  const ExternalTransactionDetailsCard({super.key});
+  const ExternalTransactionDetailsCard({
+    required this.commissionController,
+    required this.commissionTypeController,
+    super.key,
+  });
+
+  final TextEditingController commissionController;
+  final TextEditingController commissionTypeController;
 
   @override
   State<ExternalTransactionDetailsCard> createState() =>
@@ -49,13 +56,13 @@ class _ExternalTransactionDetailsCardState
   late TextEditingController paymentMethodController;
   late TextEditingController amountController;
   late TextEditingController amountByCharController;
-  late TextEditingController commissionTypeController;
-  late TextEditingController commissionController;
+  TextEditingController get commissionTypeController =>
+      widget.commissionTypeController;
+  TextEditingController get commissionController => widget.commissionController;
   int? selectedCurrencyId;
   int? selectedToCurrencyId;
   int? selectedDestinationId;
   int? selectedPaymentMethodId;
-  CommissionTypeEnum? selectedCommissionType;
 
   BranchModel? _findBranchById(List<BranchModel?> branches, int? branchId) {
     if (branchId == null) return null;
@@ -81,8 +88,10 @@ class _ExternalTransactionDetailsCardState
     if (paymentMethodController.text.trim().isNotEmpty) return;
     if (paymentMethods.isEmpty) return;
 
-    final method =
-      _findPaymentMethodById(paymentMethods, selectedPaymentMethodId);
+    final method = _findPaymentMethodById(
+      paymentMethods,
+      selectedPaymentMethodId,
+    );
     final name = method?.name.trim() ?? '';
     if (name.isEmpty) return;
 
@@ -112,6 +121,19 @@ class _ExternalTransactionDetailsCardState
     });
   }
 
+  void _syncCommissionTypeFromFormData(SendMoneyFormData? formData) {
+    final commissionType = formData?.commissionType;
+    if (commissionType == null) return;
+
+    final translatedValue = commissionType.getCommissionType(context);
+    if (commissionTypeController.text.trim() == translatedValue.trim()) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      commissionTypeController.text = translatedValue;
+    });
+  }
+
   void _syncDestinationText(List<BranchModel?> branches) {
     if (selectedDestinationId == null) return;
     if (destinationController.text.trim().isNotEmpty) return;
@@ -128,6 +150,7 @@ class _ExternalTransactionDetailsCardState
       }
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -137,8 +160,6 @@ class _ExternalTransactionDetailsCardState
     destinationController = TextEditingController();
     amountController = TextEditingController();
     amountByCharController = TextEditingController();
-    commissionTypeController = TextEditingController();
-    commissionController = TextEditingController();
     toCurrencyController = TextEditingController();
     converterAmountController = TextEditingController();
     paymentMethodController = TextEditingController();
@@ -205,8 +226,10 @@ class _ExternalTransactionDetailsCardState
           final generalState = context.read<GeneralCubit>().state;
           if (generalState.branches != null &&
               generalState.branches!.isNotEmpty) {
-            final branch =
-                _findBranchById(generalState.branches!, formData.toBranch);
+            final branch = _findBranchById(
+              generalState.branches!,
+              formData.toBranch,
+            );
             if (branch != null) {
               destinationController.text = branch.name ?? '';
               // Also fetch payment methods for this branch
@@ -252,8 +275,6 @@ class _ExternalTransactionDetailsCardState
     destinationController.dispose();
     amountController.dispose();
     amountByCharController.dispose();
-    commissionController.dispose();
-    commissionTypeController.dispose();
     toCurrencyController.dispose();
     converterAmountController.dispose();
     paymentMethodController.dispose();
@@ -439,7 +460,7 @@ class _ExternalTransactionDetailsCardState
       final toBranch = selectedDestinationId;
 
       // Get commission type
-      CommissionTypeEnum? commissionType = selectedCommissionType;
+      final CommissionTypeEnum? commissionType = currentFormData.commissionType;
 
       cubit.updateFormData(
         currentFormData.copyWith(
@@ -451,6 +472,9 @@ class _ExternalTransactionDetailsCardState
               .outside, // Assuming inside delivery for external transactions
           amount: amountController.text,
           amountByChar: amountByCharController.text,
+          commissionAmount:
+              double.tryParse(commissionController.text.trim()) ??
+              currentFormData.commissionAmount,
           commissionType: fromCurrency != toCurrency
               ? CommissionTypeEnum.none
               : commissionType,
@@ -474,8 +498,9 @@ class _ExternalTransactionDetailsCardState
 
     if (toCurrencyId == null) return;
 
+    final formData = context.read<SendMoneyCubit>().state.formData;
     CommissionTypeEnum commissionType =
-        selectedCommissionType ?? CommissionTypeEnum.none;
+        formData?.commissionType ?? CommissionTypeEnum.none;
 
     context.read<GeneralCubit>().getFeeDetails(
       params: FeeDetailsRequestParams(
@@ -497,8 +522,10 @@ class _ExternalTransactionDetailsCardState
             generalState.branches!.isNotEmpty &&
             destinationController.text.isEmpty) {
           // Only update if still empty
-          final branch =
-              _findBranchById(generalState.branches!, selectedDestinationId);
+          final branch = _findBranchById(
+            generalState.branches!,
+            selectedDestinationId,
+          );
           if (branch != null) {
             setState(() {
               destinationController.text = branch.name ?? '';
@@ -536,6 +563,7 @@ class _ExternalTransactionDetailsCardState
         child: BlocBuilder<SendMoneyCubit, SendMoneyState>(
           builder: (context, state) {
             _syncToCurrencyFromFormData(state.formData);
+            _syncCommissionTypeFromFormData(state.formData);
             return CardWithPurpleShadow(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -646,8 +674,8 @@ class _ExternalTransactionDetailsCardState
                         prefixWidget: AppAssets.svgsBank,
                         isReadOnly: true,
                         isRequired: true,
-                         validator: (value) =>
-                          Validator.validateAnotherField(value, context),
+                        validator: (value) =>
+                            Validator.validateAnotherField(value, context),
                         suffixWidget: InkWell(
                           splashColor: Colors.transparent,
                           onTap: () {
@@ -710,8 +738,8 @@ class _ExternalTransactionDetailsCardState
                             prefixWidget: AppAssets.svgsBank,
                             isReadOnly: true,
                             isRequired: true,
-                   validator: (value) =>
-                          Validator.validateAnotherField(value, context),
+                            validator: (value) =>
+                                Validator.validateAnotherField(value, context),
                             enabled:
                                 isBranchSelected &&
                                 hasPaymentMethods &&
@@ -789,8 +817,11 @@ class _ExternalTransactionDetailsCardState
                                   prefixWidget: AppAssets.svgsDollarIcon,
                                   isRequired: true,
                                   isReadOnly: true,
-                                   validator: (value) =>
-                          Validator.validateAnotherField(value, context),
+                                  validator: (value) =>
+                                      Validator.validateAnotherField(
+                                        value,
+                                        context,
+                                      ),
                                   suffixWidget: InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () {
@@ -819,7 +850,7 @@ class _ExternalTransactionDetailsCardState
                                   prefixWidget: AppAssets.svgsDollarIcon,
                                   isRequired: true,
                                   isReadOnly: true,
-                                  
+
                                   keyboardType: TextInputType.number,
                                   validator: (value) =>
                                       Validator.validateAnotherField(

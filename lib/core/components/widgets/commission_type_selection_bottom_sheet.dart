@@ -5,6 +5,11 @@ import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../features/auth/data/models/user_model.dart';
+import '../../database/cache/cache_helper.dart';
+import '../../database/cache/cache_services.dart';
+import '../../di/dependency_injection.dart';
+
 class CommissionTypeSelectionBottomSheet extends StatelessWidget {
   const CommissionTypeSelectionBottomSheet({
     super.key,
@@ -17,6 +22,8 @@ class CommissionTypeSelectionBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+       final UserModel user = getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
+    List<CommissionTypeEnum> types =user.branch?.noCommission == 1 ?[CommissionTypeEnum.added_value, CommissionTypeEnum.deducted_value] :    CommissionTypeEnum.values;
     return SizedBox(
       height: 250.h,
       child: Column(
@@ -28,10 +35,10 @@ class CommissionTypeSelectionBottomSheet extends StatelessWidget {
           16.verticalSizedBox,
           Expanded(
             child: ListView.separated(
-              itemCount: CommissionTypeEnum.values.length,
+              itemCount: types.length,
               separatorBuilder: (context, index) => 8.verticalSizedBox,
               itemBuilder: (context, index) {
-                final type = CommissionTypeEnum.values[index];
+                final type = types[index];
                 final isSelected = selectedType == type;
 
                 return InkWell(

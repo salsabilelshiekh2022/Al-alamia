@@ -402,6 +402,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
 
   @override
   Widget build(BuildContext context) {
+   final UserModel user = getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
     return BlocListener<GeneralCubit, GeneralState>(
       listener: (context, generalState) {
         // When branches are loaded, update destination name if we have a selected ID
@@ -561,7 +562,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
                         controller: commissionController,
                         label: context.commission,
                         hintText: "\$0.00",
-                        enabled: false,
+                        enabled: user.branch?.commissionCanChange == 1 ? true : false,
                         prefixWidget: AppAssets.svgsCoinsIcon,
                         isRequired: true,
                       ),

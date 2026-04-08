@@ -14,52 +14,52 @@ import 'package:flutter/material.dart';
 import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 import '../../../../../core/components/widgets/commission_type_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
+import '../../../../../core/database/cache/cache_helper.dart';
+import '../../../../../core/database/cache/cache_services.dart';
+import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/enums/commission_type_enum.dart';
 import '../../../../../core/utils/global_ui_utils.dart';
 import '../../../../../core/utils/validator.dart';
 import '../../../../../generated/app_assets.dart';
+import '../../../../auth/data/models/user_model.dart';
 
 class CommitionCard extends StatefulWidget {
-  const CommitionCard({super.key});
+  const CommitionCard({
+    required this.commissionController,
+    required this.commissionTypeController,
+    super.key,
+  });
+
+  final TextEditingController commissionController;
+  final TextEditingController commissionTypeController;
 
   @override
   State<CommitionCard> createState() => _CommitionCardState();
 }
 
 class _CommitionCardState extends State<CommitionCard> {
-  late TextEditingController commissionTypeController;
-  late TextEditingController commissionController;
+  TextEditingController get commissionTypeController =>
+      widget.commissionTypeController;
+  TextEditingController get commissionController => widget.commissionController;
   CommissionTypeEnum? selectedCommissionType;
 
   void _syncCommissionTypeFromFormData(SendMoneyFormData? formData) {
     final type = formData?.commissionType;
     if (type == null) return;
-    if (selectedCommissionType != null) return;
-    if (commissionTypeController.text.trim().isNotEmpty) return;
+
+    final translatedType = type.getCommissionType(context);
+    final hasSameType = selectedCommissionType == type;
+    final hasSameText =
+        commissionTypeController.text.trim() == translatedType.trim();
+    if (hasSameType && hasSameText) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      if (selectedCommissionType == null) {
-        setState(() {
-          selectedCommissionType = type;
-          commissionTypeController.text = type.getCommissionType(context);
-        });
-      }
+      setState(() {
+        selectedCommissionType = type;
+        commissionTypeController.text = translatedType;
+      });
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    commissionTypeController = TextEditingController();
-    commissionController = TextEditingController(text: "3 %");
-  }
-
-  @override
-  void dispose() {
-    commissionTypeController.dispose();
-    commissionController.dispose();
-    super.dispose();
   }
 
   void _onCommissionTypeSelected(CommissionTypeEnum type) {
@@ -95,6 +95,9 @@ class _CommitionCardState extends State<CommitionCard> {
       cubit.updateFormData(
         currentFormData.copyWith(
           commissionType: commissionType,
+          commissionAmount:
+              double.tryParse(commissionController.text.trim()) ??
+              currentFormData.commissionAmount,
         ),
       );
     } catch (e, stackTrace) {
@@ -121,20 +124,26 @@ class _CommitionCardState extends State<CommitionCard> {
 
     if (toCurrencyId == null) return;
 
-    CommissionTypeEnum commissionType = selectedCommissionType ?? CommissionTypeEnum.none;
+    CommissionTypeEnum commissionType =
+        selectedCommissionType ?? CommissionTypeEnum.none;
 
     context.read<GeneralCubit>().getFeeDetails(
-          params: FeeDetailsRequestParams(
-            fromCurrencyId: formData.fromCurrency!.id!,
-            toCurrencyId: toCurrencyId,
-            amount: formData.amount,
-            commissionType: commissionType,
-          ),
-        );
+      params: FeeDetailsRequestParams(
+        fromCurrencyId: formData.fromCurrency!.id!,
+        toCurrencyId: toCurrencyId,
+        amount: formData.amount,
+        commissionType: commissionType,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserModel user = getIt<CacheServices>().getDataFromCache(
+      boxName: CacheBoxes.userModelBox,
+      key: 'user',
+    );
+
     return BlocBuilder<SendMoneyCubit, SendMoneyState>(
       builder: (context, state) {
         _syncCommissionTypeFromFormData(state.formData);
@@ -147,14 +156,15 @@ class _CommitionCardState extends State<CommitionCard> {
                   Expanded(
                     child: CustomTextFieldWithLabel(
                       onTap: () {
-                        setState(() {
-                         
-                        });
+                        setState(() {});
                       },
+                      onChanged: (_) => _updateFormData(),
                       controller: commissionController,
                       label: context.commission,
                       hintText: "\$0.00",
-                      enabled: false,
+                      enabled: user.branch?.commissionCanChange == 1
+                          ? true
+                          : false,
                       prefixWidget: AppAssets.svgsCoinsIcon,
                       isRequired: true,
                     ),

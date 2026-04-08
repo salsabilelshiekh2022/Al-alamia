@@ -38,7 +38,18 @@ class ExternalSendMoneySecoundStepView extends StatefulWidget {
 
 class _ExternalSendMoneySecoundStepViewState
     extends State<ExternalSendMoneySecoundStepView> {
-      final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _commissionController = TextEditingController();
+  final TextEditingController _commissionTypeController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _commissionController.dispose();
+    _commissionTypeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var formData = context.watch<SendMoneyCubit>().state.formData;
@@ -88,38 +99,45 @@ class _ExternalSendMoneySecoundStepViewState
                 12.verticalSizedBox,
                 _progressBar(context),
                 24.verticalSizedBox,
-              ExternalTransactionDetailsCard(),
-              formData?.fromCurrency == null || formData?.toCurrency == null
-                  ? SizedBox()
-                  : formData?.fromCurrency == formData?.toCurrency
-                  ? CommitionCard()
-                  : TotalSection(
-                      fromCurrency: formData!.fromCurrency!,
-                      toCurrency: formData.toCurrency!,
-                      total: formData.amount,
-                      exchangePrice: 0.0,
-                    ).onlyPadding(topPadding: 8),
-              20.verticalSizedBox,
-              NotesCard(),
-              20.verticalSizedBox,
-              FeeDetailsCard(),
-              24.verticalSizedBox,
-              BlocBuilder<SendMoneyCubit, SendMoneyState>(
-                builder: (context, state) {
-                  return MainButton(
-                    title: context.confirm,
-                    // isLoading: state.sendMoneyStatus.isLoading,
-                    onTap: state.sendMoneyStatus.isLoading
-                        ? () {}
-                        : () => _handleConfirm(context),
-                  );
-                },
-              ),
-              32.verticalSizedBox,
-            ],
+                ExternalTransactionDetailsCard(
+                  commissionController: _commissionController,
+                  commissionTypeController: _commissionTypeController,
+                ),
+                formData?.fromCurrency == null || formData?.toCurrency == null
+                    ? SizedBox()
+                    : formData?.fromCurrency == formData?.toCurrency
+                    ? CommitionCard(
+                        commissionController: _commissionController,
+                        commissionTypeController: _commissionTypeController,
+                      )
+                    : TotalSection(
+                        fromCurrency: formData!.fromCurrency!,
+                        toCurrency: formData.toCurrency!,
+                        total: formData.amount,
+                        exchangePrice: 0.0,
+                      ).onlyPadding(topPadding: 8),
+                20.verticalSizedBox,
+                NotesCard(),
+                20.verticalSizedBox,
+                FeeDetailsCard(),
+                24.verticalSizedBox,
+                BlocBuilder<SendMoneyCubit, SendMoneyState>(
+                  builder: (context, state) {
+                    return MainButton(
+                      title: context.confirm,
+                      // isLoading: state.sendMoneyStatus.isLoading,
+                      onTap: state.sendMoneyStatus.isLoading
+                          ? () {}
+                          : () => _handleConfirm(context),
+                    );
+                  },
+                ),
+                32.verticalSizedBox,
+              ],
+            ),
           ),
         ),
-      ),)
+      ),
     );
   }
 

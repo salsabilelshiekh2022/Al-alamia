@@ -114,6 +114,7 @@ class SendMoneyFormData extends Equatable {
     String? note,
     // Commission & Payment
     CommissionTypeEnum? commissionType,
+    double? commissionAmount,
     int? paymentMethodId,
 
     // Delivery Type
@@ -152,6 +153,7 @@ class SendMoneyFormData extends Equatable {
 
       // Commission & Payment
       commissionType: commissionType ?? this.commissionType,
+      commissionAmount: commissionAmount ?? this.commissionAmount,
       paymentMethodId: paymentMethodId ?? this.paymentMethodId,
 
       // Delivery Type
