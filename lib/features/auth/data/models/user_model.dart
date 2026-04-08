@@ -4,7 +4,7 @@ part 'user_model.g.dart';
 class UserModel {
   @HiveField(0)
   String? message;
-  @HiveField(8)
+
   String? token;
   @HiveField(1)
   int? userId;

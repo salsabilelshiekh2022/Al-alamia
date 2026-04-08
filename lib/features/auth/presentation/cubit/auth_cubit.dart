@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/database/cache/app_cache_helper.dart';
 import '../../../../core/database/cache/cache_helper.dart';
 import '../../../../core/database/cache/cache_services.dart';
 import '../../../../core/enums/request_status.dart';
@@ -37,6 +38,10 @@ class AuthCubit extends Cubit<AuthState> {
           boxName: CacheBoxes.userModelBox,
           key: 'user',
           data: userModel,
+        );
+         AppCacheHelper().saveValue(
+          CacheKeys.token,
+          userModel.token!,
         );
 
         emit(state.copyWith(authStatus: RequestStatus.success));

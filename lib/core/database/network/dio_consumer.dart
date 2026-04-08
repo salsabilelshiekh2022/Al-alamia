@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alalamia/core/database/cache/app_cache_helper.dart';
 import 'package:alalamia/core/database/network/end_points.dart';
 import 'package:alalamia/core/database/network/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -63,7 +64,10 @@ class DioConsumer extends ApiConsumer {
       boxName: CacheBoxes.userModelBox,
       key: 'user',
     );
-   final token = user?.token ?? '';
+  // final token = user?.token ?? '';
+   String token = await AppCacheHelper().readValue<String>(
+            CacheKeys.token,
+          ) ?? '';
    
     final locale =
         EasyLocalization.of(
