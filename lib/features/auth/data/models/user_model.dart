@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 part 'user_model.g.dart';
+
 @HiveType(typeId: 1)
 class UserModel {
   @HiveField(0)
@@ -9,19 +10,16 @@ class UserModel {
   @HiveField(1)
   int? userId;
   @HiveField(2)
-    String? userName;
-    @HiveField(3)
+  String? userName;
+  @HiveField(3)
   String? userEmail;
   @HiveField(4)
   String? userPhone;
   @HiveField(5)
-
   String? userSalary;
   @HiveField(6)
-
   String? userImage;
   @HiveField(7)
-
   Branch? branch;
   @HiveField(9)
   String? rewarded;
@@ -64,16 +62,29 @@ class Branch {
   @HiveField(1)
   String? name;
   @HiveField(2)
-  int?transferFee;
+  int? transferFee;
   @HiveField(3)
   String? commissionRatePercentage;
+  @HiveField(4)
+  int? commissionCanChange;
+  @HiveField(5)
+  int? noCommission;
 
-  Branch({required this.id, required this.name, required this.transferFee, required this.commissionRatePercentage});
+  Branch({
+    required this.id,
+    required this.name,
+    required this.transferFee,
+    required this.commissionRatePercentage,
+    required this.commissionCanChange,
+    required this.noCommission,
+  });
 
   Branch.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     transferFee = json['transfer_fee'];
     commissionRatePercentage = json['commission_rate_percentage'];
+    commissionCanChange = json['commission_can_change'];
+    noCommission = json['no_commission'];
   }
 }

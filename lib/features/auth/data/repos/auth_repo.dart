@@ -14,4 +14,5 @@ abstract class AuthRepo {
   Future<Either<Failure, String>> sendCodeOtp({required SendCodeRequestParams sendCodeRequestParams});
   Future<Either<Failure, String>> verifyCodeOtp({required VerifyCodeRequestParams verifyCodeRequestParams});
   Future<Either<Failure, String>> resetPassword({required ResetPassRequestParams resetPassRequestParams});
+  Future<Either<Failure, UserModel>> getProfile();
 }

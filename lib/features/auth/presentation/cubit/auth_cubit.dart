@@ -7,7 +7,8 @@ import '../../../../core/database/cache/app_cache_helper.dart';
 import '../../../../core/database/cache/cache_helper.dart';
 import '../../../../core/database/cache/cache_services.dart';
 import '../../../../core/enums/request_status.dart';
-import '../../data/models/change_pass_request_model.dart' show ChangePassRequestModel;
+import '../../data/models/change_pass_request_model.dart'
+    show ChangePassRequestModel;
 import '../../data/models/login_request_params.dart';
 import '../../data/models/reset_pass_request_params.dart';
 import '../../data/models/send_code_request_params.dart';
@@ -16,6 +17,7 @@ import '../../data/models/verify_code_request_params.dart';
 import '../../data/repos/auth_repo.dart';
 
 part 'auth_state.dart';
+
 @injectable
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit({required AuthRepo authRepo})
@@ -30,7 +32,7 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) => emit(
         state.copyWith(
           authStatus: RequestStatus.error,
-         message: failure.message,
+          message: failure.message,
         ),
       ),
       (userModel) async {
@@ -39,49 +41,111 @@ class AuthCubit extends Cubit<AuthState> {
           key: 'user',
           data: userModel,
         );
-         AppCacheHelper().saveValue(
-          CacheKeys.token,
-          userModel.token!,
-        );
+        AppCacheHelper().saveValue(CacheKeys.token, userModel.token!);
 
         emit(state.copyWith(authStatus: RequestStatus.success));
       },
     );
   }
 
-  Future<void> changePassword ({required ChangePassRequestModel changePassRequestModel}) async {
+  Future<void> changePassword({
+    required ChangePassRequestModel changePassRequestModel,
+  }) async {
     emit(state.copyWith(authStatus: RequestStatus.loading));
-    final result = await _repo.changePassword(changePassRequestModel: changePassRequestModel);
+    final result = await _repo.changePassword(
+      changePassRequestModel: changePassRequestModel,
+    );
     result.fold(
-      (failure) => emit(state.copyWith(authStatus: RequestStatus.error, message: failure.message)),
-      (message) => emit(state.copyWith(authStatus: RequestStatus.success , message: message)),
+      (failure) => emit(
+        state.copyWith(
+          authStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (message) => emit(
+        state.copyWith(authStatus: RequestStatus.success, message: message),
+      ),
     );
   }
 
-  Future<void> resetPassword ({required ResetPassRequestParams resetPassRequestParams}) async {
+  Future<void> resetPassword({
+    required ResetPassRequestParams resetPassRequestParams,
+  }) async {
     emit(state.copyWith(authStatus: RequestStatus.loading));
-    final result = await _repo.resetPassword(resetPassRequestParams: resetPassRequestParams);
+    final result = await _repo.resetPassword(
+      resetPassRequestParams: resetPassRequestParams,
+    );
     result.fold(
-      (failure) => emit(state.copyWith(authStatus: RequestStatus.error, message: failure.message)),
-      (message) => emit(state.copyWith(authStatus: RequestStatus.success , message: message)),
+      (failure) => emit(
+        state.copyWith(
+          authStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (message) => emit(
+        state.copyWith(authStatus: RequestStatus.success, message: message),
+      ),
     );
   }
 
-  Future<void> sendCodeOtp ({required SendCodeRequestParams sendCodeRequestParams}) async {
+  Future<void> sendCodeOtp({
+    required SendCodeRequestParams sendCodeRequestParams,
+  }) async {
     emit(state.copyWith(authStatus: RequestStatus.loading));
-    final result = await _repo.sendCodeOtp(sendCodeRequestParams: sendCodeRequestParams);
+    final result = await _repo.sendCodeOtp(
+      sendCodeRequestParams: sendCodeRequestParams,
+    );
     result.fold(
-      (failure) => emit(state.copyWith(authStatus: RequestStatus.error, message: failure.message)),
-      (message) => emit(state.copyWith(authStatus: RequestStatus.success , message: message)),
+      (failure) => emit(
+        state.copyWith(
+          authStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (message) => emit(
+        state.copyWith(authStatus: RequestStatus.success, message: message),
+      ),
     );
   }
 
-  Future<void> verifyCodeOtp ({required VerifyCodeRequestParams verifyCodeRequestParams}) async {
+  Future<void> verifyCodeOtp({
+    required VerifyCodeRequestParams verifyCodeRequestParams,
+  }) async {
     emit(state.copyWith(authStatus: RequestStatus.loading));
-    final result = await _repo.verifyCodeOtp(verifyCodeRequestParams: verifyCodeRequestParams);
+    final result = await _repo.verifyCodeOtp(
+      verifyCodeRequestParams: verifyCodeRequestParams,
+    );
     result.fold(
-      (failure) => emit(state.copyWith(authStatus: RequestStatus.error, message: failure.message)),
-      (message) => emit(state.copyWith(authStatus: RequestStatus.success , message: message)),
+      (failure) => emit(
+        state.copyWith(
+          authStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (message) => emit(
+        state.copyWith(authStatus: RequestStatus.success, message: message),
+      ),
+    );
+  }
+
+  Future<void> getProfile() async {
+    emit(state.copyWith(authStatus: RequestStatus.loading));
+    final result = await _repo.getProfile();
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          authStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (userModel) async {
+        await getIt<CacheServices>().storeData<UserModel>(
+          boxName: CacheBoxes.userModelBox,
+          key: 'user',
+          data: userModel,
+        );
+        emit(state.copyWith(authStatus: RequestStatus.success));
+      },
     );
   }
 }

@@ -60,4 +60,5 @@ class EndPoints {
   static String resetPassword = '/employee/auth/reset-password';
   static String toggleNotifications = '/employee/auth/toggle-notifications';
   static String getAllExpensesTypes = "/employee/general/get-all-expenses";
+  static String getProfile = '/employee/auth/profile';
 }

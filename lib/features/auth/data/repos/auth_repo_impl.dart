@@ -22,15 +22,16 @@ class AuthRepoImpl extends AuthRepo {
     required LoginRequestParams loginRequestParams,
   }) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.post(path: EndPoints.login,
-          data: loginRequestParams.toJson()),
+      request: () => apiConsumer.post(
+        path: EndPoints.login,
+        data: loginRequestParams.toJson(),
+      ),
       onSuccess: (result) {
-        
         return UserModel.fromJson(result);
       },
     );
   }
-  
+
   @override
   Future<Either<Failure, String>> changePassword({
     required ChangePassRequestModel changePassRequestModel,
@@ -38,7 +39,7 @@ class AuthRepoImpl extends AuthRepo {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.post(
         path: EndPoints.changePassword,
-        data: changePassRequestModel.toJson(), 
+        data: changePassRequestModel.toJson(),
       ),
       onSuccess: (result) {
         return result['message'] ?? 'Success';
@@ -47,8 +48,9 @@ class AuthRepoImpl extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, String>> resetPassword({required ResetPassRequestParams resetPassRequestParams}) {
-   
+  Future<Either<Failure, String>> resetPassword({
+    required ResetPassRequestParams resetPassRequestParams,
+  }) {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.post(
         path: EndPoints.resetPassword,
@@ -61,7 +63,9 @@ class AuthRepoImpl extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, String>> sendCodeOtp({required SendCodeRequestParams sendCodeRequestParams}) {
+  Future<Either<Failure, String>> sendCodeOtp({
+    required SendCodeRequestParams sendCodeRequestParams,
+  }) {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.post(
         path: EndPoints.sendOtp,
@@ -74,7 +78,9 @@ class AuthRepoImpl extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, String>> verifyCodeOtp({required VerifyCodeRequestParams verifyCodeRequestParams}) {
+  Future<Either<Failure, String>> verifyCodeOtp({
+    required VerifyCodeRequestParams verifyCodeRequestParams,
+  }) {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.post(
         path: EndPoints.verifyOtp,
@@ -82,6 +88,16 @@ class AuthRepoImpl extends AuthRepo {
       ),
       onSuccess: (result) {
         return result['message'] ?? 'Success';
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, UserModel>> getProfile() {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getProfile),
+      onSuccess: (result) {
+        return UserModel.fromJson(result);
       },
     );
   }
