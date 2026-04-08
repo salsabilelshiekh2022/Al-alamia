@@ -398,8 +398,17 @@ class _ExternalTransactionDetailsCardState
   }
 
   void _onAmountChanged(String value) {
+    final amountText = value.trim();
+    if (amountText.isEmpty) {
+      converterAmountController.text = "0.00";
+      commissionController.text = "0.00";
+      _updateFormData();
+      context.read<GeneralCubit>().clearFeeDetails();
+      return;
+    }
+
     final homeState = context.read<HomeCubit>().state;
-    final double amount = double.tryParse(value) ?? 0;
+    final double amount = double.tryParse(amountText) ?? 0;
     final num exchangeRate = homeState.transferCurrencyStatus.isSuccess
         ? homeState.transferCurrency?.exchangePriceUsed ?? 0
         : 0;
@@ -490,13 +499,19 @@ class _ExternalTransactionDetailsCardState
   }
 
   void _getFeeDetails() {
-    if (amountController.text.isEmpty || selectedCurrencyId == null) {
+    final amountText = amountController.text.trim();
+    if (amountText.isEmpty ||
+        selectedCurrencyId == null ||
+        selectedToCurrencyId == null) {
+      context.read<GeneralCubit>().clearFeeDetails();
       return;
     }
 
-    int? toCurrencyId = selectedToCurrencyId;
-
-    if (toCurrencyId == null) return;
+    final amountValue = num.tryParse(amountText);
+    if (amountValue == null || amountValue <= 0) {
+      context.read<GeneralCubit>().clearFeeDetails();
+      return;
+    }
 
     final formData = context.read<SendMoneyCubit>().state.formData;
     CommissionTypeEnum commissionType =
@@ -505,8 +520,8 @@ class _ExternalTransactionDetailsCardState
     context.read<GeneralCubit>().getFeeDetails(
       params: FeeDetailsRequestParams(
         fromCurrencyId: selectedCurrencyId!,
-        toCurrencyId: toCurrencyId,
-        amount: amountController.text,
+        toCurrencyId: selectedToCurrencyId!,
+        amount: amountText,
         commissionType: commissionType,
       ),
     );

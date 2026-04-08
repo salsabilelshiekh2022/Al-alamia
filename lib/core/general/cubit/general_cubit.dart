@@ -10,6 +10,7 @@ import 'general_state.dart';
 class GeneralCubit extends Cubit<GeneralState> {
   GeneralCubit({required this.generalRepo}) : super(GeneralState.initial());
   final GeneralRepo generalRepo;
+  int _latestFeeDetailsRequestId = 0;
 
   Future<void> getUserByPhone({required String phone}) async {
     emit(state.copyWith(getUserByPhoneStatus: RequestStatus.loading));
@@ -27,18 +28,39 @@ class GeneralCubit extends Cubit<GeneralState> {
   }
 
   Future<void> getFeeDetails({required FeeDetailsRequestParams params}) async {
+    final requestId = ++_latestFeeDetailsRequestId;
     emit(state.copyWith(getFeeDetailsStatus: RequestStatus.loading));
     final result = await generalRepo.getFeeDetails(
       feeDetailsRequestParams: params,
     );
+
+    // Ignore stale responses when a newer fee-details request exists.
+    if (requestId != _latestFeeDetailsRequestId) {
+      return;
+    }
+
     result.fold(
-      (failure) =>
-          emit(state.copyWith(getFeeDetailsStatus: RequestStatus.error)),
+      (failure) => emit(
+        state.copyWith(
+          getFeeDetailsStatus: RequestStatus.error,
+          clearFeeDetails: true,
+        ),
+      ),
       (feeDetails) => emit(
         state.copyWith(
           getFeeDetailsStatus: RequestStatus.success,
           feeDetails: feeDetails,
         ),
+      ),
+    );
+  }
+
+  void clearFeeDetails() {
+    _latestFeeDetailsRequestId++;
+    emit(
+      state.copyWith(
+        getFeeDetailsStatus: RequestStatus.initial,
+        clearFeeDetails: true,
       ),
     );
   }

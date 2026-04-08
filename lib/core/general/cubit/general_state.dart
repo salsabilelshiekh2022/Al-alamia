@@ -38,7 +38,7 @@ class GeneralState extends Equatable {
     this.branches,
     this.paymentMethods,
     this.selectedBranchId,
-  this.expensesTypes,
+    this.expensesTypes,
   });
 
   GeneralState copyWith({
@@ -49,6 +49,7 @@ class GeneralState extends Equatable {
     RequestStatus? getPaymentMethodsStatus,
     UserByPhoneModel? userByPhone,
     FeeDetailsModel? feeDetails,
+    bool clearFeeDetails = false,
     List<DenominationModel?>? denominations,
     List<BranchModel?>? branches,
     List<PaymentMethodModel?>? paymentMethods,
@@ -64,7 +65,7 @@ class GeneralState extends Equatable {
       getAllDenominationsStatus:
           getAllDenominationsStatus ?? this.getAllDenominationsStatus,
       userByPhone: userByPhone ?? this.userByPhone,
-      feeDetails: feeDetails ?? this.feeDetails,
+      feeDetails: clearFeeDetails ? null : feeDetails ?? this.feeDetails,
       denominations: denominations ?? this.denominations,
       branches: branches ?? this.branches,
       paymentMethods: paymentMethods ?? this.paymentMethods,

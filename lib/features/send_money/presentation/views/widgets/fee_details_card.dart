@@ -4,6 +4,7 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,10 @@ class FeeDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GeneralCubit, GeneralState>(
       builder: (context, state) {
+        final formData = context.watch<SendMoneyCubit>().state.formData;
+        final commissionAmount =
+            state.feeDetails?.commissionAmount ?? formData?.commissionAmount;
+
         return CardWithPurpleShadow(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,18 +38,14 @@ class FeeDetailsCard extends StatelessWidget {
               _buildInfo(
                 context,
                 title: context.commission,
-                value: state.feeDetails?.commissionAmount?.toString() ?? "0.00",
+                value: commissionAmount?.toString() ?? "0.00",
               ),
-             _buildInfo(
-                    context,
-                    title: context.exchangeRate,
-                    value:
-                       state.feeDetails?.exchangePrice?.toString()
-                             ??
-                        "0.00",
-                  ),
-                
-              
+              _buildInfo(
+                context,
+                title: context.exchangeRate,
+                value: state.feeDetails?.exchangePrice?.toString() ?? "0.00",
+              ),
+
               Divider(color: context.colors.grayColor.withValues(alpha: 0.35)),
               12.verticalSizedBox,
               Container(
