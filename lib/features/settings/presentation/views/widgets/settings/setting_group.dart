@@ -1,6 +1,5 @@
 import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
-import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
