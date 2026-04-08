@@ -7,9 +7,28 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:486759824037:android:b8c2d023d6995247e4eb4c",
+        "mobilesdk_app_id": "1:486759824037:android:adb80293733e1819e4eb4c",
         "android_client_info": {
           "package_name": "com.app.alalamia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy9on0h4s1hOKd60gt0gRqJTkr_vhFu8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486759824037:android:b8c2d023d6995247e4eb4c",
+        "android_client_info": {
+          "package_name": "com.example.alalamia"
         }
       },
       "oauth_client": [],

@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDy9on0h4s1hOKd60gt0gRqJTkr_vhFu8Q',
-    appId: '1:486759824037:android:b8c2d023d6995247e4eb4c',
+    appId: '1:486759824037:android:adb80293733e1819e4eb4c',
     messagingSenderId: '486759824037',
     projectId: 'al-alamia-af2d9',
     storageBucket: 'al-alamia-af2d9.firebasestorage.app',
@@ -60,7 +60,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBfMgFQSmHTb4m_DUpFkQsRZGLcM8dLVXI',
-    appId: '1:486759824037:ios:84f4270fc7d11c1ce4eb4c',
+    appId: '1:486759824037:ios:8a873cc6a2e3c658e4eb4c',
     messagingSenderId: '486759824037',
     projectId: 'al-alamia-af2d9',
     storageBucket: 'al-alamia-af2d9.firebasestorage.app',
@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBfMgFQSmHTb4m_DUpFkQsRZGLcM8dLVXI',
-    appId: '1:486759824037:ios:84f4270fc7d11c1ce4eb4c',
+    appId: '1:486759824037:ios:8a873cc6a2e3c658e4eb4c',
     messagingSenderId: '486759824037',
     projectId: 'al-alamia-af2d9',
     storageBucket: 'al-alamia-af2d9.firebasestorage.app',
@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'al-alamia-af2d9.firebasestorage.app',
     measurementId: 'G-QE84PJP232',
   );
+
 }

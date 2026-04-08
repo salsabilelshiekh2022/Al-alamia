@@ -100,7 +100,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
 
   void _onExpensesTypeSelected(ExpensesTypeModel type) {
     setState(() {
-      purposeController.text = type.name ?? '';
+      purposeController.text = type.name ;
       selectedExpensesTypeId = type.id;
     });
   }
