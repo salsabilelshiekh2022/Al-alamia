@@ -84,10 +84,13 @@ abstract class AppRouter {
         final initialData = settings.arguments as TransferMoneyDataParams?;
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
-            value: getIt<HomeCubit>(),
+            value: getIt<SendMoneyCubit>(),
             child: BlocProvider.value(
-              value: getIt<GeneralCubit>(),
-              child: TransferMoneyView(initialData: initialData),
+              value: getIt<HomeCubit>(),
+              child: BlocProvider.value(
+                value: getIt<GeneralCubit>(),
+                child: TransferMoneyView(initialData: initialData),
+              ),
             ),
           ),
         );
