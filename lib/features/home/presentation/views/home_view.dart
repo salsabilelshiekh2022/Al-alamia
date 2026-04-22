@@ -6,11 +6,13 @@ import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/core/routes/routes.dart';
 import 'package:alalamia/features/auth/data/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../core/database/cache/cache_helper.dart';
 import '../../../../core/database/cache/cache_services.dart';
 import '../../../../generated/app_assets.dart';
+import '../cubit/home_cubit.dart';
 import 'widgets/calculator/currency_calculator_section.dart';
 import 'widgets/debts_and_expenses_section.dart';
 import 'widgets/main_actions_box.dart';
@@ -21,61 +23,67 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Image.asset(
-            AppAssets.imagesBackground,
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
-          ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHomeAppBar(
-                  context,
-                ).horizontalPadding(16).onlyPadding(topPadding: 16),
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 50),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 35,
-                      ),
-                      width: double.infinity,
-                      constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height - 130.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color(0xfff5f7f9),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24),
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<HomeCubit>().getBranchCurrencies();
+      },
+
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Image.asset(
+              AppAssets.imagesBackground,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHomeAppBar(
+                    context,
+                  ).horizontalPadding(16).onlyPadding(topPadding: 16),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 50),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 35,
+                        ),
+                        width: double.infinity,
+                        constraints: BoxConstraints(
+                          minHeight: MediaQuery.of(context).size.height - 130.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color(0xfff5f7f9),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(24),
+                            topRight: Radius.circular(24),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            25.verticalSizedBox,
+                            WalletsSections(),
+                            20.verticalSizedBox,
+                            DebtsAndExpensesSection(),
+                            20.verticalSizedBox,
+                            CurrencyCalculatorSection(),
+                            120.verticalSizedBox,
+                          ],
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          25.verticalSizedBox,
-                          WalletsSections(),
-                          20.verticalSizedBox,
-                          DebtsAndExpensesSection(),
-                          20.verticalSizedBox,
-                          CurrencyCalculatorSection(),
-                          120.verticalSizedBox,
-                        ],
-                      ),
-                    ),
-                    MainActionsBox(),
-                  ],
-                ),
-              ],
+                      MainActionsBox(),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
