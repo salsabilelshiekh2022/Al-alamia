@@ -1,5 +1,6 @@
 import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
+import 'package:alalamia/generated/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -146,12 +147,11 @@ class _NotificationToggleAction extends StatelessWidget {
             //   ),
             // ),
             // 6.horizontalSpace,
-            Icon(
-              state.isEnabled ? Icons.toggle_on : Icons.toggle_off,
-              size: 40,
-              color: state.isEnabled
-                  ? context.colors.greenColor
-                  : context.colors.grayColor,
+            Image.asset(
+              state.isEnabled ? AppAssets.imagesToggleOn : AppAssets.imagesToggleOff,
+              width: 40,
+              height: 22,
+              
             ),
           ],
         );

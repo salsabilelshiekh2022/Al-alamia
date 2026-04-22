@@ -46,6 +46,10 @@ class AppAssets {
 
   static const String imagesSuccess = "assets/images/success.png";
 
+  static const String imagesToggleOff = "assets/images/toggle_off.png";
+
+  static const String imagesToggleOn = "assets/images/toggle_on.png";
+
   static const String svgsAdditionalPhoneIcon = "assets/svgs/additional_phone_icon.svg";
 
   static const String svgsArabicFlag = "assets/svgs/arabic_flag.svg";
