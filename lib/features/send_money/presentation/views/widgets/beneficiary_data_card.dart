@@ -7,6 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/components/widgets/card_with_purple_shadow.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
+import '../../../../../core/enums/request_status.dart';
+import '../../../../../core/general/cubit/general_cubit.dart';
+import '../../../../../core/general/cubit/general_state.dart';
 import '../../../../../generated/app_assets.dart';
 import '../../../data/models/send_money_form_data.dart';
 import '../../cubit/send_money_cubit.dart';
@@ -74,65 +77,77 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
 
   @override
   Widget build(BuildContext context) {
-    return CardWithPurpleShadow(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            context.beneficiary,
-            style: context.textStyles.font16SemiBoldSecondaryColor,
-          ),
-          12.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: nameController,
-            label: context.name,
-            hintText: context.fullNameHint,
-            prefixWidget: AppAssets.svgsUser,
-            isRequired: true,
-            validator: (value) => Validator.validateName(value, context),
-            onChanged: (_) => _updateFormData(),
-          ),
-          16.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: phoneController,
-            label: context.phone,
-            hintText: context.phoneHint,
-            prefixWidget: AppAssets.svgsPhone,
-            keyboardType: TextInputType.phone,
-            isRequired: true,
-            validator: (value) => Validator.validatePhone(value, context),
-            onChanged: (_) => _updateFormData(),
-          ),
-          16.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: whatsAppController,
-            label: "رقم الواتساب",
-            hintText: "ادخل رقم الواتساب",
-            prefixWidget: AppAssets.svgsPhone,
-            keyboardType: TextInputType.phone,
-            isRequired: true,
-            validator: (value) => Validator.validatePhone(value, context),
-            onChanged: (_) => _updateFormData(),
-          ),
-          16.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: additionalController,
-            label: context.additionalNumber,
-            hintText: context.additionalNumberHint,
-            prefixWidget: AppAssets.svgsAdditionalPhoneIcon,
-            keyboardType: TextInputType.phone,
-            onChanged: (_) => _updateFormData(),
-          ),
-          16.verticalSizedBox,
-          CustomTextFieldWithLabel(
-            controller: addressController,
-            label: context.address,
-            hintText: context.addressHint,
-            prefixWidget: AppAssets.svgsMapIcon,
+    return BlocListener<GeneralCubit, GeneralState>(
+      listener: (context, state) {
+        if (state.getUserByPhoneStatus.isSuccess) {
+          nameController.text = state.userByPhone?.name ?? '';
+          additionalController.text = state.userByPhone?.phone2 ?? '';
+          addressController.text = state.userByPhone?.address ?? '';
+        }
+      },
+      child: CardWithPurpleShadow(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.beneficiary,
+              style: context.textStyles.font16SemiBoldSecondaryColor,
+            ),
+            12.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              controller: phoneController,
+              label: context.phone,
+              hintText: context.phoneHint,
+              prefixWidget: AppAssets.svgsPhone,
+              keyboardType: TextInputType.phone,
+              isRequired: true,
+              validator: (value) => Validator.validatePhone(value, context),
+              onChanged: (val) {
+                context.read<GeneralCubit>().getUserByPhone(phone: val.trim());
+                _updateFormData();
+              },
+            ),
+            16.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              controller: nameController,
+              label: context.name,
+              hintText: context.fullNameHint,
+              prefixWidget: AppAssets.svgsUser,
+              isRequired: true,
+              validator: (value) => Validator.validateName(value, context),
+              onChanged: (_) => _updateFormData(),
+            ),
+            16.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              controller: whatsAppController,
+              label: "رقم الواتساب",
+              hintText: "ادخل رقم الواتساب",
+              prefixWidget: AppAssets.svgsPhone,
+              keyboardType: TextInputType.phone,
+              isRequired: true,
+              validator: (value) => Validator.validatePhone(value, context),
+              onChanged: (_) => _updateFormData(),
+            ),
+            16.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              controller: additionalController,
+              label: context.additionalNumber,
+              hintText: context.additionalNumberHint,
+              prefixWidget: AppAssets.svgsAdditionalPhoneIcon,
+              keyboardType: TextInputType.phone,
+              onChanged: (_) => _updateFormData(),
+            ),
+            16.verticalSizedBox,
+            CustomTextFieldWithLabel(
+              controller: addressController,
+              label: context.address,
+              hintText: context.addressHint,
+              prefixWidget: AppAssets.svgsMapIcon,
 
-            onChanged: (_) => _updateFormData(),
-          ),
-        ],
+              onChanged: (_) => _updateFormData(),
+            ),
+          ],
+        ),
       ),
     );
   }
