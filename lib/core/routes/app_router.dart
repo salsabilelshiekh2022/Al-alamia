@@ -72,10 +72,20 @@ abstract class AppRouter {
       case Routes.transactionsView:
         return MaterialPageRoute(builder: (_) => const TransactionsView());
       case Routes.transactionDetailsView:
-        final id = settings.arguments as int;
+        final args = settings.arguments;
+        int id;
+        TransactionsCubit? cubit;
+
+        if (args is Map<String, dynamic>) {
+          id = args['id'] as int;
+          cubit = args['transactionsCubit'] as TransactionsCubit?;
+        } else {
+          id = args as int;
+        }
+
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
-            value: getIt<TransactionsCubit>(),
+            value: cubit ?? getIt<TransactionsCubit>(),
             child: TransactionsDetailsView(id),
           ),
         );

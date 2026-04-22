@@ -443,157 +443,164 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
               );
             }
           },
-          child: Scaffold(
-            body: Stack(
-              children: [
-                Image.asset(
-                  AppAssets.imagesBackground,
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                SingleChildScrollView(
-                  child: BlocBuilder<TransactionsCubit, TransactionsState>(
-                    builder: (context, state) {
-                      final transaction = state.transactionDetails;
-                      final canCancel = transaction != null &&
-                          _canCancelTransaction(transaction);
-                      final canPayBack = transaction != null &&
-                          _canPayBackTransaction(transaction);
-                      final showReceivingButton =
-                          transaction?.recievingBranch == true &&
-                          transaction?.details.status == StatusEnum.pending;
-
-                      return Column(
-                        children: [
-                      // Custom AppBar with Copy button
-                      AppBar(
-                        title: Text(
-                          context.transactions,
-                          style: context.textStyles.font18SemiBoldWhiteColor,
-                        ),
-                        leading: const CustomBackButton(),
-                        actions: [
-                          if (state.transactionDetails != null &&
-                              _canEditTransaction(state.transactionDetails!))
-                            IconButton(
-                              icon: const Icon(
-                                Icons.edit_rounded,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                              onPressed: () => _handleEditTransaction(
-                                context,
-                                state.transactionDetails!,
-                              ),
-                            ),
-                          if (state.transactionDetails != null)
-                            IconButton(
-                              icon: const Icon(
-                                Icons.copy_rounded,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                              onPressed: () => _handleCopyTransaction(
-                                context,
-                                state.transactionDetails!,
-                              ),
-                            ),
-                        ],
-                        centerTitle: true,
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                      ).onlyPadding(bottomPadding: 24),
-
-                      Skeletonizer(
-                        enabled:
-                            state.transactionDetailsStatus ==
-                            RequestStatus.loading,
-                        child: Stack(
-                          clipBehavior: Clip.none,
+          child: PopScope(
+            canPop: true,
+            onPopInvokedWithResult: (bool didPop, dynamic result) {
+              if (!didPop) return;
+              context.read<TransactionsCubit>().refreshTransactions();
+            },
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  Image.asset(
+                    AppAssets.imagesBackground,
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  SingleChildScrollView(
+                    child: BlocBuilder<TransactionsCubit, TransactionsState>(
+                      builder: (context, state) {
+                        final transaction = state.transactionDetails;
+                        final canCancel = transaction != null &&
+                            _canCancelTransaction(transaction);
+                        final canPayBack = transaction != null &&
+                            _canPayBackTransaction(transaction);
+                        final showReceivingButton =
+                            transaction?.recievingBranch == true &&
+                            transaction?.details.status == StatusEnum.in_progress;
+            
+                        return Column(
                           children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 25),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 35,
-                              ),
-                              width: double.infinity,
-                              constraints: BoxConstraints(
-                                minHeight:
-                                    MediaQuery.of(context).size.height - 130.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.colors.backgroundColor,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(24),
-                                  topRight: Radius.circular(24),
+                        // Custom AppBar with Copy button
+                        AppBar(
+                          title: Text(
+                            context.transactions,
+                            style: context.textStyles.font18SemiBoldWhiteColor,
+                          ),
+                          leading: const CustomBackButton(),
+                          actions: [
+                            if (state.transactionDetails != null &&
+                                _canEditTransaction(state.transactionDetails!))
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit_rounded,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                                onPressed: () => _handleEditTransaction(
+                                  context,
+                                  state.transactionDetails!,
                                 ),
                               ),
-                              child: Column(
-                                children: [
-                                  25.verticalSizedBox,
-                                  TransferredAmountInfoWidget(),
-                                  20.verticalSizedBox,
-                                  SenderInfoCard(),
-                                  20.verticalSizedBox,
-                                  BeneficiaryInfoCard(),
-                                  20.verticalSizedBox,
-                                  TransactionInfoCard(),
-                                  32.verticalSizedBox,
-                                  Column(
-                                    children: [
-                                      showReceivingButton
-                                          ? recivingButton()
-                                          : MainButton(
-                                              title: context.printReceipt,
-                                              onTap: () => _launchUrl(
-                                                state.transactionDetails?.pdfUrl ??
-                                                    '',
-                                              ),
-                                            ),
-                                      if (canCancel) ...[
-                                        12.verticalSizedBox,
-                                        MainButton(
-                                          title: context.cancle,
-                                          color: context.colors.redColor,
-                                          onTap: () =>
-                                              _showCancelConfirmation(context),
-                                        ),
-                                      ],
-                                      if (canPayBack) ...[
-                                        12.verticalSizedBox,
-                                        MainButton(
-                                          title: context.payBackTransactionLabel,
-                                          color: context.colors.redColor,
-                                          onTap: () =>
-                                              _showPayBackConfirmation(context),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ],
+                            if (state.transactionDetails != null)
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.copy_rounded,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                                onPressed: () => _handleCopyTransaction(
+                                  context,
+                                  state.transactionDetails!,
+                                ),
                               ),
-                            ),
-                            PositionedDirectional(
-                              top: -10,
-                              start: 16,
-                              end: 16,
-                              child: StatusBox(
-                                status:
-                                    state.transactionDetails?.details.status ??
-                                    StatusEnum.pending,
-                              ),
-                            ),
                           ],
+                          centerTitle: true,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ).onlyPadding(bottomPadding: 24),
+            
+                        Skeletonizer(
+                          enabled:
+                              state.transactionDetailsStatus ==
+                              RequestStatus.loading,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(top: 25),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 35,
+                                ),
+                                width: double.infinity,
+                                constraints: BoxConstraints(
+                                  minHeight:
+                                      MediaQuery.of(context).size.height - 130.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.colors.backgroundColor,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(24),
+                                    topRight: Radius.circular(24),
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    25.verticalSizedBox,
+                                    TransferredAmountInfoWidget(),
+                                    20.verticalSizedBox,
+                                    SenderInfoCard(),
+                                    20.verticalSizedBox,
+                                    BeneficiaryInfoCard(),
+                                    20.verticalSizedBox,
+                                    TransactionInfoCard(),
+                                    32.verticalSizedBox,
+                                    Column(
+                                      children: [
+                                        showReceivingButton
+                                            ? recivingButton()
+                                            : MainButton(
+                                                title: context.printReceipt,
+                                                onTap: () => _launchUrl(
+                                                  state.transactionDetails?.pdfUrl ??
+                                                      '',
+                                                ),
+                                              ),
+                                        if (canCancel) ...[
+                                          12.verticalSizedBox,
+                                          MainButton(
+                                            title: context.cancle,
+                                            color: context.colors.redColor,
+                                            onTap: () =>
+                                                _showCancelConfirmation(context),
+                                          ),
+                                        ],
+                                        if (canPayBack) ...[
+                                          12.verticalSizedBox,
+                                          MainButton(
+                                            title: context.payBackTransactionLabel,
+                                            color: context.colors.redColor,
+                                            onTap: () =>
+                                                _showPayBackConfirmation(context),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              PositionedDirectional(
+                                top: -10,
+                                start: 16,
+                                end: 16,
+                                child: StatusBox(
+                                  status:
+                                      state.transactionDetails?.details.status ??
+                                      StatusEnum.pending,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                      );
-                    },
+                      ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

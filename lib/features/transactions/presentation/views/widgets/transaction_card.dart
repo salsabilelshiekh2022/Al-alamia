@@ -2,9 +2,11 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/transactions/data/models/transaction_model.dart';
+import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
 import 'package:alalamia/features/transactions/presentation/views/widgets/transaction_From_to.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/components/widgets/card_with_gray_border.dart';
@@ -18,7 +20,13 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.pushNamed(Routes.transactionDetailsView, arguments: transactionModel.id),
+      onTap: () => context.pushNamed(
+        Routes.transactionDetailsView,
+        arguments: {
+          'id': transactionModel.id,
+          'transactionsCubit': context.read<TransactionsCubit>(),
+        },
+      ),
       child: CardWithGrayBorder(
         child: Column(
           children: [
