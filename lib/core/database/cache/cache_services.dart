@@ -11,7 +11,7 @@ class CacheServices {
     Hive.box(boxName).put(key, data);
   }
 
-  clear(String boxName) {
-    Hive.box(boxName).clear();
+  Future<void> clear(String boxName) async {
+    await Hive.box(boxName).clear();
   }
 }

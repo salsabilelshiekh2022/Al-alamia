@@ -6,6 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/components/widgets/custom_svg_builder.dart';
 import '../../../../../../core/components/widgets/main_button.dart';
+import '../../../../../../core/database/cache/app_cache_helper.dart';
+import '../../../../../../core/database/cache/cache_helper.dart';
+import '../../../../../../core/database/cache/cache_services.dart';
+import '../../../../../../core/di/dependency_injection.dart';
 import '../../../../../../core/routes/routes.dart';
 import '../../../../../../generated/app_assets.dart';
 
@@ -72,7 +76,9 @@ class LogoutSection extends StatelessWidget {
               Expanded(
                 child: MainButton(
                   title: context.confirm,
-                  onTap: () {
+                  onTap: () async{
+                     await getIt<CacheServices>().clear(CacheBoxes.userModelBox,);
+                        AppCacheHelper().deleteAll();
                     context.pushNamedAndRemoveUntil(
                       Routes.loginView,
                     );

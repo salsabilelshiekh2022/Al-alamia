@@ -36,12 +36,13 @@ class AuthCubit extends Cubit<AuthState> {
         ),
       ),
       (userModel) async {
+        AppCacheHelper().saveValue(CacheKeys.token, userModel.token!);
         await getIt<CacheServices>().storeData<UserModel>(
           boxName: CacheBoxes.userModelBox,
           key: 'user',
           data: userModel,
         );
-        AppCacheHelper().saveValue(CacheKeys.token, userModel.token!);
+        
 
         emit(state.copyWith(authStatus: RequestStatus.success));
       },

@@ -5,6 +5,7 @@ import 'package:alalamia/features/auth/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/database/cache/app_cache_helper.dart';
 import '../../../../core/database/cache/cache_helper.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../generated/app_assets.dart';
@@ -19,13 +20,12 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
-      final UserModel? user = getIt<CacheServices>().getDataFromCache(
-        boxName: CacheBoxes.userModelBox,
-        key: 'user',
-      );
+    Future.delayed(const Duration(seconds: 2), ()async {
+      
       context.pushReplacementNamed(
-        user?.token == null ? Routes.loginView : Routes.mainNavigationView,
+        await AppCacheHelper().readValue<String>(
+            CacheKeys.token,
+          )== null ? Routes.loginView : Routes.mainNavigationView,
       );
     });
     super.initState();

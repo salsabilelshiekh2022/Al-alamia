@@ -1,6 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dio/dio.dart';
 
+import '../../di/dependency_injection.dart';
+import '../../routes/routes.dart';
+import '../../utils/app_keys.dart';
+import '../cache/app_cache_helper.dart';
+import '../cache/cache_helper.dart';
+import '../cache/cache_services.dart';
+
 class CacheFailure extends Failure {
   CacheFailure({required super.message});
 }
@@ -23,22 +30,19 @@ class Failure implements Exception {
 }
 
 class ServerFailure extends Failure {
+  static bool _isHandlingUnauthorized = false;
+
   ServerFailure({required super.message, super.statusCode});
 
   factory ServerFailure.fromDioError(DioException e) {
     if (e.response?.statusCode == 401) {
-      // Future.microtask(() async {
-      //   await Hive.box(HiveBoxes.userModelBox).clear();
-      //   AppKeys.navigatorKey.currentState!
-      //       .pushNamedAndRemoveUntil(Routes.loginView, (route) => false);
-      //   GlobalUiUtils.showSnackBar(
-      //     AppKeys.navigatorKey.currentContext!,
-      //     msg: e.response!.data['error']['message'],
-      //     title: S.of(AppKeys.navigatorKey.currentContext!).error,
-      //   );
-      // });
-      return ServerFailure(message: 'Unauthorized access.');
+      _handleUnauthorized();
+      return ServerFailure(
+        message: 'Unauthorized access.',
+        statusCode: e.response?.statusCode,
+      );
     }
+
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
         return ServerFailure(message: 'Connection timeout with ApiServer');
@@ -65,9 +69,17 @@ class ServerFailure extends Failure {
   }
 
   factory ServerFailure.fromResponse(int statusCode, dynamic response) {
+    if (statusCode == 401) {
+      _handleUnauthorized();
+      return ServerFailure(
+        message: 'Unauthorized access.',
+        statusCode: statusCode,
+      );
+    }
+
     if (statusCode == 404) {
       return ServerFailure(message: response['error']['message']);
-    } else if (statusCode == 400 || statusCode == 401 || statusCode == 403) {
+    } else if (statusCode == 400 || statusCode == 403) {
       return ServerFailure(message: response['error']['message']);
     } else if (statusCode == 428) {
       return ServerFailure(
@@ -87,6 +99,25 @@ class ServerFailure extends Failure {
     } else {
       return ServerFailure(message: response?['error']?['message'] ?? '');
     }
+  }
+
+  static void _handleUnauthorized() {
+    if (_isHandlingUnauthorized) return;
+    _isHandlingUnauthorized = true;
+
+    Future.microtask(() async {
+      try {
+        await getIt<CacheServices>().clear(CacheBoxes.userModelBox);
+        await AppCacheHelper().deleteAll();
+
+        AppKeys.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          Routes.loginView,
+          (route) => false,
+        );
+      } finally {
+        _isHandlingUnauthorized = false;
+      }
+    });
   }
 }
 
