@@ -40,32 +40,32 @@ class BeneficiaryInfoCard extends StatelessWidget {
               14.verticalSizedBox,
               InfoWidget(
                 title: context.fullName,
-                value: state.transactionDetails?.receiver.name ?? '--',
+                value: state.transactionDetails?.receiver?.name ?? '--',
                 icon: AppAssets.svgsUser,
               ),
               24.verticalSizedBox,
               InfoWidget(
                 title: context.phone,
-                value: state.transactionDetails?.receiver.phone ?? '--',
+                value: state.transactionDetails?.receiver?.phone ?? '--',
                 icon: AppAssets.svgsPhone,
               ),
               24.verticalSizedBox,
               InfoWidget(
                 title: "رقم الواتساب",
                 value:
-                    state.transactionDetails?.receiver.whatsappNumber ?? '--',
+                    state.transactionDetails?.receiver?.whatsappNumber ?? '--',
                 icon: AppAssets.svgsPhone,
               ),
               24.verticalSizedBox,
               InfoWidget(
                 title: context.phone2,
-                value: state.transactionDetails?.receiver.phone_2 ?? '--',
+                value: state.transactionDetails?.receiver?.phone_2 ?? '--',
                 icon: AppAssets.svgsAdditionalPhoneIcon,
               ),
               24.verticalSizedBox,
               InfoWidget(
                 title: context.address,
-                value: state.transactionDetails?.receiver.address ?? '--',
+                value: state.transactionDetails?.receiver?.address ?? '--',
                 icon: AppAssets.svgsMapIcon,
               ),
             ],

@@ -13,17 +13,17 @@ class TransactionCopyService {
   }) {
     try {
       return TransferMoneyDataParams(
-        clientPhone: transaction.receiver.phone ?? '',
-        clientName: transaction.receiver.name ?? '',
-        whatsappNumber: transaction.receiver.whatsappNumber ?? '',
+        clientPhone: transaction.receiver?.phone ?? '',
+        clientName: transaction.receiver?.name ?? '',
+        whatsappNumber: transaction.receiver?.whatsappNumber ?? '',
         // Currency IDs will be set from the currencies list in the UI based on names
         fromCurrencyId: 0, // Will be matched by currency name
         toCurrencyId: 0, // Will be matched by currency name
-        amount: transaction.amountSent,
-        totalPrice: transaction.amountReceived,
-        amountByChar: transaction.details.amountCharacter,
+        amount: transaction.amountSent ?? "0",
+        totalPrice: transaction.amountReceived ?? "0",
+        amountByChar: transaction.details?.amountCharacter ?? '',
         note: preserveNote
-            ? transaction.notes
+            ? transaction.notes ?? ''
             : '', // Notes are not copied in copy mode to allow fresh notes
         sendingMessageType: null, // User will select new message type
         transactionId: transactionId,
@@ -43,26 +43,26 @@ class TransactionCopyService {
     try {
       return SendMoneyFormData(
         // Sender Info - Keep original sender info
-        senderPhone: transaction.sender.phone ?? '',
-        senderWhatsApp: transaction.sender.whatsappNumber ?? '',
-        senderName: transaction.sender.name ?? '',
-        senderAddress: transaction.sender.address,
+        senderPhone: transaction.sender?.phone ?? '',
+        senderWhatsApp: transaction.sender?.whatsappNumber ?? '',
+        senderName: transaction.sender?.name ?? '',
+        senderAddress: transaction.sender?.address,
 
         // Receiver Info
-        receiverPhone: transaction.receiver.phone ?? '',
-        receiverWhatsApp: transaction.receiver.whatsappNumber ?? '',
-        receiverName: transaction.receiver.name ?? '',
-        receiverAddress: transaction.receiver.address,
-        receiverPhone2: transaction.receiver.phone_2,
+        receiverPhone: transaction.receiver?.phone ?? '',
+        receiverWhatsApp: transaction.receiver?.whatsappNumber ?? '',
+        receiverName: transaction.receiver?.name ?? '',
+        receiverAddress: transaction.receiver?.address,
+        receiverPhone2: transaction.receiver?.phone_2,
 
         // Transaction Details
-        amount: transaction.amountSent,
-        totalPrice: transaction.amountReceived,
-        amountByChar: transaction.details.amountCharacter,
+        amount: transaction.amountSent ?? "0",
+        totalPrice: transaction.amountReceived ?? "0",
+        amountByChar: transaction.details?.amountCharacter ?? '',
         note: preserveNote ? transaction.notes ?? '' : '',
 
         // Commission & Payment
-        commissionType: transaction.details.commissionType,
+        commissionType: transaction.details?.commissionType,
         paymentMethodId: transaction.paymentMethod?.id,
 
         // Delivery Type
@@ -78,8 +78,8 @@ class TransactionCopyService {
         // These are intentionally left as defaults and will be set by UI:
         fromCurrency: null, // To be matched by currency name
         toCurrency: null, // To be matched by currency name
-        fromBranch: transaction.fromBranch.id, // Branch ID for matching
-        toBranch: transaction.toBranch.id, // Branch ID for matching
+        fromBranch: transaction.fromBranch?.id ?? 0, // Branch ID for matching
+        toBranch: transaction.toBranch?.id ?? 0 , // Branch ID for matching
         transactionId: transactionId,
       );
     } catch (e) {
@@ -90,27 +90,27 @@ class TransactionCopyService {
 
   /// Get the currency name from transaction for matching
   static String getFromCurrencyName(TransactionDetailsModel transaction) {
-    return transaction.currency;
+    return transaction.currency ?? '';
   }
 
   /// Get the to currency name from transaction for matching
   static String getToCurrencyName(TransactionDetailsModel transaction) {
-    return transaction.toCurrency;
+    return transaction.toCurrency ?? '';
   }
 
   /// Get the from branch ID
   static int getFromBranchId(TransactionDetailsModel transaction) {
-    return transaction.fromBranch.id ?? 0;
+    return transaction.fromBranch?.id ?? 0;
   }
 
   /// Get the to branch ID
   static int getToBranchId(TransactionDetailsModel transaction) {
-    return transaction.toBranch.id ?? 0;
+    return transaction.toBranch?.id ?? 0;
   }
 
   /// Determine the transaction type for navigation
   static String getTransactionType(TransactionDetailsModel transaction) {
-    return transaction.details.transactionType;
+    return transaction.details?.transactionType ?? '';
   }
 
   /// Determine if it's external delivery

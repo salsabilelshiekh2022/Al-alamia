@@ -22,21 +22,22 @@ class TransferredAmountInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardWithShadow(
-      child: BlocBuilder<TransactionsCubit, TransactionsState>(
-        builder: (context, state) {
-          final details = state.transactionDetails;
-          
-          return Column(
+    return BlocBuilder<TransactionsCubit, TransactionsState>(
+      builder: (context, state) {
+        final details = state.transactionDetails;
+        bool isInOutTransaction = state.transactionDetails?.details?.transactionType?.toLowerCase() == 'in_out';
+        
+        return   isInOutTransaction  ?   _buildInOutTransactionCard(context) : CardWithShadow(
+          child: Column(
             children: [
               _buildAmountSection(context, details),
               _sectionSpacing.verticalSizedBox,
               _buildDivider(context),
               _buildBranchSection(context, details),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -140,4 +141,20 @@ class TransferredAmountInfoWidget extends StatelessWidget {
       thickness: 1,
     ).verticalPadding(_dividerPadding).horizontalPadding(_sectionSpacing);
   }
+
+  Widget _buildInOutTransactionCard(BuildContext context) {
+    return CardWithShadow(
+      child: Column(
+        children: [
+          Text("المبلغ المرسل", style: context.textStyles.font15MediumGrayColor),
+          14.verticalSizedBox,
+          Text("4,850.00 ", style: context.textStyles.font24BoldSecondaryColor),
+           6.verticalSizedBox,
+           Text("دينار ليبي", style: context.textStyles.font14RegularPrimaryColor),
+            _buildDivider(context),
+            _buildBranchSection(context, context.watch<TransactionsCubit>().state.transactionDetails),
+        ],
+      )  );
+  }
 }
+

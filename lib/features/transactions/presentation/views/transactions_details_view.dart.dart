@@ -105,12 +105,12 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
       
     };
 
-    final status = transaction.details.status;
-    final transactionType = transaction.details.transactionType;
+    final status = transaction.details?.status;
+    final transactionType = transaction.details?.transactionType;
 
     final isEditableType =
-        transactionType.trim().toLowerCase() == 'sending' ||
-        _isTransferType(transactionType);
+        transactionType?.trim().toLowerCase() == 'sending' ||
+        _isTransferType(transactionType ?? '');
 
     return isEditableType && editableStatuses.contains(status);
   }
@@ -120,7 +120,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
   }
 
   bool _canPayBackTransaction(TransactionDetailsModel transaction) {
-    return transaction.details.status == StatusEnum.pending;
+    return transaction.details?.status == StatusEnum.pending;
   }
 
   Future<void> _showConfirmationBottomSheet(
@@ -468,7 +468,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                             _canPayBackTransaction(transaction);
                         final showReceivingButton =
                             transaction?.recievingBranch == true &&
-                            transaction?.details.status == StatusEnum.in_progress;
+                            transaction?.details?.status == StatusEnum.in_progress;
             
                         return Column(
                           children: [
@@ -585,7 +585,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                 end: 16,
                                 child: StatusBox(
                                   status:
-                                      state.transactionDetails?.details.status ??
+                                      state.transactionDetails?.details?.status ??
                                       StatusEnum.pending,
                                 ),
                               ),

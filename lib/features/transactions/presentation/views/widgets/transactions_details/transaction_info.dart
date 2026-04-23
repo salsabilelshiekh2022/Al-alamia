@@ -18,10 +18,13 @@ class TransactionInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardWithShadow(
-      child: BlocBuilder<TransactionsCubit, TransactionsState>(
-        builder: (context, state) {
-          return Column(
+    return BlocBuilder<TransactionsCubit, TransactionsState>(
+      builder: (context, state) {
+        bool isInOutTransaction =
+            state.transactionDetails?.details?.transactionType?.toLowerCase() ==
+            'in_out';
+        return isInOutTransaction ? buildInOutTransactionCard(context) : CardWithShadow(
+          child: Column(
             children: [
               Row(
                 children: [
@@ -42,58 +45,72 @@ class TransactionInfoCard extends StatelessWidget {
               _buildInfoRow(
                 context: context,
                 title: context.transactionCode,
-                value: state.transactionDetails?.details.transactionUuid ?? '--',
+                value:
+                    state.transactionDetails?.details?.transactionUuid ?? '--',
               ),
               14.verticalSizedBox,
-               _buildInfoRow(
+              _buildInfoRow(
                 context: context,
                 title: context.transactionType,
-                value: state.transactionDetails?.details.transactionType ?? '--',
+                value:
+                    state.transactionDetails?.details?.transactionType ?? '--',
               ),
               Divider(color: context.colors.strokeColor).verticalPadding(14),
-                _buildInfoRow(
+              _buildInfoRow(
                 context: context,
                 title: context.commission,
-                value: state.transactionDetails?.details.totalCommissionValue ?? '--',
+                value:
+                    state.transactionDetails?.details?.totalCommissionValue ??
+                    '--',
               ),
-            14.verticalSizedBox,
+              14.verticalSizedBox,
               _buildInfoRow(
                 context: context,
                 title: context.commissionType,
-                value: state.transactionDetails?.details.commissionType.getCommissionType(context) ?? '--',
+                value:
+                    state.transactionDetails?.details?.commissionType
+                        ?.getCommissionType(context) ??
+                    '--',
               ),
               14.verticalSizedBox,
               _buildInfoRow(
                 context: context,
                 title: context.amountSent,
-                value: state.transactionDetails?.details.amountSent ?? '--',
+                value: state.transactionDetails?.details?.amountSent ?? '--',
               ),
               14.verticalSizedBox,
-               _buildInfoRow(
+              _buildInfoRow(
                 context: context,
                 title: context.amountByChar,
-                value: state.transactionDetails?.details.amountCharacter ?? '--',
+                value:
+                    state.transactionDetails?.details?.amountCharacter ?? '--',
               ),
               14.verticalSizedBox,
-               _buildInfoRow(
+              _buildInfoRow(
                 context: context,
                 title: context.exchangeRate,
-                value: state.transactionDetails?.details.exchangeRate ?? '--',
+                value: state.transactionDetails?.details?.exchangeRate ?? '--',
               ),
               14.verticalSizedBox,
-               _buildInfoRow(
+              _buildInfoRow(
                 context: context,
                 title: context.fee,
-                value: state.transactionDetails?.details.transferFees.toString() ?? '--',
+                value:
+                    state.transactionDetails?.details?.transferFees
+                        .toString() ??
+                    '--',
               ),
-             Divider(color: context.colors.strokeColor).verticalPadding(14),
+              Divider(color: context.colors.strokeColor).verticalPadding(14),
               TotalSection(
-                value: state.transactionDetails?.details.totalAmount.toStringAsFixed(2) ?? '--',
+                value:
+                    state.transactionDetails?.details?.totalAmount
+                        ?.toStringAsFixed(2) ??
+                    '--',
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -113,6 +130,48 @@ class TransactionInfoCard extends StatelessWidget {
         ),
         Text(value, style: context.textStyles.font16MediumSecondaryColor),
       ],
+    );
+  }
+
+  Widget buildInOutTransactionCard(BuildContext context) {
+    return BlocBuilder<TransactionsCubit, TransactionsState>(
+      builder: (context, state) {
+        return CardWithShadow(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CustomSvgBuilder(
+                    path: AppAssets.svgsTransactionInfoIcon,
+                    width: 24,
+                    height: 24,
+                    fit: BoxFit.scaleDown,
+                  ),
+                  10.horizontalSpace,
+                  Text(
+                    context.transactionInfo,
+                    style: context.textStyles.font16MediumSecondaryColor,
+                  ),
+                ],
+              ),
+              17.verticalSizedBox,
+              _buildInfoRow(
+                context: context,
+                title: context.transactionCode,
+                value:
+                    state.transactionDetails?.details?.transactionUuid ?? '--',
+              ),
+              14.verticalSizedBox,
+              _buildInfoRow(
+                context: context,
+                title: context.transactionType,
+                value:
+                   "دخول / خروج",
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

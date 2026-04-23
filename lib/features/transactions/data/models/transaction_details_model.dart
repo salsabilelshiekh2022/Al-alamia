@@ -7,34 +7,34 @@ import '../../../../core/general/data/models/branch_model.dart';
 
 class TransactionDetailsModel {
   TransactionDetailsModel({
-    required this.amountSent,
-    required this.currency,
-    required this.amountReceived,
-    required this.toCurrency,
-    required this.fromBranch,
-    required this.toBranch,
-    required this.sender,
-    required this.receiver,
-    required this.details,
+     this.amountSent,
+     this.currency,
+     this.amountReceived,
+     this.toCurrency,
+     this.fromBranch,
+     this.toBranch,
+     this.sender,
+     this.receiver,
+     this.details,
     this.paymentMethod,
     this.pdfUrl,
-    required this.recievingBranch,
+     this.recievingBranch,
     this.recieveType,
     this.notes,
   });
 
-  final String amountSent;
-  final String currency;
-  final String amountReceived;
-  final String toCurrency;
-  final BranchModel fromBranch;
-  final BranchModel toBranch;
-  final ClientModel sender;
-  final ClientModel receiver;
-  final DetailModel details;
+  final String? amountSent;
+  final String? currency;
+  final String? amountReceived;
+  final String? toCurrency;
+  final BranchModel? fromBranch;
+  final BranchModel? toBranch;
+  final ClientModel? sender;
+  final ClientModel? receiver;
+  final DetailModel? details;
   final PaymentMethodModel? paymentMethod;
   final String? pdfUrl;
-  final bool recievingBranch;
+  final bool? recievingBranch;
   final DeliveryTypeEnum? recieveType;
   final String? notes;
 
@@ -48,11 +48,11 @@ class TransactionDetailsModel {
     toCurrency: json["ToCurrency"],
     fromBranch: BranchModel.fromJson(json["from_branch"]),
     toBranch: BranchModel.fromJson(json["to_branch"]),
-    sender: ClientModel.fromJson(json["sender"]),
-    receiver: ClientModel.fromJson(json["receiver"]),
-    details: DetailModel.fromJson(json["details"]),
+    sender:json["sender"] != null ? ClientModel.fromJson(json["sender"]) : null,
+    receiver: json["receiver"] != null ? ClientModel.fromJson(json["receiver"]) : null,
+    details:json["details"] != null ? DetailModel.fromJson(json["details"]) : null,
     pdfUrl: pdfUrl,
-    recievingBranch: json["recieving_branch"],
+    recievingBranch:json["recieving_branch"] != null ? json["recieving_branch"] as bool : null,
     recieveType: json["recieve_type"] != null
         ? DeliveryTypeEnum.values.firstWhere(
             (e) => e.name == json['recieve_type'],
@@ -67,28 +67,28 @@ class TransactionDetailsModel {
 
 class DetailModel {
   DetailModel({
-    required this.transactionUuid,
-    required this.transactionType,
-    required this.totalCommissionValue,
-    required this.amountSent,
-    required this.amountCharacter,
-    required this.exchangeRate,
-    required this.transferFees,
-    required this.totalAmount,
-    required this.commissionType,
-    required this.status,
+     this.transactionUuid,
+     this.transactionType,
+     this.totalCommissionValue,
+     this.amountSent,
+     this.amountCharacter,
+     this.exchangeRate,
+     this.transferFees,
+     this.totalAmount,
+     this.commissionType,
+     this.status,
   });
 
-  final String transactionUuid;
-  final String transactionType;
-  final String totalCommissionValue;
-  final String amountSent;
-  final String amountCharacter;
-  final String exchangeRate;
-  final int transferFees;
-  final double totalAmount;
-  final CommissionTypeEnum commissionType;
-  final StatusEnum status;
+  final String? transactionUuid;
+  final String? transactionType;
+  final String? totalCommissionValue;
+  final String? amountSent;
+  final String? amountCharacter;
+  final String? exchangeRate;
+  final int? transferFees;
+  final double? totalAmount;
+  final CommissionTypeEnum? commissionType;
+  final StatusEnum? status;
 
   factory DetailModel.fromJson(Map<String, dynamic> json) => DetailModel(
     transactionUuid: json["transaction_uuid"],
@@ -98,11 +98,17 @@ class DetailModel {
     amountCharacter: json["amount_character"],
     exchangeRate: json["exchange_rate"],
     transferFees: json["transfer_fees"],
-    totalAmount: json["total_amount"].toDouble(),
-    commissionType: CommissionTypeEnum.values.firstWhere(
-      (e) => e.name == json['commission_type'],
-    ),
-    status: StatusEnum.values.firstWhere((e) => e.name == json['status']),
+    totalAmount: json["total_amount"] != null ? json["total_amount"].toDouble() : null,
+    commissionType: json["commission_type"] != null
+        ? CommissionTypeEnum.values.firstWhere(
+            (e) => e.name == json['commission_type'],
+          )
+        : null,
+    status: json["status"] != null
+        ? StatusEnum.values.firstWhere(
+            (e) => e.name == json['status'],
+          )
+        : null,
   );
 }
 class PaymentMethodModel {
