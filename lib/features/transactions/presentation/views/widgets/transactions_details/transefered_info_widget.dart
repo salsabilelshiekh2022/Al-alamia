@@ -143,18 +143,22 @@ class TransferredAmountInfoWidget extends StatelessWidget {
   }
 
   Widget _buildInOutTransactionCard(BuildContext context) {
-    return CardWithShadow(
-      child: Column(
-        children: [
-          Text("المبلغ المرسل", style: context.textStyles.font15MediumGrayColor),
-          14.verticalSizedBox,
-          Text("4,850.00 ", style: context.textStyles.font24BoldSecondaryColor),
-           6.verticalSizedBox,
-           Text("دينار ليبي", style: context.textStyles.font14RegularPrimaryColor),
-            _buildDivider(context),
-            _buildBranchSection(context, context.watch<TransactionsCubit>().state.transactionDetails),
-        ],
-      )  );
+    return BlocBuilder<TransactionsCubit, TransactionsState>(
+      builder: (context, state) {
+        return CardWithShadow(
+          child: Column(
+            children: [
+              Text("المبلغ المرسل", style: context.textStyles.font15MediumGrayColor),
+              14.verticalSizedBox,
+              Text(state.transactionDetails?.amountSent ?? '--', style: context.textStyles.font24BoldSecondaryColor),
+               6.verticalSizedBox,
+               Text(state.transactionDetails?.currency ?? '--', style: context.textStyles.font14RegularPrimaryColor),
+                _buildDivider(context),
+                _buildBranchSection(context, context.watch<TransactionsCubit>().state.transactionDetails),
+            ],
+          )  );
+      },
+    );
   }
 }
 
