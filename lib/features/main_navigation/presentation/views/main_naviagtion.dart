@@ -1,6 +1,7 @@
 import 'package:alalamia/core/components/widgets/custom_svg_builder.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
 import 'package:alalamia/features/home/presentation/views/home_view.dart';
 import 'package:alalamia/features/notifications/presentation/views/notifications_view.dart';
@@ -40,7 +41,11 @@ class _MainNavigationViewState extends State<MainNavigationView> {
   final List<Widget> bottomBarPages = [
     SettingsView(),
     NotificationsView(),
-    BlocProvider(create: (context) => getIt<ReportsCubit>()..getReports(type: ReportsEnum.day), child: ReportsView()),
+    BlocProvider(
+      create: (context) =>
+          getIt<ReportsCubit>()..getReports(type: ReportsEnum.day),
+      child: ReportsView(),
+    ),
     BlocProvider(
       create: (context) =>
           getIt<TransactionsCubit>()
@@ -48,10 +53,14 @@ class _MainNavigationViewState extends State<MainNavigationView> {
       child: TransactionsView(),
     ),
     BlocProvider.value(
-      value: getIt<HomeCubit>()
-        ..getBranchCurrencies()
-        ..getCurrencies(),
-      child: HomeView(),
+      value: getIt<AuthCubit>()..getProfile(),
+        
+      child: BlocProvider.value(
+        value: getIt<HomeCubit>()
+          ..getBranchCurrencies()
+          ..getCurrencies(),
+        child: HomeView(),
+      ),
     ),
   ];
 

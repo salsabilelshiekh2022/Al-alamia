@@ -21,8 +21,8 @@ class TransactionFromTo extends StatelessWidget {
           children: [
             Text(
               "${context.from}:", style:  context.textStyles.font14RegularGrayColor,),
-              Text(transactionModel.client!.fromClient!.name!, style:  context.textStyles.font14RegularSecondaryColor,).verticalPadding(8),
-              Text(transactionModel.client!.fromClient!.phone!, style:  context.textStyles.font14RegularGrayColor,),
+          transactionModel.client?.fromClient != null ? Text(transactionModel.client!.fromClient!.name!, style:  context.textStyles.font14RegularSecondaryColor,).verticalPadding(8) :Text(transactionModel.branches!.fromBranch!.name!, style:  context.textStyles.font14RegularSecondaryColor,).verticalPadding(8),
+          transactionModel.client?.fromClient != null ?    Text(transactionModel.client!.fromClient!.phone!, style:  context.textStyles.font14RegularGrayColor,) : SizedBox(),
           ],
         ),
         CustomSvgBuilder(path: AppAssets.svgsDoubleArrowIcon, width: 24, height: 24,),
@@ -31,8 +31,8 @@ class TransactionFromTo extends StatelessWidget {
           children: [
             Text(
               "${context.to}:", style:  context.textStyles.font14RegularGrayColor,),
-              Text(transactionModel.client!.toClient!.name!, style:  context.textStyles.font14RegularSecondaryColor,).verticalPadding(8),
-              Text(transactionModel.client!.toClient!.phone!, style:  context.textStyles.font14RegularGrayColor,),
+          transactionModel.client?.toClient != null ?    Text(transactionModel.client!.toClient!.name!, style:  context.textStyles.font14RegularSecondaryColor,).verticalPadding(8) : Text(transactionModel.branches!.toBranch!.name!, style:  context.textStyles.font14RegularSecondaryColor,).verticalPadding(8),
+          transactionModel.client?.toClient != null ?    Text(transactionModel.client!.toClient!.phone!, style:  context.textStyles.font14RegularGrayColor,) : SizedBox(),
           ],
         ),
       

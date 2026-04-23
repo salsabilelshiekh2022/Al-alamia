@@ -541,10 +541,8 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                     25.verticalSizedBox,
                                     TransferredAmountInfoWidget(),
                                     20.verticalSizedBox,
-                                    SenderInfoCard(),
-                                    20.verticalSizedBox,
-                                    BeneficiaryInfoCard(),
-                                    20.verticalSizedBox,
+                              context.read<TransactionsCubit>().state.transactionDetails?.sender != null ?    SenderInfoCard().onlyPadding(bottomPadding: 20) : SizedBox(),
+                             context.read<TransactionsCubit>().state.transactionDetails?.receiver != null ?        BeneficiaryInfoCard().onlyPadding(bottomPadding: 20) : SizedBox(),
                                     TransactionInfoCard(),
                                     32.verticalSizedBox,
                                     Column(

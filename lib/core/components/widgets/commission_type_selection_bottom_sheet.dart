@@ -23,7 +23,7 @@ class CommissionTypeSelectionBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
        final UserModel user = getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
-    List<CommissionTypeEnum> types =user.branch?.noCommission == 1 ?[CommissionTypeEnum.added_value, CommissionTypeEnum.deducted_value] :    CommissionTypeEnum.values;
+    List<CommissionTypeEnum> types =user.branch?.noCommission == 0 ?[CommissionTypeEnum.added_value, CommissionTypeEnum.deducted_value] :    CommissionTypeEnum.values;
     return SizedBox(
       height: 250.h,
       child: Column(

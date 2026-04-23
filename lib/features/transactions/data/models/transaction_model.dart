@@ -1,3 +1,5 @@
+import 'package:alalamia/core/general/data/models/branch_model.dart';
+
 import '../../../../core/enums/status_enum.dart';
 import '../../../home/data/models/currency_model.dart';
 import '../../../notifications/data/models/notification_model.dart';
@@ -28,6 +30,7 @@ class TransactionModel {
   String? dateTime;
   StatusEnum? status;
   ClientsFromTo? client;
+  Branches? branches;
   CurrencyModel? currency;
   String? amountReceived;
   List<DenominationData>? denominationsIn;
@@ -43,6 +46,7 @@ class TransactionModel {
     this.amountReceived,
     this.denominationsIn,
     this.denominationsOut,
+    this.branches,
   });
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +72,40 @@ class TransactionModel {
                 .map((v) => DenominationData.fromJson(v))
                 .toList()
           : null,
+      branches: json['branches'] != null
+          ? Branches.fromJson(json['branches'])
+          : null,
+    );
+  }
+}
+class Branches{
+  Branch? fromBranch;
+  Branch? toBranch;
+
+  Branches({this.fromBranch, this.toBranch});
+
+  factory Branches.fromJson(Map<String, dynamic> json) {
+    return Branches(
+      fromBranch: json['from_branch'] != null
+          ? Branch.fromJson(json['from_branch'])
+          : null,
+      toBranch: json['to_branch'] != null
+          ? Branch.fromJson(json['to_branch'])
+          : null,
+    );
+  }
+}
+
+class Branch {
+  int? id;
+  String? name;
+
+  Branch({this.id, this.name});
+
+  factory Branch.fromJson(Map<String, dynamic> json) {
+    return Branch(
+      id: json['id'],
+      name: json['name'],
     );
   }
 }

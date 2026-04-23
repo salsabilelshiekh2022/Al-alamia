@@ -5,6 +5,7 @@ import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/core/routes/routes.dart';
 import 'package:alalamia/features/auth/data/models/user_model.dart';
+import 'package:alalamia/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +27,7 @@ class HomeView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {
         await context.read<HomeCubit>().getBranchCurrencies();
+        await context.read<AuthCubit>().getProfile();
       },
 
       child: Scaffold(

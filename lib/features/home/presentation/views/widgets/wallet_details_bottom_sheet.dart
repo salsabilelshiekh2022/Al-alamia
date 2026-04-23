@@ -66,29 +66,29 @@ class _WalletDetailsBottomSheetState extends State<WalletDetailsBottomSheet> {
             ),
           ),
           6.verticalSizedBox,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                context.balanceDetails,
-                style: context.textStyles.font14MediumPrimaryColor,
-              ),
-              4.horizontalSpace,
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    showBalanceDetails = !showBalanceDetails;
-                  });
-                },
-                child: Icon(
+          InkWell(
+             onTap: () {
+                    setState(() {
+                      showBalanceDetails = !showBalanceDetails;
+                    });
+                  },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  context.balanceDetails,
+                  style: context.textStyles.font14MediumPrimaryColor,
+                ),
+                4.horizontalSpace,
+                Icon(
                   showBalanceDetails
                       ? Icons.keyboard_arrow_up_rounded
                       : Icons.keyboard_arrow_down_rounded,
                   size: 20,
                   color: context.colors.primaryColor,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           showBalanceDetails
               ? _buildBalanceDetails(context)
