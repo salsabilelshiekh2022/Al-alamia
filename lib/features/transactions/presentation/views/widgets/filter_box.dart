@@ -96,7 +96,7 @@ class _FilterBoxState extends State<FilterBox> {
                   Expanded(
                     child: CustomTextFieldWithLabel(
                       label: 'من',
-                      hintText: '2026-04-05',
+                      hintText: 'yyyy-mm-dd',
                       controller: fromDateController,
                       isReadOnly: true,
                       onTap: () => pickDate(controller: fromDateController),
@@ -106,7 +106,7 @@ class _FilterBoxState extends State<FilterBox> {
                   Expanded(
                     child: CustomTextFieldWithLabel(
                       label: 'إلى',
-                      hintText: '2026-04-05',
+                      hintText: 'yyyy-mm-dd',
                       controller: toDateController,
                       isReadOnly: true,
                       onTap: () => pickDate(controller: toDateController),

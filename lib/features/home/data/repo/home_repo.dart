@@ -12,7 +12,7 @@ abstract class HomeRepo {
     required int currencyId,
   });
 
-  Future<Either<Failure, List<CurrencyModel>>> getCurrencies();
+  Future<Either<Failure, List<CurrencyModel>>> getCurrencies({int toCurrencies = 0});
   Future<Either<Failure, TransferCurrencyModel>> transferCurrency({
     required TransferCurrencyRequestParams transferCurrencyRequestParams,
   });

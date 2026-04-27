@@ -41,9 +41,12 @@ class HomeRepoImpl extends HomeRepo {
   }
 
   @override
-  Future<Either<Failure, List<CurrencyModel>>> getCurrencies() {
+  Future<Either<Failure, List<CurrencyModel>>> getCurrencies({int toCurrencies = 0}) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.getCurrencies),
+      request: () => apiConsumer.get(EndPoints.getCurrencies, queryParameters: {
+        if (toCurrencies > 0) 'to_currencies': toCurrencies,
+      }),
+      
       onSuccess: (result) {
         final data = result['data'] as List;
         return data.map((e) => CurrencyModel.fromJson(e)).toList();

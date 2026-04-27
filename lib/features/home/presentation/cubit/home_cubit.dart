@@ -49,9 +49,9 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  Future<void> getCurrencies() async {
+  Future<void> getCurrencies({int toCurrencies = 0}) async {
     emit(state.copyWith(homeStatus: RequestStatus.loading));
-    final result = await homeRepo.getCurrencies();
+    final result = await homeRepo.getCurrencies(toCurrencies: toCurrencies);
     result.fold(
       (failure) => emit(state.copyWith(homeStatus: RequestStatus.error)),
       (currenciesList) => _handleCurrenciesSuccess(currenciesList),

@@ -66,8 +66,12 @@ class _SearchBoxState extends State<SearchBox> {
     return SizedBox(
       height: 48,
       child: TextFormField(
+        style: context.textStyles.font15MediumGrayColor.copyWith(
+          color: context.colors.whiteColor,
+        ),
         controller: _controller,
         onChanged: _onSearchChanged,
+        cursorColor: context.colors.whiteColor,
         onFieldSubmitted: (value) {
           _debounce?.cancel();
           _requestSearch(value);
