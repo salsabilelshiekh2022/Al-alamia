@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -12,25 +11,90 @@ import '../../domain/usecases/pay_back_transaction_usecase.dart';
 import 'transactions_state.dart';
 
 @injectable
-class TransactionsCubit extends Cubit<TransactionsState>{
-
+class TransactionsCubit extends Cubit<TransactionsState> {
   TransactionsCubit({required this.transactionRepo})
-      : cancelTransactionUseCase = CancelTransactionUseCase(transactionRepo),
-        payBackTransactionUseCase = PayBackTransactionUseCase(transactionRepo),
-        super(const TransactionsState());
+    : cancelTransactionUseCase = CancelTransactionUseCase(transactionRepo),
+      payBackTransactionUseCase = PayBackTransactionUseCase(transactionRepo),
+      super(const TransactionsState());
   final TransactionsRepo transactionRepo;
   final CancelTransactionUseCase cancelTransactionUseCase;
   final PayBackTransactionUseCase payBackTransactionUseCase;
 
-  Future<void> fetchTransactionList({required TransactionsEnum transaction}) async {
-    emit(state.copyWith(transactionsStatus: RequestStatus.loading, currentFilter: transaction));
-    final result = await transactionRepo.getTransactionList(transaction: transaction, page: 1);
+  List<String>? _statusFilters;
+  String? _fromDateFilter;
+  String? _toDateFilter;
+  String? _searchFilter;
+
+  List<String>? get statusFilters =>
+      _statusFilters == null ? null : List.unmodifiable(_statusFilters!);
+  String? get fromDateFilter => _fromDateFilter;
+  String? get toDateFilter => _toDateFilter;
+  String? get searchFilter => _searchFilter;
+
+  String? _normalizeQueryValue(String? value) {
+    final normalized = value?.trim();
+    if (normalized == null || normalized.isEmpty) {
+      return null;
+    }
+    return normalized;
+  }
+
+  List<String>? _normalizeStatusFilters(List<String>? statuses) {
+    if (statuses == null) {
+      return null;
+    }
+
+    final normalized = statuses
+        .map((status) => status.trim())
+        .where((status) => status.isNotEmpty)
+        .toList();
+
+    if (normalized.isEmpty) {
+      return null;
+    }
+
+    return normalized;
+  }
+
+  Future<void> fetchTransactionList({
+    required TransactionsEnum transaction,
+    List<String>? status,
+    String? fromDate,
+    String? toDate,
+    String? search,
+  }) async {
+    final normalizedStatus = _normalizeStatusFilters(status);
+    final normalizedFromDate = _normalizeQueryValue(fromDate);
+    final normalizedToDate = _normalizeQueryValue(toDate);
+    final normalizedSearch = _normalizeQueryValue(search);
+
+    _statusFilters = normalizedStatus;
+    _fromDateFilter = normalizedFromDate;
+    _toDateFilter = normalizedToDate;
+    _searchFilter = normalizedSearch;
+
+    emit(
+      state.copyWith(
+        transactionsStatus: RequestStatus.loading,
+        currentFilter: transaction,
+      ),
+    );
+
+    final result = await transactionRepo.getTransactionList(
+      transaction: transaction,
+      page: 1,
+      status: _statusFilters,
+      fromDate: _fromDateFilter,
+      toDate: _toDateFilter,
+      search: _searchFilter,
+    );
+
     result.fold(
       (failure) => emit(
         state.copyWith(
           transactionsStatus: RequestStatus.error,
           message: failure.message,
-        ), 
+        ),
       ),
       (transactionsResponse) {
         final hasReachedMax = _checkIfReachedMax(transactionsResponse);
@@ -54,7 +118,14 @@ class TransactionsCubit extends Cubit<TransactionsState>{
     emit(state.copyWith(transactionsStatus: RequestStatus.loadingMore));
 
     final nextPage = state.currentPage + 1;
-    final result = await transactionRepo.getTransactionList(transaction: state.currentFilter, page: nextPage);
+    final result = await transactionRepo.getTransactionList(
+      transaction: state.currentFilter,
+      page: nextPage,
+      status: _statusFilters,
+      fromDate: _fromDateFilter,
+      toDate: _toDateFilter,
+      search: _searchFilter,
+    );
 
     result.fold(
       (failure) => emit(
@@ -65,9 +136,11 @@ class TransactionsCubit extends Cubit<TransactionsState>{
       ),
       (transactionsResponse) {
         final newTransactions = transactionsResponse.transactionsList ?? [];
-        final updatedList = List<TransactionModel>.from(state.transactionsList)..addAll(newTransactions);
-        
-        final hasReachedMax = _checkIfReachedMax(transactionsResponse) || newTransactions.isEmpty;
+        final updatedList = List<TransactionModel>.from(state.transactionsList)
+          ..addAll(newTransactions);
+
+        final hasReachedMax =
+            _checkIfReachedMax(transactionsResponse) || newTransactions.isEmpty;
 
         emit(
           state.copyWith(
@@ -86,7 +159,14 @@ class TransactionsCubit extends Cubit<TransactionsState>{
   Future<void> refreshTransactions() async {
     emit(state.copyWith(transactionsStatus: RequestStatus.refreshing));
 
-    final result = await transactionRepo.getTransactionList(transaction: state.currentFilter, page: 1);
+    final result = await transactionRepo.getTransactionList(
+      transaction: state.currentFilter,
+      page: 1,
+      status: _statusFilters,
+      fromDate: _fromDateFilter,
+      toDate: _toDateFilter,
+      search: _searchFilter,
+    );
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -118,15 +198,29 @@ class TransactionsCubit extends Cubit<TransactionsState>{
 
     return currentPage >= lastPage;
   }
-  
+
   // Legacy support
-  Future<void> getTransactionList({required TransactionsEnum transaction}) async {
-    await fetchTransactionList(transaction: transaction);
+  Future<void> getTransactionList({
+    required TransactionsEnum transaction,
+    List<String>? status,
+    String? fromDate,
+    String? toDate,
+    String? search,
+  }) async {
+    await fetchTransactionList(
+      transaction: transaction,
+      status: status,
+      fromDate: fromDate,
+      toDate: toDate,
+      search: search,
+    );
   }
 
   Future<void> showTransactionDetails({required String transactionId}) async {
     emit(state.copyWith(transactionDetailsStatus: RequestStatus.loading));
-    final result = await transactionRepo.showTransactionDetails(transactionId: transactionId);
+    final result = await transactionRepo.showTransactionDetails(
+      transactionId: transactionId,
+    );
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -143,12 +237,28 @@ class TransactionsCubit extends Cubit<TransactionsState>{
     );
   }
 
-  Future<void> updateTransactionStatus({required int transactionId, required UpdateTransactionRequestParams params}) async {
+  Future<void> updateTransactionStatus({
+    required int transactionId,
+    required UpdateTransactionRequestParams params,
+  }) async {
     emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.loading));
-    final result = await transactionRepo.updateTransactionStatus(transactionId: transactionId, params: params);
+    final result = await transactionRepo.updateTransactionStatus(
+      transactionId: transactionId,
+      params: params,
+    );
     result.fold(
-      (failure) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.error, message: failure.message)),
-      (message) => emit(state.copyWith(updateTransactionRequestStatus: RequestStatus.success, message: message)),
+      (failure) => emit(
+        state.copyWith(
+          updateTransactionRequestStatus: RequestStatus.error,
+          message: failure.message,
+        ),
+      ),
+      (message) => emit(
+        state.copyWith(
+          updateTransactionRequestStatus: RequestStatus.success,
+          message: message,
+        ),
+      ),
     );
   }
 

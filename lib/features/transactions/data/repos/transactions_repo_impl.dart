@@ -12,28 +12,66 @@ import 'transactions_repo.dart';
 
 @LazySingleton(as: TransactionsRepo)
 class TransactionsRepoImpl implements TransactionsRepo {
-final ApiConsumer apiConsumer;
+  final ApiConsumer apiConsumer;
 
   TransactionsRepoImpl({required this.apiConsumer});
 
   @override
-  Future<Either<Failure, TransactionsResponseModel>> getTransactionList(
-      {required TransactionsEnum transaction, int page = 1}) async {
+  Future<Either<Failure, TransactionsResponseModel>> getTransactionList({
+    required TransactionsEnum transaction,
+    int page = 1,
+    List<String>? status,
+    String? fromDate,
+    String? toDate,
+    String? search,
+  }) async {
+    final queryParameters = <String, dynamic>{
+      'type': transaction.name,
+      'page': page,
+    };
+
+    final normalizedStatus = status
+        ?.map((value) => value.trim())
+        .where((value) => value.isNotEmpty)
+        .toList();
+    if (normalizedStatus != null && normalizedStatus.isNotEmpty) {
+      queryParameters['status[]'] = normalizedStatus;
+    }
+
+    final normalizedFromDate = fromDate?.trim();
+    if (normalizedFromDate != null && normalizedFromDate.isNotEmpty) {
+      queryParameters['from_date'] = normalizedFromDate;
+    }
+
+    final normalizedToDate = toDate?.trim();
+    if (normalizedToDate != null && normalizedToDate.isNotEmpty) {
+      queryParameters['to_date'] = normalizedToDate;
+    }
+
+    final normalizedSearch = search?.trim();
+    if (normalizedSearch != null && normalizedSearch.isNotEmpty) {
+      queryParameters['search'] = normalizedSearch;
+    }
+
     return apiConsumer.handleRequest(
       request: () => apiConsumer.get(
-        EndPoints.getTransactionList(transaction: transaction),
-        queryParameters: {'page': page},
+        EndPoints.getTransactionList(),
+        queryParameters: queryParameters,
       ),
       onSuccess: (result) {
         return TransactionsResponseModel.fromJson(result);
       },
     );
   }
-  
+
   @override
-  Future<Either<Failure, TransactionDetailsModel>> showTransactionDetails({required String transactionId}) {
+  Future<Either<Failure, TransactionDetailsModel>> showTransactionDetails({
+    required String transactionId,
+  }) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.get(EndPoints.showTransactionDetails(transactionId: transactionId)),
+      request: () => apiConsumer.get(
+        EndPoints.showTransactionDetails(transactionId: transactionId),
+      ),
       onSuccess: (result) {
         final data = result['data'];
         final meta = result['meta'];
@@ -43,9 +81,15 @@ final ApiConsumer apiConsumer;
   }
 
   @override
-  Future<Either<Failure, String>> updateTransactionStatus({required UpdateTransactionRequestParams params , required int transactionId}) {
+  Future<Either<Failure, String>> updateTransactionStatus({
+    required UpdateTransactionRequestParams params,
+    required int transactionId,
+  }) {
     return apiConsumer.handleRequest(
-      request: () => apiConsumer.post(path :EndPoints.updateTransactionStatus(transactionId: transactionId), data: params.toJson()),
+      request: () => apiConsumer.post(
+        path: EndPoints.updateTransactionStatus(transactionId: transactionId),
+        data: params.toJson(),
+      ),
       onSuccess: (result) {
         return result['meta']['message'] ?? 'Success';
       },
@@ -53,7 +97,9 @@ final ApiConsumer apiConsumer;
   }
 
   @override
-  Future<Either<Failure, String>> cancelTransaction({required int transactionId}) {
+  Future<Either<Failure, String>> cancelTransaction({
+    required int transactionId,
+  }) {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.post(
         path: EndPoints.cancelTransaction(transactionId: transactionId),
@@ -65,7 +111,9 @@ final ApiConsumer apiConsumer;
   }
 
   @override
-  Future<Either<Failure, String>> payBackTransaction({required String transactionId}) {
+  Future<Either<Failure, String>> payBackTransaction({
+    required String transactionId,
+  }) {
     return apiConsumer.handleRequest(
       request: () => apiConsumer.post(
         path: EndPoints.payBackTransaction(transactionId: transactionId),
@@ -75,5 +123,4 @@ final ApiConsumer apiConsumer;
       },
     );
   }
-  
 }

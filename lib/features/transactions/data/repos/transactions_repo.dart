@@ -7,9 +7,25 @@ import '../../../../core/database/network/failure.dart';
 import '../../../../core/enums/transactions_enum.dart';
 
 abstract class TransactionsRepo {
-  Future<Either<Failure, TransactionsResponseModel>> getTransactionList({required TransactionsEnum transaction, int page = 1});
-  Future<Either<Failure, TransactionDetailsModel>> showTransactionDetails({required String transactionId});  
-  Future<Either<Failure, String>> updateTransactionStatus({required UpdateTransactionRequestParams params , required int transactionId});
-  Future<Either<Failure, String>> cancelTransaction({required int transactionId});
-  Future<Either<Failure, String>> payBackTransaction({required String transactionId});
+  Future<Either<Failure, TransactionsResponseModel>> getTransactionList({
+    required TransactionsEnum transaction,
+    int page = 1,
+    List<String>? status,
+    String? fromDate,
+    String? toDate,
+    String? search,
+  });
+  Future<Either<Failure, TransactionDetailsModel>> showTransactionDetails({
+    required String transactionId,
+  });
+  Future<Either<Failure, String>> updateTransactionStatus({
+    required UpdateTransactionRequestParams params,
+    required int transactionId,
+  });
+  Future<Either<Failure, String>> cancelTransaction({
+    required int transactionId,
+  });
+  Future<Either<Failure, String>> payBackTransaction({
+    required String transactionId,
+  });
 }

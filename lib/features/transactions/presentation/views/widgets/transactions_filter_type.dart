@@ -33,10 +33,17 @@ class _TransactionsFilterTypeState extends State<TransactionsFilterType> {
           (index) => Expanded(
             child: InkWell(
               onTap: () {
+                final cubit = context.read<TransactionsCubit>();
                 setState(() {
                   selectedIndex = index;
-                  context.read<TransactionsCubit>().getTransactionList(transaction: TransactionsEnum.values[index]);
                 });
+                cubit.getTransactionList(
+                  transaction: TransactionsEnum.values[index],
+                  status: cubit.statusFilters,
+                  fromDate: cubit.fromDateFilter,
+                  toDate: cubit.toDateFilter,
+                  search: cubit.searchFilter,
+                );
               },
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 2),
@@ -45,16 +52,15 @@ class _TransactionsFilterTypeState extends State<TransactionsFilterType> {
                   color: selectedIndex == index
                       ? context.colors.whiteColor
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10.r), 
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Center(
                   child: Text(
                     TransactionsEnum.values[index].translate(context),
                     style: selectedIndex == index
                         ? context.textStyles.font16MediumPrimaryColor
-                        : context.textStyles.font16MediumSecondaryColor.copyWith(
-                              color: context.colors.grayColor,
-                        ),
+                        : context.textStyles.font16MediumSecondaryColor
+                              .copyWith(color: context.colors.grayColor),
                     textAlign: TextAlign.center,
                   ),
                 ),
