@@ -120,7 +120,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
   }
 
   bool _canPayBackTransaction(TransactionDetailsModel transaction) {
-    return transaction.details?.status == StatusEnum.pending;
+    return transaction.details?.status == StatusEnum.pending && transaction.recievingBranch != true;
   }
 
   Future<void> _showConfirmationBottomSheet(
