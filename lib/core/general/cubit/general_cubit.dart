@@ -12,16 +12,29 @@ class GeneralCubit extends Cubit<GeneralState> {
   final GeneralRepo generalRepo;
   int _latestFeeDetailsRequestId = 0;
 
-  Future<void> getUserByPhone({required String phone}) async {
-    emit(state.copyWith(getUserByPhoneStatus: RequestStatus.loading));
+  Future<void> getUserByPhone({
+    required String phone,
+    String? requestSource,
+  }) async {
+    emit(
+      state.copyWith(
+        getUserByPhoneStatus: RequestStatus.loading,
+        userByPhoneRequestSource: requestSource,
+      ),
+    );
     final result = await generalRepo.getUserByPhone(phone: phone);
     result.fold(
-      (failure) =>
-          emit(state.copyWith(getUserByPhoneStatus: RequestStatus.error)),
+      (failure) => emit(
+        state.copyWith(
+          getUserByPhoneStatus: RequestStatus.error,
+          userByPhoneRequestSource: requestSource,
+        ),
+      ),
       (userByPhone) => emit(
         state.copyWith(
           getUserByPhoneStatus: RequestStatus.success,
           userByPhone: userByPhone,
+          userByPhoneRequestSource: requestSource,
         ),
       ),
     );

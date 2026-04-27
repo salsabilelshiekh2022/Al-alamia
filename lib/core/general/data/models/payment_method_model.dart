@@ -1,12 +1,12 @@
 class PaymentMethodModel {
   final int id;
   final String name;
-  final String image;
+  final String? image;
 
   PaymentMethodModel({
     required this.id,
     required this.name,
-    required this.image,
+     this.image,
   });
 
   factory PaymentMethodModel.fromJson(Map<String, dynamic> json) {

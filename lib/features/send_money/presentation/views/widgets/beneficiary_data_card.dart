@@ -22,6 +22,8 @@ class BeneficiaryDataCard extends StatefulWidget {
 }
 
 class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
+  static const _lookupSource = 'beneficiary_data_card';
+
   late TextEditingController nameController;
   late TextEditingController phoneController;
   late TextEditingController whatsAppController;
@@ -79,10 +81,12 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
   Widget build(BuildContext context) {
     return BlocListener<GeneralCubit, GeneralState>(
       listener: (context, state) {
-        if (state.getUserByPhoneStatus.isSuccess) {
+        if (state.getUserByPhoneStatus.isSuccess &&
+            state.userByPhoneRequestSource == _lookupSource) {
           nameController.text = state.userByPhone?.name ?? '';
           additionalController.text = state.userByPhone?.phone2 ?? '';
           addressController.text = state.userByPhone?.address ?? '';
+          _updateFormData();
         }
       },
       child: CardWithPurpleShadow(
@@ -103,7 +107,10 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
               isRequired: true,
               validator: (value) => Validator.validatePhone(value, context),
               onChanged: (val) {
-                context.read<GeneralCubit>().getUserByPhone(phone: val.trim());
+                context.read<GeneralCubit>().getUserByPhone(
+                  phone: val.trim(),
+                  requestSource: _lookupSource,
+                );
                 _updateFormData();
               },
             ),

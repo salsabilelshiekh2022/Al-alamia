@@ -15,6 +15,7 @@ class GeneralState extends Equatable {
   final RequestStatus getAllBranchesStatus;
   final RequestStatus getPaymentMethodsStatus;
   final UserByPhoneModel? userByPhone;
+  final String? userByPhoneRequestSource;
   final FeeDetailsModel? feeDetails;
   final List<DenominationModel?>? denominations;
   final List<BranchModel?>? branches;
@@ -33,6 +34,7 @@ class GeneralState extends Equatable {
     this.getAllBranchesStatus = RequestStatus.initial,
     this.getPaymentMethodsStatus = RequestStatus.initial,
     this.userByPhone,
+    this.userByPhoneRequestSource,
     this.feeDetails,
     this.denominations,
     this.branches,
@@ -48,6 +50,7 @@ class GeneralState extends Equatable {
     RequestStatus? getAllBranchesStatus,
     RequestStatus? getPaymentMethodsStatus,
     UserByPhoneModel? userByPhone,
+    String? userByPhoneRequestSource,
     FeeDetailsModel? feeDetails,
     bool clearFeeDetails = false,
     List<DenominationModel?>? denominations,
@@ -65,6 +68,8 @@ class GeneralState extends Equatable {
       getAllDenominationsStatus:
           getAllDenominationsStatus ?? this.getAllDenominationsStatus,
       userByPhone: userByPhone ?? this.userByPhone,
+      userByPhoneRequestSource:
+          userByPhoneRequestSource ?? this.userByPhoneRequestSource,
       feeDetails: clearFeeDetails ? null : feeDetails ?? this.feeDetails,
       denominations: denominations ?? this.denominations,
       branches: branches ?? this.branches,
@@ -78,6 +83,7 @@ class GeneralState extends Equatable {
   List<Object?> get props => [
     getUserByPhoneStatus,
     userByPhone,
+    userByPhoneRequestSource,
     getFeeDetailsStatus,
     feeDetails,
     getAllDenominationsStatus,

@@ -22,6 +22,8 @@ class SenderDataCard extends StatefulWidget {
 }
 
 class _SenderDataCardState extends State<SenderDataCard> {
+  static const _lookupSource = 'sender_data_card';
+
   late TextEditingController phoneController;
   late TextEditingController whatsAppController;
   late TextEditingController nameController;
@@ -73,9 +75,11 @@ class _SenderDataCardState extends State<SenderDataCard> {
   Widget build(BuildContext context) {
     return BlocListener<GeneralCubit, GeneralState>(
       listener: (context, state) {
-        if (state.getUserByPhoneStatus.isSuccess) {
-        nameController.text = state.userByPhone?.name ?? '';
-        addressController.text = state.userByPhone?.address ?? '';
+        if (state.getUserByPhoneStatus.isSuccess &&
+            state.userByPhoneRequestSource == _lookupSource) {
+          nameController.text = state.userByPhone?.name ?? '';
+          addressController.text = state.userByPhone?.address ?? '';
+          _updateFormData();
         }
       },
       child: CardWithPurpleShadow(
@@ -96,7 +100,10 @@ class _SenderDataCardState extends State<SenderDataCard> {
               isRequired: true,
               validator: (val) => Validator.validatePhone(val, context),
               onChanged: (val) {
-                context.read<GeneralCubit>().getUserByPhone(phone: val.trim());
+                context.read<GeneralCubit>().getUserByPhone(
+                  phone: val.trim(),
+                  requestSource: _lookupSource,
+                );
                 _updateFormData();
               },
             ),
