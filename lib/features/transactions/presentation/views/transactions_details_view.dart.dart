@@ -112,7 +112,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
         transactionType?.trim().toLowerCase() == 'sending' ||
         _isTransferType(transactionType ?? '');
 
-    return isEditableType && editableStatuses.contains(status);
+    return isEditableType && editableStatuses.contains(status) && transaction.recievingBranch != true;
   }
 
   bool _canCancelTransaction(TransactionDetailsModel transaction) {

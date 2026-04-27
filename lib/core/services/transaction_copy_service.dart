@@ -56,7 +56,7 @@ class TransactionCopyService {
         receiverPhone2: transaction.receiver?.phone_2,
 
         // Transaction Details
-        amount: transaction.amountSent ?? "0",
+        amount: transaction.amount ?? "0",
         totalPrice: transaction.amountReceived ?? "0",
         amountByChar: transaction.details?.amountCharacter ?? '',
         note: preserveNote ? transaction.notes ?? '' : '',

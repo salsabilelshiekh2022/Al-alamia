@@ -7,6 +7,7 @@ import '../../../../core/general/data/models/branch_model.dart';
 
 class TransactionDetailsModel {
   TransactionDetailsModel({
+     this.amount,
      this.amountSent,
      this.currency,
      this.amountReceived,
@@ -24,6 +25,7 @@ class TransactionDetailsModel {
   });
 
   final String? amountSent;
+  final String? amount;
   final String? currency;
   final String? amountReceived;
   final String? toCurrency;
@@ -43,6 +45,7 @@ class TransactionDetailsModel {
     String? pdfUrl,
   }) => TransactionDetailsModel(
     amountSent: json["amount_sent"],
+    amount: json["amount"],
     currency: json["currency"],
     amountReceived: json["amount_received"],
     toCurrency: json["ToCurrency"],

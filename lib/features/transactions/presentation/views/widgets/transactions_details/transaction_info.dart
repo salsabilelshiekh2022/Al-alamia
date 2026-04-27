@@ -76,7 +76,7 @@ class TransactionInfoCard extends StatelessWidget {
               _buildInfoRow(
                 context: context,
                 title: context.amountSent,
-                value: state.transactionDetails?.details?.amountSent ?? '--',
+                value: state.transactionDetails?.amount ?? '--',
               ),
               14.verticalSizedBox,
               _buildInfoRow(
