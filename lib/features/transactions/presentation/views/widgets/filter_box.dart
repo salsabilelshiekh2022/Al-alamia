@@ -44,8 +44,8 @@ class _FilterBoxState extends State<FilterBox> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CheckItem(title: "الكل",),
-                CheckItem(title: "في انتظار القبول"),
+                CheckItem(title: "في انتظار القبول", status: "waiting_approval",),
+                 CheckItem(title: "قيد التنفيذ", status: "in_progress",),
               ],
             ).onlyPadding(
               leftPadding: 50
@@ -54,8 +54,10 @@ class _FilterBoxState extends State<FilterBox> {
              Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CheckItem(title: "قيد التنفيذ",),
-                CheckItem(title: "تم التسليم "),
+               
+                CheckItem(title: "تم التسليم ", status: "completed",),
+                CheckItem(title: "معلق", status: "pending",),
+
               ],
             ).onlyPadding(
               leftPadding: 82
@@ -63,8 +65,7 @@ class _FilterBoxState extends State<FilterBox> {
             12.verticalSizedBox, Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CheckItem(title: "معلق",),
-                CheckItem(title: "ملغي "),
+                CheckItem(title: "ملغي ", status: "canceled",),
               ],
             ).onlyPadding(
               leftPadding: 114
@@ -94,9 +95,10 @@ class _FilterBoxState extends State<FilterBox> {
 
 class CheckItem extends StatefulWidget {
   const CheckItem({
-    super.key, required this.title,
+    super.key, required this.title, required this.status,
   });
   final String title;
+  final String status;
 
   @override
   State<CheckItem> createState() => _CheckItemState();
