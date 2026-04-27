@@ -637,7 +637,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                           .read<TransactionsCubit>()
                           .state
                           .transactionDetails
-                          ?.amountSent ??
+                          ?.amount ??
                       '0',
                 ).toInt(),
                 onConfirm: _onDenominationsConfirmed,

@@ -48,14 +48,14 @@ class TransferredAmountInfoWidget extends StatelessWidget {
         _buildAmountColumn(
           context,
           label: context.transeferedAmount,
-          amount: details?.amountSent ?? '--',
+          amount: details?.amount ?? '--',
           currency: details?.currency ?? '--',
         ),
         _buildArrowIcon(context),
         _buildAmountColumn(
           context,
-          label: context.amountSent,
-          amount: details?.amountReceived ?? '--',
+          label: context.amount,
+          amount: details?.amount ?? '--',
           currency: details?.toCurrency ?? '--',
         ),
       ],
@@ -150,7 +150,7 @@ class TransferredAmountInfoWidget extends StatelessWidget {
             children: [
               Text("المبلغ المرسل", style: context.textStyles.font15MediumGrayColor),
               14.verticalSizedBox,
-              Text(state.transactionDetails?.amountSent ?? '--', style: context.textStyles.font24BoldSecondaryColor),
+              Text(state.transactionDetails?.amount ?? '--', style: context.textStyles.font24BoldSecondaryColor),
                6.verticalSizedBox,
                Text(state.transactionDetails?.currency ?? '--', style: context.textStyles.font14RegularPrimaryColor),
                 _buildDivider(context),
