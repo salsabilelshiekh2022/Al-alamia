@@ -16,4 +16,5 @@ abstract class HomeRepo {
   Future<Either<Failure, TransferCurrencyModel>> transferCurrency({
     required TransferCurrencyRequestParams transferCurrencyRequestParams,
   });
+   Future<Either<Failure, List<CurrencyModel>>> getCurrenciesByBranch({int toCurrencies = 1});
 }

@@ -233,7 +233,7 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
       builder: (context, state) {
         return CustomTextFieldWithLabel(
           onTap: () {
-            _showCurrencyBottomSheet(state.currenciesList);
+            _showCurrencyBottomSheet(state.currenciesByBranchList);
           },
           controller: currencyController,
           label: context.currency,
@@ -245,7 +245,7 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
           suffixWidget: InkWell(
             splashColor: Colors.transparent,
             onTap: () {
-              _showCurrencyBottomSheet(state.currenciesList);
+              _showCurrencyBottomSheet(state.currenciesByBranchList);
             },
             child: Icon(
               Icons.keyboard_arrow_down_rounded,

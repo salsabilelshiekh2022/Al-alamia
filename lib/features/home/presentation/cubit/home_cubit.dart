@@ -58,6 +58,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
+
   void _handleCurrenciesSuccess(List<CurrencyModel> currenciesList) {
     if (currenciesList.length >= 2) {
       transferCurrency(
@@ -90,6 +91,19 @@ class HomeCubit extends Cubit<HomeState> {
         state.copyWith(
           transferCurrencyStatus: RequestStatus.success,
           transferCurrency: transferCurrency,
+        ),
+      ),
+    );
+  }
+   Future<void> getCurrenciesByBranch({int toCurrencies = 1}) async {
+    emit(state.copyWith(homeStatus: RequestStatus.loading));
+    final result = await homeRepo.getCurrenciesByBranch(toCurrencies: toCurrencies);
+    result.fold(
+      (failure) => emit(state.copyWith(homeStatus: RequestStatus.error)),
+      (currenciesList) => emit(
+        state.copyWith(
+          homeStatus: RequestStatus.success,
+          currenciesByBranchList: currenciesList,
         ),
       ),
     );

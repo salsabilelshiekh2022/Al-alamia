@@ -26,6 +26,8 @@ class CurrencyCalculator extends StatefulWidget {
     this.onAmountChanged,
     this.isFromCurrencyLocked = false,
     this.initialFromCurrency,
+    required this.fromCurrencies,
+    required this.toCurrencies,
   });
 
   final TextEditingController amountController;
@@ -37,6 +39,8 @@ class CurrencyCalculator extends StatefulWidget {
   final void Function(String)? onAmountChanged;
   final bool isFromCurrencyLocked;
   final CurrencyModel? initialFromCurrency;
+  final List<CurrencyModel> fromCurrencies ;
+  final List<CurrencyModel> toCurrencies ;
 
   @override
   State<CurrencyCalculator> createState() => _CurrencyCalculatorState();
@@ -46,6 +50,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   CurrencyModel? _fromCurrency;
   CurrencyModel? _toCurrency;
   bool _currenciesInitialized = false;
+ 
 
   void _swapCurrencies() {
     if (widget.isFromCurrencyLocked) return;
@@ -187,7 +192,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
               16.verticalSizedBox,
               CurrencyInputRow(
                 enabled: true,
-                currencies: state.currenciesList,
+                currencies: widget.fromCurrencies,
                 selectedCurrency: _fromCurrency,
                 onCurrencyChanged: _onFromCurrencyChanged,
                 controller: widget.amountController,
@@ -207,7 +212,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
               16.verticalSizedBox,
               CurrencyInputRow(
                 enabled: false,
-                currencies: state.currenciesList,
+                currencies: widget.toCurrencies,
                 selectedCurrency: _toCurrency,
                 onCurrencyChanged: _onToCurrencyChanged,
                 controller: widget.resultController,

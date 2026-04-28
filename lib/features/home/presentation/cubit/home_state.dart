@@ -16,6 +16,7 @@ class HomeState extends Equatable {
   final List<DenominationsModel> denominations;
   final DenominationsMeta? denominationsMeta;
   final TransferCurrencyModel? transferCurrency;
+  final List<CurrencyModel> currenciesByBranchList;
 
   static HomeState initial() => const HomeState();
 
@@ -29,6 +30,7 @@ class HomeState extends Equatable {
     this.denominationsMeta,
     this.currenciesList = const [],
     this.transferCurrency,
+    this.currenciesByBranchList = const [],
   });
 
   HomeState copyWith({
@@ -41,6 +43,7 @@ class HomeState extends Equatable {
     DenominationsMeta? denominationsMeta,
     List<CurrencyModel>? currenciesList,
     TransferCurrencyModel? transferCurrency,
+    List<CurrencyModel>? currenciesByBranchList,
   }) {
     return HomeState(
       homeStatus: homeStatus ?? this.homeStatus,
@@ -53,6 +56,7 @@ class HomeState extends Equatable {
       denominationsMeta: denominationsMeta ?? this.denominationsMeta,
       currenciesList: currenciesList ?? this.currenciesList,
       transferCurrency: transferCurrency ?? this.transferCurrency,
+      currenciesByBranchList: currenciesByBranchList ?? this.currenciesByBranchList,
     );
   }
 
@@ -67,5 +71,6 @@ class HomeState extends Equatable {
     denominationsMeta,
     currenciesList,
     transferCurrency,
+    currenciesByBranchList,
   ];
 }

@@ -50,6 +50,65 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
   int? selectedToCurrencyId;
   int? selectedDestinationId;
   CommissionTypeEnum? selectedCommissionType;
+  String? _lastCommissionText;
+
+  double _calculateCommissionAmount() {
+    final amountText = amountController.text.trim();
+    final amount = double.tryParse(amountText) ?? 0.0;
+    if (amount <= 0) return 0.0;
+
+    final branch = getIt<CacheServices>()
+        .getDataFromCache<UserModel>(
+          boxName: CacheBoxes.userModelBox,
+          key: "user",
+        )
+        ?.branch;
+
+    final double commissionPercentage =
+        double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
+
+    return (amount * commissionPercentage) / 100;
+  }
+
+  void _syncCommissionAmountForType(CommissionTypeEnum type) {
+    final currentText = commissionController.text.trim();
+
+    if (type == CommissionTypeEnum.none) {
+      if (currentText.isNotEmpty && currentText != '0.00') {
+        _lastCommissionText = currentText;
+      }
+      commissionController.text = '0.00';
+      return;
+    }
+
+    if (_lastCommissionText != null && _lastCommissionText!.trim().isNotEmpty) {
+      commissionController.text = _lastCommissionText!;
+      return;
+    }
+
+    final commissionAmount = _calculateCommissionAmount();
+    commissionController.text = commissionAmount.toStringAsFixed(2);
+  }
+
+  void _syncCommissionTypeFromFormData(SendMoneyFormData? formData) {
+    final type = formData?.commissionType;
+    if (type == null) return;
+
+    final translatedType = type.getCommissionType(context);
+    final hasSameType = selectedCommissionType == type;
+    final hasSameText =
+        commissionTypeController.text.trim() == translatedType.trim();
+    if (hasSameType && hasSameText) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        selectedCommissionType = type;
+        commissionTypeController.text = translatedType;
+      });
+      _syncCommissionAmountForType(type);
+    });
+  }
 
   BranchModel? _findBranchById(List<BranchModel?> branches, int? branchId) {
     if (branchId == null) return null;
@@ -258,6 +317,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       commissionTypeController.text = type.getCommissionType(context);
       selectedCommissionType = type;
     });
+    _syncCommissionAmountForType(type);
     _updateFormData();
     _getFeeDetails();
   }
@@ -299,19 +359,14 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
     final result = (amount * exchangeRate).toStringAsFixed(2);
     converterAmountController.text = result;
 
-    // Calculate commission
-    final branch = getIt<CacheServices>()
-        .getDataFromCache<UserModel>(
-          boxName: CacheBoxes.userModelBox,
-          key: "user",
-        )
-        ?.branch;
-
-    final double commissionPercentage =
-        double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
-
-    final double commissionAmount = (amount * commissionPercentage) / 100;
-    commissionController.text = commissionAmount.toStringAsFixed(2);
+    final commissionType = selectedCommissionType ??
+        context.read<SendMoneyCubit>().state.formData?.commissionType;
+    if (commissionType == CommissionTypeEnum.none) {
+      commissionController.text = '0.00';
+    } else {
+      final commissionAmount = _calculateCommissionAmount();
+      commissionController.text = commissionAmount.toStringAsFixed(2);
+    }
 
     _updateFormData();
     _getFeeDetails();
@@ -422,6 +477,7 @@ class _TransactionDetailsCardState extends State<TransactionDetailsCard> {
       },
       child: BlocBuilder<SendMoneyCubit, SendMoneyState>(
         builder: (context, state) {
+          _syncCommissionTypeFromFormData(state.formData);
           return CardWithPurpleShadow(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

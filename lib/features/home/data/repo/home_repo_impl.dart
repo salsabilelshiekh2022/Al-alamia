@@ -68,4 +68,17 @@ class HomeRepoImpl extends HomeRepo {
       },
     );
   }
+  @override
+  Future<Either<Failure, List<CurrencyModel>>> getCurrenciesByBranch({int toCurrencies = 1}) {
+    return apiConsumer.handleRequest(
+      request: () => apiConsumer.get(EndPoints.getCurrencies, queryParameters: {
+        'to_currencies': toCurrencies,
+      }),
+      
+      onSuccess: (result) {
+        final data = result['data'] as List;
+        return data.map((e) => CurrencyModel.fromJson(e)).toList();
+      },
+    );
+  }
 }

@@ -236,7 +236,7 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
                 context.read<InAndOutTransactionCubit>().state.inAndOutTransactionStatus.isLoading
                     ? null
                     : _showCurrencyBottomSheet(
-                        context.read<HomeCubit>().state.currenciesList);
+                        context.read<HomeCubit>().state.currenciesByBranchList);
               },
               suffixWidget: InkWell(
                 splashColor: Colors.transparent,
@@ -244,7 +244,7 @@ class _InAndOutTransactionFormState extends State<InAndOutTransactionForm> {
                    context.read<InAndOutTransactionCubit>().state.inAndOutTransactionStatus.isLoading
                     ? null
                     : _showCurrencyBottomSheet(
-                        context.read<HomeCubit>().state.currenciesList);
+                        context.read<HomeCubit>().state.currenciesByBranchList);
                 },
                 child: Icon(
                   Icons.keyboard_arrow_down_rounded,

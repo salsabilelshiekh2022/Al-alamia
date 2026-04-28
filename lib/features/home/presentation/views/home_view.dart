@@ -73,7 +73,10 @@ class HomeView extends StatelessWidget {
                             20.verticalSizedBox,
                             DebtsAndExpensesSection(),
                             20.verticalSizedBox,
-                            CurrencyCalculatorSection(),
+                            CurrencyCalculatorSection(
+                              fromCurrencies: context.read<HomeCubit>().state.currenciesList, 
+                              toCurrencies: context.read<HomeCubit>().state.currenciesList,
+                            ),
                             120.verticalSizedBox,
                           ],
                         ),

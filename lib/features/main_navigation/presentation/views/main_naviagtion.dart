@@ -58,7 +58,7 @@ class _MainNavigationViewState extends State<MainNavigationView> {
       child: BlocProvider.value(
         value: getIt<HomeCubit>()
           ..getBranchCurrencies()
-          ..getCurrencies(),
+          ..getCurrencies()..getCurrenciesByBranch(),
         child: HomeView(),
       ),
     ),

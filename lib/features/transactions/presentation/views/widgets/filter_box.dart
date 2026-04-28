@@ -24,7 +24,7 @@ class _FilterBoxState extends State<FilterBox> {
   static const List<_StatusOption> _statusOptions = [
     _StatusOption(title: 'في انتظار القبول', value: 'waiting_approval'),
     _StatusOption(title: 'قيد التنفيذ', value: 'in_progress'),
-    _StatusOption(title: 'تم التسليم', value: 'completed'),
+    _StatusOption(title: 'مكتملة', value: 'completed'),
     _StatusOption(title: 'معلق', value: 'pending'),
     _StatusOption(title: 'ملغي', value: 'canceled'),
   ];

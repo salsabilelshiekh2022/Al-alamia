@@ -236,6 +236,8 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
                 title: context.conversionData,
                 amountController: _amountController,
                 resultController: _resultController,
+                fromCurrencies: context.read<HomeCubit>().state.currenciesList,
+                toCurrencies: context.read<HomeCubit>().state.currenciesByBranchList,
                 onAmountChanged: (val) {
                   _getFeeDetails();
                 },
