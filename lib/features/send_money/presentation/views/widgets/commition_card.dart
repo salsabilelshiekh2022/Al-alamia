@@ -42,6 +42,42 @@ class _CommitionCardState extends State<CommitionCard> {
       widget.commissionTypeController;
   TextEditingController get commissionController => widget.commissionController;
   CommissionTypeEnum? selectedCommissionType;
+  String? _lastCommissionText;
+
+  double _calculateCommissionAmount() {
+    final formData = context.read<SendMoneyCubit>().state.formData;
+    final amountText = formData?.amount.trim() ?? '';
+    final amount = double.tryParse(amountText) ?? 0.0;
+    if (amount <= 0) return 0.0;
+
+    final branch = getIt<CacheServices>().getDataFromCache<UserModel>(
+      boxName: CacheBoxes.userModelBox,
+      key: 'user',
+    )?.branch;
+    final percentage =
+        double.tryParse(branch?.commissionRatePercentage ?? '0') ?? 0.0;
+    return (amount * percentage) / 100;
+  }
+
+  void _syncCommissionAmountForType(CommissionTypeEnum type) {
+    final currentText = commissionController.text.trim();
+
+    if (type == CommissionTypeEnum.none) {
+      if (currentText.isNotEmpty && currentText != '0.00') {
+        _lastCommissionText = currentText;
+      }
+      commissionController.text = '0.00';
+      return;
+    }
+
+    if (_lastCommissionText != null && _lastCommissionText!.trim().isNotEmpty) {
+      commissionController.text = _lastCommissionText!;
+      return;
+    }
+
+    final commissionAmount = _calculateCommissionAmount();
+    commissionController.text = commissionAmount.toStringAsFixed(2);
+  }
 
   void _syncCommissionTypeFromFormData(SendMoneyFormData? formData) {
     final type = formData?.commissionType;
@@ -59,6 +95,7 @@ class _CommitionCardState extends State<CommitionCard> {
         selectedCommissionType = type;
         commissionTypeController.text = translatedType;
       });
+      _syncCommissionAmountForType(type);
     });
   }
 
@@ -67,6 +104,7 @@ class _CommitionCardState extends State<CommitionCard> {
       commissionTypeController.text = type.getCommissionType(context);
       selectedCommissionType = type;
     });
+    _syncCommissionAmountForType(type);
     _updateFormData();
     _getFeeDetails();
   }

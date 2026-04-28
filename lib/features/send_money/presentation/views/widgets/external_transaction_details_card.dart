@@ -415,19 +415,25 @@ class _ExternalTransactionDetailsCardState
     final result = (amount * exchangeRate).toStringAsFixed(2);
     converterAmountController.text = result;
 
-    // Calculate commission
-    final branch = getIt<CacheServices>()
-        .getDataFromCache<UserModel>(
-          boxName: CacheBoxes.userModelBox,
-          key: "user",
-        )
-        ?.branch;
+    final commissionType =
+        context.read<SendMoneyCubit>().state.formData?.commissionType;
+    if (commissionType == CommissionTypeEnum.none) {
+      commissionController.text = "0.00";
+    } else {
+      // Calculate commission
+      final branch = getIt<CacheServices>()
+          .getDataFromCache<UserModel>(
+            boxName: CacheBoxes.userModelBox,
+            key: "user",
+          )
+          ?.branch;
 
-    final double commissionPercentage =
-        double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
+      final double commissionPercentage =
+          double.tryParse(branch?.commissionRatePercentage ?? "0") ?? 0.0;
 
-    final double commissionAmount = (amount * commissionPercentage) / 100;
-    commissionController.text = commissionAmount.toStringAsFixed(2);
+      final double commissionAmount = (amount * commissionPercentage) / 100;
+      commissionController.text = commissionAmount.toStringAsFixed(2);
+    }
 
     _updateFormData();
     _getFeeDetails();

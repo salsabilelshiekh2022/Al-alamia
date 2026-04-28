@@ -1,5 +1,6 @@
 import 'package:alalamia/core/enums/debets_enum.dart';
 
+import '../../../../core/enums/status_enum.dart';
 import '../../../expenses/data/models/expense_model.dart';
 import '../../../home/data/models/currency_model.dart';
 import '../../../notifications/data/models/notification_model.dart';
@@ -33,7 +34,7 @@ class DebtModel {
   int? id;
   String? uuid;
   String? amount;
-  String? status;
+  StatusEnum? status;
   DateTime? createdAt;
   String? note;
   CurrencyModel? currency;
@@ -58,7 +59,7 @@ class DebtModel {
     id = json['id'];
     uuid = json['uuid'];
     amount = json['amount'];
-    status = json['status'];
+    status = json['status'] != null ? StatusEnum.values.firstWhere((e) => e.name == json['status']) : null;
     createdAt = json['created_at'] != null ? DateTime.parse(json['created_at']) : null;
     note = json['notes'];
     currency = json['currency'] != null ? CurrencyModel.fromJson(json['currency']) : null;
@@ -72,7 +73,7 @@ DebtModel dummyDebtModel = DebtModel(
   id: 1,
   uuid: "uuid",
   amount: "amount",
-  status: "status",
+  status: StatusEnum.completed,
   createdAt: DateTime.now(),
   note: "note",
   currency: CurrencyModel(

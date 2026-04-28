@@ -110,13 +110,13 @@ class DebtItem extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.5, vertical: 5),
           decoration: BoxDecoration(
-            color: context.colors.greenColor.withValues(alpha: 0.05),
+            color: debtModel.status?.chooseColor(context).withValues(alpha: 0.05) ?? Colors.transparent,
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
-            "مقبولة",
+            debtModel.status?.translate(context) ?? "",
             style: context.textStyles.font14MediumPrimaryColor.copyWith(
-              color: context.colors.greenColor,
+              color: debtModel.status?.chooseColor(context) ?? Colors.black,
             ),
           ),
         ),
