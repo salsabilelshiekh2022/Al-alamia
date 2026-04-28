@@ -57,10 +57,7 @@ class TransactionsView extends StatelessWidget {
                     children: [
                       TransactionsFilterType(),
                       16.verticalSizedBox,
-                      const Expanded(
-                        child: TransactionsListWidget(),
-                      ),
-                      80.verticalSizedBox,
+                      const Expanded(child: TransactionsListWidget()),
                     ],
                   ),
                 ),
@@ -72,10 +69,3 @@ class TransactionsView extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-

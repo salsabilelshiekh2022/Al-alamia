@@ -76,6 +76,11 @@ class _SearchBoxState extends State<SearchBox> {
           _debounce?.cancel();
           _requestSearch(value);
         },
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+          _debounce?.cancel();
+          _requestSearch(_controller.text);
+        },
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: context.search,
