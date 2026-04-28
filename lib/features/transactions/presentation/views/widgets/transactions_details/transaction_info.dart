@@ -3,6 +3,7 @@ import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -54,6 +55,16 @@ class TransactionInfoCard extends StatelessWidget {
                 title: context.transactionType,
                 value:
                     state.transactionDetails?.details?.transactionType ?? '--',
+              ),
+               14.verticalSizedBox,
+              _buildInfoRow(
+                context: context,
+                title: "تاريخ المعاملة",
+                value:
+                    DateFormat(
+                        'dd-MM-yyyy, hh:mm a',
+                        EasyLocalization.of(context)!.locale.languageCode,
+                      ).format(DateTime.parse( state.transactionDetails?.details?.dateTime.toString() ?? '')),
               ),
               Divider(color: context.colors.strokeColor).verticalPadding(14),
               _buildInfoRow(
@@ -162,6 +173,15 @@ class TransactionInfoCard extends StatelessWidget {
                     state.transactionDetails?.details?.transactionUuid ?? '--',
               ),
               14.verticalSizedBox,
+                _buildInfoRow(
+                context: context,
+                title: "تاريخ المعاملة",
+                value:
+                    DateFormat(
+                        'dd-MM-yyyy, hh:mm a',
+                        EasyLocalization.of(context)!.locale.languageCode,
+                      ).format(DateTime.parse( state.transactionDetails?.details?.dateTime.toString() ?? '')),
+              ),
               _buildInfoRow(
                 context: context,
                 title: context.transactionType,

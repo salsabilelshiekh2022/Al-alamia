@@ -16,8 +16,7 @@ class TransactionStatusBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-     width: 80,
-     height: 26,
+     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 12.5),
       decoration: BoxDecoration(
         color:status.chooseColor(context).withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(6.r),

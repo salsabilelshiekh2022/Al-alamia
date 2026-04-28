@@ -80,6 +80,7 @@ class DetailModel {
      this.totalAmount,
      this.commissionType,
      this.status,
+     this.dateTime,
   });
 
   final String? transactionUuid;
@@ -92,6 +93,7 @@ class DetailModel {
   final double? totalAmount;
   final CommissionTypeEnum? commissionType;
   final StatusEnum? status;
+  final DateTime? dateTime;
 
   factory DetailModel.fromJson(Map<String, dynamic> json) => DetailModel(
     transactionUuid: json["transaction_uuid"],
@@ -112,6 +114,7 @@ class DetailModel {
             (e) => e.name == json['status'],
           )
         : null,
+    dateTime: json["date_time"] != null ? DateTime.parse(json["date_time"]) : null,
   );
 }
 class PaymentMethodModel {
@@ -160,6 +163,7 @@ TransactionDetailsModel dummyTransactionModel = TransactionDetailsModel(
     totalAmount: 10.399999999999999,
     commissionType: CommissionTypeEnum.none,
     status: StatusEnum.completed,
+    dateTime: DateTime.now(),
   ),
 );
 
