@@ -72,6 +72,7 @@ class _SenderDataCardState extends State<SenderDataCard> {
   }
 
   @override
+
   Widget build(BuildContext context) {
     return BlocListener<GeneralCubit, GeneralState>(
       listener: (context, state) {
@@ -79,6 +80,11 @@ class _SenderDataCardState extends State<SenderDataCard> {
             state.userByPhoneRequestSource == _lookupSource) {
           nameController.text = state.userByPhone?.name ?? '';
           addressController.text = state.userByPhone?.address ?? '';
+          _updateFormData();
+        }else if (state.getUserByPhoneStatus.isError &&
+            state.userByPhoneRequestSource == _lookupSource) {
+          nameController.text = '';
+          addressController.text = '';
           _updateFormData();
         }
       },

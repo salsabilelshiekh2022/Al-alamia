@@ -87,7 +87,13 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
           additionalController.text = state.userByPhone?.phone2 ?? '';
           addressController.text = state.userByPhone?.address ?? '';
           _updateFormData();
-        }
+        }else if (state.getUserByPhoneStatus.isError &&
+            state.userByPhoneRequestSource == _lookupSource) {
+          nameController.text = '';
+          additionalController.text = '';
+          addressController.text = '';
+          _updateFormData();
+        } 
       },
       child: CardWithPurpleShadow(
         child: Column(
