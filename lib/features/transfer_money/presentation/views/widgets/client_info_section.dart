@@ -74,10 +74,15 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
                 controller: widget.whatsAppNumberController,
                 label: "رقم الواتساب",
                 hintText: "أدخل رقم الواتساب",
-                isRequired: true,
+                isRequired: false,
                 prefixWidget: AppAssets.svgsPhone,
                 keyboardType: TextInputType.phone,
-                validator: (val) => Validator.validatePhone(val, context),
+                validator: (val) {
+                  if (val == null || val.trim().isEmpty) {
+                    return null;
+                  }
+                  return Validator.validatePhone(val, context);
+                },
               ),
               CustomTextFieldWithLabel(
                 controller: widget.nameController,

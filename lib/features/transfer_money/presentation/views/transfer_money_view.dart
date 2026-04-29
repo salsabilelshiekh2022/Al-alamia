@@ -6,6 +6,7 @@ import 'package:alalamia/core/general/cubit/general_cubit.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
+import 'package:alalamia/core/utils/validator.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -111,10 +112,6 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       _showError('يرجى إدخال رقم الهاتف');
       return;
     }
-    if (_whatsAppNumberController.text.trim().isEmpty) {
-      _showError('يرجى إدخال رقم الواتساب');
-      return;
-    }
     if (_nameController.text.trim().isEmpty) {
       _showError('يرجى إدخال اسم العميل');
       return;
@@ -137,11 +134,17 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     }
 
     // Show message type selection bottom sheet
+    final whatsappNumber = _whatsAppNumberController.text.trim();
+    final hasValidWhatsapp = whatsappNumber.isNotEmpty &&
+        Validator.validatePhone(whatsappNumber, context) == null;
+
     final selectedMessageType = await showModalBottomSheet<MessageTypeEnum>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const MessageTypeSelectionBottomSheet(),
+      builder: (context) => MessageTypeSelectionBottomSheet(
+        allowWhatsApp: hasValidWhatsapp,
+      ),
     );
 
     // Check if widget is still mounted after async operation
@@ -156,7 +159,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     final transferData = TransferMoneyDataParams(
       clientPhone: _phoneController.text.trim(),
       clientName: _nameController.text.trim(),
-      whatsappNumber: _whatsAppNumberController.text.trim(),
+      whatsappNumber: whatsappNumber,
       fromCurrencyId: _fromCurrency!.id!,
       toCurrencyId: _toCurrency!.id!,
       amount: _amountController.text.trim(),

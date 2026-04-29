@@ -6,9 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Bottom sheet for selecting notification message type (SMS or WhatsApp)
 class MessageTypeSelectionBottomSheet extends StatefulWidget {
-  const MessageTypeSelectionBottomSheet({super.key, this.initialSelection});
+  const MessageTypeSelectionBottomSheet({
+    super.key,
+    this.initialSelection,
+    this.allowWhatsApp = true,
+  });
 
   final MessageTypeEnum? initialSelection;
+  final bool allowWhatsApp;
 
   @override
   State<MessageTypeSelectionBottomSheet> createState() =>
@@ -23,6 +28,9 @@ class _MessageTypeSelectionBottomSheetState
   void initState() {
     super.initState();
     _selectedType = widget.initialSelection;
+    if (!widget.allowWhatsApp && _selectedType == MessageTypeEnum.whatsapp) {
+      _selectedType = null;
+    }
   }
 
   @override
@@ -82,6 +90,7 @@ class _MessageTypeSelectionBottomSheetState
             title: 'واتساب (WhatsApp)',
             description: 'إرسال إشعار عبر تطبيق واتساب',
             icon: Icons.chat_bubble_outline,
+            enabled: widget.allowWhatsApp,
           ),
 
           24.verticalSizedBox,
@@ -124,24 +133,32 @@ class _MessageTypeSelectionBottomSheetState
     required String title,
     required String description,
     required IconData icon,
+    bool enabled = true,
   }) {
     final isSelected = _selectedType == type;
+    final isEnabled = enabled;
+    final effectiveSelected = isSelected && isEnabled;
+    final baseTextColor = isEnabled
+        ? context.colors.primaryColor
+        : context.colors.grayColor;
 
     return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedType = type;
-        });
-      },
+      onTap: isEnabled
+          ? () {
+              setState(() {
+                _selectedType = type;
+              });
+            }
+          : null,
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected
+          color: effectiveSelected
               ? context.colors.primaryColor.withOpacity(0.1)
               : context.colors.backgroundFieldColor,
           border: Border.all(
-            color: isSelected
+            color: effectiveSelected
                 ? context.colors.primaryColor
                 : Colors.transparent,
             width: 2,
@@ -155,14 +172,14 @@ class _MessageTypeSelectionBottomSheetState
               width: 48.w,
               height: 48.w,
               decoration: BoxDecoration(
-                color: isSelected
+                color: effectiveSelected
                     ? context.colors.primaryColor
                     : context.colors.grayColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
                 icon,
-                color: isSelected
+                color: effectiveSelected
                     ? context.colors.whiteColor
                     : context.colors.grayColor,
                 size: 24.sp,
@@ -180,9 +197,7 @@ class _MessageTypeSelectionBottomSheetState
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: isSelected
-                          ? context.colors.primaryColor
-                          : context.colors.primaryColor,
+                      color: baseTextColor,
                     ),
                   ),
                   4.verticalSizedBox,
@@ -190,7 +205,9 @@ class _MessageTypeSelectionBottomSheetState
                     description,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: context.colors.grayColor,
+                      color: isEnabled
+                          ? context.colors.grayColor
+                          : context.colors.grayColor.withOpacity(0.6),
                     ),
                   ),
                 ],
@@ -204,16 +221,16 @@ class _MessageTypeSelectionBottomSheetState
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected
+                  color: effectiveSelected
                       ? context.colors.primaryColor
                       : context.colors.grayColor,
                   width: 2,
                 ),
-                color: isSelected
+                color: effectiveSelected
                     ? context.colors.primaryColor
                     : Colors.transparent,
               ),
-              child: isSelected
+              child: effectiveSelected
                   ? Icon(
                       Icons.check,
                       size: 16.sp,
