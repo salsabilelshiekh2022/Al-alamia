@@ -175,6 +175,12 @@ abstract class AppRouter {
           ),
         );
       case Routes.addExpensesView:
+        final args = settings.arguments;
+        ExpensesCubit? cubit;
+        if (args is Map<String, dynamic>) {
+          cubit = args['transactionsCubit'] as ExpensesCubit?;
+        }
+
         return MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: getIt<GeneralCubit>(),
@@ -182,7 +188,9 @@ abstract class AppRouter {
               value: getIt<HomeCubit>(),
               child: BlocProvider(
                 create: (context) => getIt<ExpensesCubit>(),
-                child: const AddExpensesView(),
+                child: AddExpensesView(
+                  expensesCubit: cubit ?? getIt<ExpensesCubit>(),
+                ),
               ),
             ),
           ),

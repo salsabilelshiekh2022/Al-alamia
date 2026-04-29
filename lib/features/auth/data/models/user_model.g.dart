@@ -28,6 +28,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       branch: fields[7] as Branch?,
       rewarded: fields[9] as String?,
       penalized: fields[10] as String?,
+      currency: fields[11] as String?,
     );
   }
 
@@ -56,7 +57,9 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(9)
       ..write(obj.rewarded)
       ..writeByte(10)
-      ..write(obj.penalized);
+      ..write(obj.penalized)
+      ..writeByte(11)
+      ..write(obj.currency);
   }
 
   @override

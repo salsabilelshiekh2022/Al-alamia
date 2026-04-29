@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/components/widgets/custom_app_bar.dart';
+import '../../../../core/database/cache/cache_helper.dart';
+import '../../../../core/database/cache/cache_services.dart';
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/helper/app_extention.dart';
 import '../../../../core/helper/translation_extensions.dart';
 import '../../../../core/helper/widget_extentions.dart';
@@ -26,7 +29,16 @@ class _ExpensesListViewState extends State<ExpensesListView> {
 
   @override
   void initState() {
-    selectedCurrency = context.read<HomeCubit>().state.currenciesList.first;
+    final user = getIt<CacheServices>().getDataFromCache(
+      boxName: CacheBoxes.userModelBox,
+      key: 'user',
+    );
+    selectedCurrency = context
+        .read<HomeCubit>()
+        .state
+        .currenciesList
+        .where((currency) => currency.name == user?.currency)
+        .firstOrNull;
 
     // context.read<ExpensesCubit>().getExpenses(); // Handled by list widget
     context.read<ExpensesCubit>().getExpensesByCurrency(
@@ -38,80 +50,90 @@ class _ExpensesListViewState extends State<ExpensesListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: InkWell(
-        onTap: () => context.pushNamed(Routes.addExpensesView),
-        child: Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: context.colors.primaryColor,
+    return RefreshIndicator(
+      onRefresh: () {
+        context.read<ExpensesCubit>().refreshExpenses();
+        context.read<ExpensesCubit>().getExpensesByCurrency(
+          id: selectedCurrency!.id!,
+        );
+
+        return Future.value();
+      },
+      child: Scaffold(
+        floatingActionButton: InkWell(
+          onTap: () => context.pushNamed(Routes.addExpensesView, arguments: {
+            'expensesCubit': context.read<ExpensesCubit>(),
+          }),
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: context.colors.primaryColor,
+            ),
+            child: Icon(Icons.add_rounded, color: context.colors.whiteColor),
           ),
-          child: Icon(Icons.add_rounded, color: context.colors.whiteColor),
         ),
-      ),
-      body: Stack(
-        children: [
-          _buildBackgroundImage(),
-          Column(
-            children: [
-              CustomAppBar(
-                title: context.expenses,
-                isBack: true,
-              ).onlyPadding(bottomPadding: 0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  BlocBuilder<ExpensesCubit, ExpensesState>(
-                    builder: (context, state) {
-                      return Text(
-                        "${state.expensesAmountByCurrency ?? "0.0"}",
-                        style: context.textStyles.font24BoldSecondaryColor
-                            .copyWith(color: context.colors.whiteColor),
-                      );
-                    },
-                  ),
-                  6.horizontalSizedBox,
-                  Text(
-                    "الدينار الليبي",
-                    style: context.textStyles.font16RegularSecondaryColor
-                        .copyWith(color: context.colors.whiteColor),
-                  ).verticalPadding(8),
-                ],
-              ),
-              8.verticalSizedBox,
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(top: 16),
-                  padding: const EdgeInsets.all(24),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: context.colors.backgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
+        body: Stack(
+          children: [
+            _buildBackgroundImage(),
+            Column(
+              children: [
+                CustomAppBar(
+                  title: context.expenses,
+                  isBack: true,
+                ).onlyPadding(bottomPadding: 0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BlocBuilder<ExpensesCubit, ExpensesState>(
+                      builder: (context, state) {
+                        return Text(
+                          "${state.expensesAmountByCurrency ?? "0.0"}",
+                          style: context.textStyles.font24BoldSecondaryColor
+                              .copyWith(color: context.colors.whiteColor),
+                        );
+                      },
+                    ),
+                    6.horizontalSizedBox,
+                    Text(
+                      selectedCurrency?.name ?? "",
+                      style: context.textStyles.font16RegularSecondaryColor
+                          .copyWith(color: context.colors.whiteColor),
+                    ).verticalPadding(8),
+                  ],
+                ),
+                8.verticalSizedBox,
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.all(24),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: context.colors.backgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.expense,
+                          style: context.textStyles.font15SemiBoldSecondaryColor
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        18.verticalSizedBox,
+                        const Expanded(child: ExpensesListWidget()),
+                      ],
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.expense,
-                        style: context.textStyles.font15SemiBoldSecondaryColor
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      18.verticalSizedBox,
-                      const Expanded(
-                        child: ExpensesListWidget(),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

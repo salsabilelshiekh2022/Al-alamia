@@ -25,6 +25,8 @@ class UserModel {
   String? rewarded;
   @HiveField(10)
   String? penalized;
+  @HiveField(11)
+  String? currency;
 
   UserModel({
     required this.message,
@@ -38,6 +40,7 @@ class UserModel {
     required this.branch,
     required this.rewarded,
     required this.penalized,
+    required this.currency,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -52,6 +55,7 @@ class UserModel {
     branch = Branch.fromJson(json['branch']);
     rewarded = json['user']['rewarded'];
     penalized = json['user']['penalized'];
+    currency = json['user']['currency'];
   }
 }
 

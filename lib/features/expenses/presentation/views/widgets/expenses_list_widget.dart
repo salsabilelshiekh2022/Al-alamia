@@ -70,44 +70,41 @@ class _ExpensesListWidgetState extends State<ExpensesListWidget> {
           );
         }
 
-        return RefreshIndicator(
-          onRefresh: () => context.read<ExpensesCubit>().refreshExpenses(),
-          child: ListView.separated(
-            controller: _scrollController,
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            physics: const AlwaysScrollableScrollPhysics(),
-            separatorBuilder: (context, index) => 12.verticalSizedBox,
-            itemBuilder: (_, index) {
-              if (isInitialLoading) {
-                return Skeletonizer(
-                  enabled: true,
-                  child: ExpenseItem(
-                    expenseModel: dummyExpenseModel,
-                  ),
-                );
-              }
-
-              if (index < state.expensesList.length) {
-                return ExpenseItem(
-                  expenseModel: state.expensesList[index],
-                );
-              }
-
-              // Show loading indicator when loading more
-              if (state.isLoadingMore) {
-                return const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-
-              return const SizedBox.shrink();
-            },
-            itemCount: isInitialLoading
-                ? 3
-                : state.expensesList.length + (state.isLoadingMore || state.hasReachedMax ? 1 : 0),
-          ),
+        return ListView.separated(
+          controller: _scrollController,
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          physics: const AlwaysScrollableScrollPhysics(),
+          separatorBuilder: (context, index) => 12.verticalSizedBox,
+          itemBuilder: (_, index) {
+            if (isInitialLoading) {
+              return Skeletonizer(
+                enabled: true,
+                child: ExpenseItem(
+                  expenseModel: dummyExpenseModel,
+                ),
+              );
+            }
+        
+            if (index < state.expensesList.length) {
+              return ExpenseItem(
+                expenseModel: state.expensesList[index],
+              );
+            }
+        
+            // Show loading indicator when loading more
+            if (state.isLoadingMore) {
+              return const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+        
+            return const SizedBox.shrink();
+          },
+          itemCount: isInitialLoading
+              ? 3
+              : state.expensesList.length + (state.isLoadingMore || state.hasReachedMax ? 1 : 0),
         );
       },
     );

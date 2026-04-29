@@ -11,6 +11,8 @@ import '../../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../../core/components/widgets/custom_text_field_with_label.dart';
 import '../../../../../core/components/widgets/expenses_type_selection_bottom_sheet.dart';
 import '../../../../../core/components/widgets/main_button.dart';
+import '../../../../../core/database/cache/cache_helper.dart';
+import '../../../../../core/database/cache/cache_services.dart';
 import '../../../../../core/di/dependency_injection.dart';
 import '../../../../../core/general/cubit/general_cubit.dart';
 import '../../../../../core/general/cubit/general_state.dart';
@@ -46,6 +48,19 @@ class _ExpensesFormState extends State<ExpensesForm> {
   @override
   void initState() {
     super.initState();
+    final user =  getIt<CacheServices>().getDataFromCache(
+      boxName: CacheBoxes.userModelBox,
+      key: 'user',
+    );
+     selectedCurrencyId = context
+        .read<HomeCubit>()
+        .state
+        .currenciesList
+        .firstWhere(
+          (currency) => currency.name == user?.currency,
+          orElse: () => CurrencyModel(id: 0, name: ''),
+        )
+        .id;
     amountController = TextEditingController();
     currencyController = TextEditingController(
       text: context
@@ -53,7 +68,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
           .state
           .currenciesList
           .firstWhere(
-            (currency) => currency.code == 'LYD',
+            (currency) => currency.name == user?.currency,
             orElse: () => CurrencyModel(id: 0, name: ''),
           )
           .name,
@@ -63,7 +78,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
         .state
         .currenciesList
         .firstWhere(
-          (currency) => currency.code == 'LYD',
+          (currency) => currency.name == user?.currency,
           orElse: () => CurrencyModel(id: 0, name: ''),
         )
         .id;
@@ -103,7 +118,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
 
   void _onExpensesTypeSelected(ExpensesTypeModel type) {
     setState(() {
-      purposeController.text = type.name ;
+      purposeController.text = type.name;
       selectedExpensesTypeId = type.id;
     });
   }
@@ -182,13 +197,10 @@ class _ExpensesFormState extends State<ExpensesForm> {
             message: state.message!,
             state: SnackBarStates.success,
           );
-         // context.pop();
+          // context.pop();
           context.pop();
 
-    context.read<ExpensesCubit>().getExpensesByCurrency(
-           
-      id:  context.read<HomeCubit>().state.currenciesList.first.id!,
-    );
+         context.read<ExpensesCubit>().refreshExpenses();
           context.read<HomeCubit>().getBranchCurrencies();
         }
       },
@@ -214,22 +226,21 @@ class _ExpensesFormState extends State<ExpensesForm> {
     );
   }
 
-    Widget _buildNotesField() {
-      return CustomTextFieldWithLabel(
-        controller: notesController,
-        label: "ملاحظة",
-        hintText: context.notesHint,
-        isRequired: false,
-        keyboardType: TextInputType.text,
-      );
-    }
+  Widget _buildNotesField() {
+    return CustomTextFieldWithLabel(
+      controller: notesController,
+      label: "ملاحظة",
+      hintText: context.notesHint,
+      isRequired: false,
+      keyboardType: TextInputType.text,
+    );
+  }
 
   Widget _buildPurposeField() {
     return BlocBuilder<GeneralCubit, GeneralState>(
       builder: (context, state) {
         final expensesTypes = state.expensesTypes ?? [];
         return CustomTextFieldWithLabel(
-        
           controller: purposeController,
           label: "نوع المصروف ",
           hintText: context.purposeHint,

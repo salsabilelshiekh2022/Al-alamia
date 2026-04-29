@@ -9,7 +9,8 @@ import '../cubit/expenses_cubit.dart';
 import 'widgets/expenses_form.dart';
 
 class AddExpensesView extends StatefulWidget {
-  const AddExpensesView({super.key});
+  const AddExpensesView({super.key,  this.expensesCubit});
+  final Cubit? expensesCubit;
 
   @override
   State<AddExpensesView> createState() => _AddExpensesViewState();
