@@ -16,6 +16,7 @@ import '../../../../core/helper/app_extention.dart';
 import '../../../../core/helper/number_extentions.dart';
 import '../../../../core/helper/translation_extensions.dart';
 import '../../../../core/utils/global_ui_utils.dart';
+import '../../../../core/utils/validator.dart';
 import '../../../home/presentation/cubit/home_cubit.dart';
 import '../../../transfer_money/data/models/transfer_money_request_params.dart';
 import '../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
@@ -189,11 +190,21 @@ class _ExternalSendMoneySecoundStepViewState
     }
 
     // Show message type selection bottom sheet
+    final senderWhatsApp = formData.senderWhatsApp.trim();
+    final receiverWhatsApp = formData.receiverWhatsApp.trim();
+    final senderHasValidWhatsApp = senderWhatsApp.isNotEmpty &&
+        Validator.validatePhone(senderWhatsApp, context) == null;
+    final receiverHasValidWhatsApp = receiverWhatsApp.isNotEmpty &&
+        Validator.validatePhone(receiverWhatsApp, context) == null;
+    final allowWhatsApp = senderHasValidWhatsApp || receiverHasValidWhatsApp;
+
     final selectedMessageType = await showModalBottomSheet<MessageTypeEnum>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const MessageTypeSelectionBottomSheet(),
+      builder: (context) => MessageTypeSelectionBottomSheet(
+        allowWhatsApp: allowWhatsApp,
+      ),
     );
 
     // If user cancelled, do not proceed

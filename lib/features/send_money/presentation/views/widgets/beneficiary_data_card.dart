@@ -131,8 +131,13 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
               hintText: "ادخل رقم الواتساب",
               prefixWidget: AppAssets.svgsPhone,
               keyboardType: TextInputType.phone,
-              isRequired: true,
-              validator: (value) => Validator.validatePhone(value, context),
+              isRequired: false,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return null;
+                }
+                return Validator.validatePhone(value, context);
+              },
               onChanged: (_) => _updateFormData(),
             ),
             16.verticalSizedBox,

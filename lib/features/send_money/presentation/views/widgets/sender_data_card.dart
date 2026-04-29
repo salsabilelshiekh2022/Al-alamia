@@ -114,8 +114,13 @@ class _SenderDataCardState extends State<SenderDataCard> {
               controller: whatsAppController,
               prefixWidget: AppAssets.svgsPhone,
               keyboardType: TextInputType.phone,
-              isRequired: true,
-              validator: (val) => Validator.validatePhone(val, context),
+              isRequired: false,
+              validator: (val) {
+                if (val == null || val.trim().isEmpty) {
+                  return null;
+                }
+                return Validator.validatePhone(val, context);
+              },
               onChanged: (_) => _updateFormData(),
             ),
             16.verticalSizedBox,

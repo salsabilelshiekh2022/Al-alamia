@@ -170,13 +170,11 @@ class SendMoneyFormData extends Equatable {
   // Validation getters
   bool get hasSenderInfo =>
       senderPhone.isNotEmpty &&
-      senderName.isNotEmpty &&
-      senderWhatsApp.isNotEmpty;
+      senderName.isNotEmpty;
 
   bool get hasReceiverInfo =>
       receiverPhone.isNotEmpty &&
-      receiverName.isNotEmpty &&
-      receiverWhatsApp.isNotEmpty;
+      receiverName.isNotEmpty;
 
   bool get hasAmountDetails =>
       amount.isNotEmpty &&

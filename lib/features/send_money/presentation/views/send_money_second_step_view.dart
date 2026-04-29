@@ -7,6 +7,7 @@ import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/translation_extensions.dart';
 import 'package:alalamia/core/utils/global_ui_utils.dart';
+import 'package:alalamia/core/utils/validator.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_state.dart';
 import 'package:alalamia/features/send_money/presentation/views/widgets/send_money_successfully_dialog.dart';
@@ -159,11 +160,21 @@ class _SendMoneySecondStepViewState extends State<SendMoneySecondStepView> {
     }
 
     // Show message type selection bottom sheet
+    final senderWhatsApp = formData.senderWhatsApp.trim();
+    final receiverWhatsApp = formData.receiverWhatsApp.trim();
+    final senderHasValidWhatsApp = senderWhatsApp.isNotEmpty &&
+        Validator.validatePhone(senderWhatsApp, context) == null;
+    final receiverHasValidWhatsApp = receiverWhatsApp.isNotEmpty &&
+        Validator.validatePhone(receiverWhatsApp, context) == null;
+    final allowWhatsApp = senderHasValidWhatsApp || receiverHasValidWhatsApp;
+
     final selectedMessageType = await showModalBottomSheet<MessageTypeEnum>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const MessageTypeSelectionBottomSheet(),
+      builder: (context) => MessageTypeSelectionBottomSheet(
+        allowWhatsApp: allowWhatsApp,
+      ),
     );
 
     // If user cancelled, do not proceed
