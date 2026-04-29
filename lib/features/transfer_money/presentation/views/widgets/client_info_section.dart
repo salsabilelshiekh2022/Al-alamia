@@ -40,6 +40,9 @@ class _ClientInfoSectionState extends State<ClientInfoSection> {
       listener: (context, state) {
         if (state.getUserByPhoneStatus.isSuccess) {
           widget.nameController.text = state.userByPhone?.name ?? '';
+          widget.whatsAppNumberController.text = state.userByPhone?.whatsappNumber ?? '';
+        }else{
+          widget.nameController.text = '';
         }
       },
       builder: (context, state) {

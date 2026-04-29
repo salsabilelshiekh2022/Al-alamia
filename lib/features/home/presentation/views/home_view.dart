@@ -28,6 +28,8 @@ class HomeView extends StatelessWidget {
       onRefresh: () async {
         await context.read<HomeCubit>().getBranchCurrencies();
         await context.read<AuthCubit>().getProfile();
+        await context.read<HomeCubit>().getCurrenciesByBranch();
+        await context.read<HomeCubit>().getCurrencies();
       },
 
       child: Scaffold(
@@ -74,8 +76,14 @@ class HomeView extends StatelessWidget {
                             DebtsAndExpensesSection(),
                             20.verticalSizedBox,
                             CurrencyCalculatorSection(
-                              fromCurrencies: context.read<HomeCubit>().state.currenciesList, 
-                              toCurrencies: context.read<HomeCubit>().state.currenciesList,
+                              fromCurrencies: context
+                                  .read<HomeCubit>()
+                                  .state
+                                  .currenciesList,
+                              toCurrencies: context
+                                  .read<HomeCubit>()
+                                  .state
+                                  .currenciesList,
                             ),
                             120.verticalSizedBox,
                           ],
@@ -94,7 +102,10 @@ class HomeView extends StatelessWidget {
   }
 
   AppBar _buildHomeAppBar(BuildContext context) {
-   final UserModel user = getIt<CacheServices>().getDataFromCache(boxName: CacheBoxes.userModelBox, key: 'user' ,);
+    final UserModel user = getIt<CacheServices>().getDataFromCache(
+      boxName: CacheBoxes.userModelBox,
+      key: 'user',
+    );
     return AppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

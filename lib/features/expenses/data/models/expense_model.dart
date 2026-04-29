@@ -36,8 +36,9 @@ class ExpenseModel {
   String? note;
   CurrencyModel? currency;
   EmployeeModel? employee;
+  String? expensesType;
 
-  ExpenseModel({this.id, this.uuid, this.amount, this.status, this.createdAt, this.note, this.currency, this.employee});
+  ExpenseModel({this.id, this.uuid, this.amount, this.status, this.createdAt, this.note, this.currency, this.employee, this.expensesType});
 
   ExpenseModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -48,6 +49,7 @@ class ExpenseModel {
     note = json['notes'];
     currency = json['currency'] != null ? CurrencyModel.fromJson(json['currency']) : null;
     employee = json['employee'] != null ? EmployeeModel.fromJson(json['employee']) : null;
+    expensesType = json['expense_type'];
   }
 
 }

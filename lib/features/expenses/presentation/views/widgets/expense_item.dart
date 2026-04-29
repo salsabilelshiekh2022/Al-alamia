@@ -44,7 +44,7 @@ class ExpenseItem extends StatelessWidget {
          decoration: BoxDecoration(
           borderRadius: 10.allBorderRadius,
            color: context.colors.backgroundFieldColor,),
-          child: Text("الغرض: ${expenseModel.note}",style: context.textStyles.font14MediumGrayColor,),
+          child: Text("الغرض: ${expenseModel.expensesType}",style: context.textStyles.font14MediumGrayColor,),
         )
       ],
     ),

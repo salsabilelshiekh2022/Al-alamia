@@ -37,6 +37,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
   late TextEditingController amountController;
   late TextEditingController currencyController;
   late TextEditingController purposeController;
+  late TextEditingController notesController;
   final formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   int? selectedCurrencyId;
@@ -67,6 +68,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
         )
         .id;
     purposeController = TextEditingController();
+    notesController = TextEditingController();
   }
 
   @override
@@ -74,6 +76,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
     amountController.dispose();
     currencyController.dispose();
     purposeController.dispose();
+    notesController.dispose();
     super.dispose();
   }
 
@@ -127,7 +130,7 @@ class _ExpensesFormState extends State<ExpensesForm> {
       expensesRequestParams: ExpensesRequestParams(
         currencyId: selectedCurrencyId ?? 0,
         amount: amountController.text,
-        notes: purposeController.text,
+        notes: notesController.text,
         denominations: denominations,
         expensesTypeId: selectedExpensesTypeId ?? 0,
       ),
@@ -179,8 +182,13 @@ class _ExpensesFormState extends State<ExpensesForm> {
             message: state.message!,
             state: SnackBarStates.success,
           );
+         // context.pop();
           context.pop();
-          context.pop();
+
+    context.read<ExpensesCubit>().getExpensesByCurrency(
+           
+      id:  context.read<HomeCubit>().state.currenciesList.first.id!,
+    );
           context.read<HomeCubit>().getBranchCurrencies();
         }
       },
@@ -195,6 +203,8 @@ class _ExpensesFormState extends State<ExpensesForm> {
               _buildCurrencyField(context),
               20.verticalSizedBox,
               _buildAmountField(),
+              20.verticalSizedBox,
+              _buildNotesField(),
               40.verticalSizedBox,
               _buildSubmitButton(state.expensesStatus),
             ],
@@ -203,6 +213,16 @@ class _ExpensesFormState extends State<ExpensesForm> {
       },
     );
   }
+
+    Widget _buildNotesField() {
+      return CustomTextFieldWithLabel(
+        controller: notesController,
+        label: "ملاحظة",
+        hintText: context.notesHint,
+        isRequired: false,
+        keyboardType: TextInputType.text,
+      );
+    }
 
   Widget _buildPurposeField() {
     return BlocBuilder<GeneralCubit, GeneralState>(

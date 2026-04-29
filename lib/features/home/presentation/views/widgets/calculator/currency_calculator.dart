@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../../core/components/widgets/app_snack_bar.dart';
 import '../../../../data/models/currency_model.dart';
 import '../../../../data/models/transfer_currency_request_params.dart';
 import '../../../cubit/home_state.dart';
@@ -150,6 +151,16 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
+        if(state.transferCurrencyStatus.isError){
+         
+          AppSnackBar.showSnackBar(
+            context: context,
+            message:"لا يوجد سعر صرف بين العملتين",
+            state: SnackBarStates.error,
+          );
+           widget.resultController.text = '';
+        }
+        
         _initializeCurrencies(state);
         _updateResultFromExchangeRate(state);
       },

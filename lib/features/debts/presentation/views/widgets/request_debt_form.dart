@@ -197,6 +197,10 @@ class _RequestDebtFormState extends State<RequestDebtForm> {
       listener: (context, state) {
         if (state.getUserByPhoneStatus.isSuccess) {
           nameController.text = state.userByPhone?.name ?? '';
+        
+        }else{
+          nameController.text = '';
+         
         }
       },
       child: Column(
