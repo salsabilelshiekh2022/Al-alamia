@@ -42,11 +42,11 @@ class WalletCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                SvgPicture.network(
+             currencyModel.currencyImage != null ?   SvgPicture.network(
                   currencyModel.currencyImage!,
                   width: 18,
                   height: 12,
-                ),
+                ) : SizedBox(width: 18, height: 12),
                 6.horizontalSpace,
                 Expanded(
                   child: FittedBox(

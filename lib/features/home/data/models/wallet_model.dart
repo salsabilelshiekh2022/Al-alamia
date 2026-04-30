@@ -34,8 +34,8 @@ class WalletModel {
 
 WalletModel dummyCurrenyModel = WalletModel(
   id: 1,
-  currencyName: 'Dollar Dollar',
-  currencyImage: AppAssets.svgsEnglishFlag,
+  currencyName: 'Dollar ',
+  currencyImage: "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg",
   currencyCode: 'USD',
-  balance: '2,222',
+  balance: '0.000',
 );

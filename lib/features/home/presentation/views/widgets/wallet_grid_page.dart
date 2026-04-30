@@ -20,6 +20,7 @@ class WalletGridPage extends StatelessWidget {
     return GridView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
+      
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
