@@ -1,6 +1,8 @@
 import 'package:alalamia/core/general/data/models/branch_model.dart';
+import 'package:alalamia/features/transactions/presentation/views/widgets/transaction_status_box.dart';
 
 import '../../../../core/enums/status_enum.dart';
+import '../../../../core/enums/transactions_enum.dart';
 import '../../../home/data/models/currency_model.dart';
 import '../../../notifications/data/models/notification_model.dart';
 
@@ -33,8 +35,10 @@ class TransactionModel {
   Branches? branches;
   CurrencyModel? currency;
   String? amountReceived;
+  String? amountSent;
   List<DenominationData>? denominationsIn;
   List<DenominationData>? denominationsOut;
+  String? type;
 
   TransactionModel({
     this.id,
@@ -47,6 +51,8 @@ class TransactionModel {
     this.denominationsIn,
     this.denominationsOut,
     this.branches,
+    this.amountSent,
+    this.type,
   });
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
@@ -62,6 +68,7 @@ class TransactionModel {
           ? CurrencyModel.fromJson(json['currency'])
           : null,
       amountReceived: json['amount_recieved'],
+      amountSent: json['amount_sent'],
       denominationsIn: json['denominations_in'] != null
           ? (json['denominations_in'] as List)
                 .map((v) => DenominationData.fromJson(v))
@@ -75,6 +82,7 @@ class TransactionModel {
       branches: json['branches'] != null
           ? Branches.fromJson(json['branches'])
           : null,
+      type: json['type'],
     );
   }
 }
@@ -191,6 +199,7 @@ TransactionModel dummyTransactionModel = TransactionModel(
   transactionUuid: '1234567890',
   dateTime: DateTime.now().toString(),
   status: StatusEnum.completed,
+  type: 'sending',
   client: ClientsFromTo(
     fromClient: ClientModel(
       id: 1,

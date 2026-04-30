@@ -15,7 +15,7 @@ class WalletsSections extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        return Column(
+        return Column( 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../core/helper/app_extention.dart';
 import 'wallet_grid_page.dart';
 import 'wallet_page_indicator.dart';
 
@@ -102,11 +103,51 @@ class _WalletsListState extends State<WalletsList> {
   Widget _buildEmptyState() {
     return SizedBox(
       height: 212.h,
-      child: Center(
-        child: Text(
-          'لا يوجد خزن متاحة',
-          style: Theme.of(context).textTheme.bodyMedium,
-          textAlign: TextAlign.center,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.colors.whiteColor.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(20.r),
+        border:   Border.all(color: context.colors.primaryColor, width: 0.5),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.06),
+                blurRadius: 16.r,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 56.r,
+                  height: 56.r,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.account_balance_wallet_outlined,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 28.r,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  'لا يوجد خزن متاحة',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+              
+              ],
+            ),
+          ),
         ),
       ),
     );

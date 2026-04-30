@@ -48,14 +48,14 @@ class TransferredAmountInfoWidget extends StatelessWidget {
         _buildAmountColumn(
           context,
           label: context.transeferedAmount,
-          amount: details?.amount ?? '--',
+          amount: details?.amountSent ?? '--',
           currency: details?.currency ?? '--',
         ),
         _buildArrowIcon(context),
         _buildAmountColumn(
           context,
           label: context.amount,
-          amount: details?.amount ?? '--',
+          amount: details?.amountReceived ?? '--',
           currency: details?.toCurrency ?? '--',
         ),
       ],

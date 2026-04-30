@@ -1,8 +1,10 @@
+import 'package:alalamia/core/enums/transactions_enum.dart';
 import 'package:alalamia/core/helper/app_extention.dart';
 import 'package:alalamia/core/helper/number_extentions.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
 import 'package:alalamia/features/transactions/data/models/transaction_model.dart';
 import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
+import 'package:alalamia/features/transactions/presentation/cubit/transactions_state.dart';
 import 'package:alalamia/features/transactions/presentation/views/widgets/transaction_From_to.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +62,7 @@ class TransactionCard extends StatelessWidget {
             TransactionFromTo(transactionModel: transactionModel),
             16.verticalSizedBox,
              Text(
-              "${transactionModel.amountReceived!.toString()} ${transactionModel.currency?.code ?? ""}",
+              "${transactionModel.type == 'receiving' ? transactionModel.amountReceived!.toString() : transactionModel.amountSent!.toString()} ${transactionModel.currency?.code ?? ""}",
               style: context.textStyles.font20SemiBoldPrimaryColor,
             ),
             // Row(
