@@ -151,7 +151,7 @@ class _ExternalSendMoneySecoundStepViewState
     if (formData == null) {
       AppSnackBar.showSnackBar(
         context: context,
-        message: 'Please fill all required fields',
+        message: 'يرجى ملء جميع البيانات المطلوبة ',
         state: SnackBarStates.error,
       );
       return;
@@ -160,12 +160,12 @@ class _ExternalSendMoneySecoundStepViewState
     // Check specific requirements and show detailed error
     final missingFields = <String>[];
 
-    if (!formData.hasSenderInfo) missingFields.add('Sender information');
-    if (!formData.hasReceiverInfo) missingFields.add('Receiver information');
-    if (!formData.hasAmountDetails) missingFields.add('Amount and currency');
-    if (!formData.hasBranches) missingFields.add('Branch information');
-    if (!formData.hasCommissionDetails) missingFields.add('Commission type');
-    if (!formData.hasPaymentMethod) missingFields.add('Payment method');
+    if (!formData.hasSenderInfo) missingFields.add('بيانات المرسل');
+    if (!formData.hasReceiverInfo) missingFields.add('بيانات المستفيد');
+    if (!formData.hasAmountDetails) missingFields.add('المبلغ والعملة');
+    if (!formData.hasBranches) missingFields.add('بيانات الفرع');
+    if (!formData.hasCommissionDetails) missingFields.add('نوع العمولة');
+    if (!formData.hasPaymentMethod) missingFields.add('طريقة الدفع');
 
     // Note: We don't check hasDenominations here because we are about to collect them
 
@@ -173,7 +173,7 @@ class _ExternalSendMoneySecoundStepViewState
       !_formKey.currentState!.validate();
       AppSnackBar.showSnackBar(
         context: context,
-        message: 'Missing: ${missingFields.join(', ')}',
+        message: 'يرجى ملء ${missingFields.join(', ')}',
         state: SnackBarStates.error,
       );
       return;
@@ -183,7 +183,7 @@ class _ExternalSendMoneySecoundStepViewState
     if (amount == null || amount <= 0) {
       AppSnackBar.showSnackBar(
         context: context,
-        message: "Please enter a valid amount",
+        message: "يرجى إدخال مبلغ صحيح",
         state: SnackBarStates.error,
       );
       return;

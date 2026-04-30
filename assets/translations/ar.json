@@ -123,7 +123,7 @@
   "cancle": "الغاء",
   "currency": "العملة",
   "curreny_hint": "اختر العملة",
-  "amount_by_char": "المبلغ بالاحرف",
+  "amount_by_char": "المبلغ بالاحرف (المبلغ المستلم)",
   "sender_info": "بيانات المُرسِل",
   "additional_number": "رقم جوال اضافي",
   "additional_number_hint": "ادخل رقم الجوال اخر",

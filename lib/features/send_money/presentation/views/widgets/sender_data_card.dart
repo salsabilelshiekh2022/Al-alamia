@@ -80,11 +80,13 @@ class _SenderDataCardState extends State<SenderDataCard> {
             state.userByPhoneRequestSource == _lookupSource) {
           nameController.text = state.userByPhone?.name ?? '';
           addressController.text = state.userByPhone?.address ?? '';
+          whatsAppController.text = state.userByPhone?.whatsappNumber ?? '';
           _updateFormData();
         }else if (state.getUserByPhoneStatus.isError &&
             state.userByPhoneRequestSource == _lookupSource) {
           nameController.text = '';
           addressController.text = '';
+          whatsAppController.text = '';
           _updateFormData();
         }
       },

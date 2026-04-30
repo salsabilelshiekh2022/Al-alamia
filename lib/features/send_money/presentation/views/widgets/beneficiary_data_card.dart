@@ -86,12 +86,14 @@ class _BeneficiaryDataCardState extends State<BeneficiaryDataCard> {
           nameController.text = state.userByPhone?.name ?? '';
           additionalController.text = state.userByPhone?.phone2 ?? '';
           addressController.text = state.userByPhone?.address ?? '';
+          whatsAppController.text = state.userByPhone?.whatsappNumber ?? '';
           _updateFormData();
         }else if (state.getUserByPhoneStatus.isError &&
             state.userByPhoneRequestSource == _lookupSource) {
           nameController.text = '';
           additionalController.text = '';
           addressController.text = '';
+          whatsAppController.text = '';
           _updateFormData();
         } 
       },
