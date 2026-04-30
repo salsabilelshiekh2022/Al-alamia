@@ -175,7 +175,11 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     // Navigate to denomination view with data
     context.pushNamed(
       Routes.addAmountByDenominationView,
-      arguments: transferData,
+      arguments: {
+        'transferData': transferData,
+        'fromCurrencyName': _fromCurrency?.name,
+        'toCurrencyName': _toCurrency?.name,
+      },
     );
   }
 

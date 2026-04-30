@@ -26,9 +26,11 @@ import '../../data/models/transfer_money_request_params.dart';
 ///
 /// Shows confirm button only when both amounts are complete (remaining = 0).
 class AddAmountByDenominationView extends StatefulWidget {
-  const AddAmountByDenominationView({super.key, required this.transferData});
+  const AddAmountByDenominationView({super.key, required this.transferData, required this.fromCurrencyName, required this.toCurrencyName});
 
   final TransferMoneyDataParams transferData;
+  final String fromCurrencyName ;
+  final String toCurrencyName ;
 
   @override
   State<AddAmountByDenominationView> createState() =>
@@ -163,7 +165,7 @@ class _AddAmountByDenominationViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Denomination In Section
-          _buildSectionTitle(context, "المبلغ قبل التحويل"),
+          _buildSectionTitle(context, "المبلغ قبل التحويل (${widget.fromCurrencyName})"),
           14.verticalSizedBox,
           AllDenominationsBottomSheet(
             amount: amountIn,
@@ -175,7 +177,7 @@ class _AddAmountByDenominationViewState
           24.verticalSizedBox,
 
           // Denomination Out Section
-          _buildSectionTitle(context, "المبلغ بعد التحويل"),
+          _buildSectionTitle(context, "المبلغ بعد التحويل (${widget.toCurrencyName})"),
           14.verticalSizedBox,
           AllDenominationsBottomSheet(
             amount: amountOut,

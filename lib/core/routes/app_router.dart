@@ -209,7 +209,16 @@ abstract class AppRouter {
           ),
         );
       case Routes.addAmountByDenominationView:
-        final transferData = settings.arguments as TransferMoneyDataParams;
+        final transferData = settings.arguments is Map<String, dynamic>
+            ? (settings.arguments as Map<String, dynamic>)['transferData'] as TransferMoneyDataParams
+            : settings.arguments as TransferMoneyDataParams;
+          final fromCurrencyName = settings.arguments is Map<String, dynamic> 
+            ? (settings.arguments as Map<String, dynamic>)['fromCurrencyName'] as String
+            : '';
+          final toCurrencyName = settings.arguments is Map<String, dynamic> 
+            ? (settings.arguments as Map<String, dynamic>)['toCurrencyName'] as String
+            : '';
+      
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
@@ -217,7 +226,11 @@ abstract class AppRouter {
               BlocProvider(create: (_) => getIt<TransferCurrencyCubit>()),
               BlocProvider.value(value: getIt<HomeCubit>()),
             ],
-            child: AddAmountByDenominationView(transferData: transferData),
+            child: AddAmountByDenominationView(
+              transferData: transferData,
+              fromCurrencyName: fromCurrencyName,
+              toCurrencyName: toCurrencyName,
+            ),
           ),
         );
       case Routes.debtsView:
