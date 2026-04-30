@@ -32,9 +32,14 @@ class _WalletsListState extends State<WalletsList> {
       builder: (context, state) {
         final isLoading =
             state.homeStatus.isLoading && state.walletsList.isEmpty;
+        final isEmpty = state.walletsList.isEmpty && !isLoading;
         final items = _getItemsList(state.walletsList, isLoading);
         final pages = _divideIntoPages(items);
         final pageCount = pages.isEmpty ? 1 : pages.length;
+
+        if (isEmpty) {
+          return _buildEmptyState();
+        }
 
         return Column(
           children: [
@@ -91,6 +96,19 @@ class _WalletsListState extends State<WalletsList> {
     return Padding(
       padding: EdgeInsets.only(top: 16.h),
       child: WalletPageIndicator(controller: _pageController, count: pageCount),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return SizedBox(
+      height: 212.h,
+      child: Center(
+        child: Text(
+          'لا يوجد خزن متاحة',
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 }
