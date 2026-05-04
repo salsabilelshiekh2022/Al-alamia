@@ -165,12 +165,29 @@ class _ExternalTransactionDetailsCardState
     paymentMethodController = TextEditingController();
 
     // Set default currency ID
-    selectedCurrencyId = context
+    final user = getIt<CacheServices>().getDataFromCache(
+      boxName: CacheBoxes.userModelBox,
+      key: 'user',
+    );
+    final userCurrency = context
         .read<HomeCubit>()
         .state
         .currenciesList
-        .first
-        .id;
+        .where((currency) => currency.name == user?.currency)
+        .firstOrNull;
+
+    selectedCurrencyId = userCurrency?.id;
+
+    selectedToCurrencyId = userCurrency?.id;
+     final cubit = context.read<HomeCubit>();
+    cubit.transferCurrency(
+      transferCurrencyRequestParams: TransferCurrencyRequestParams(
+        fromCurrencyId: selectedCurrencyId!,
+        toCurrencyId: selectedToCurrencyId!,
+        amount: null,
+      ),
+    );
+
     // Don't set initial payment method ID - will be set after branch selection
   }
 
@@ -292,13 +309,17 @@ class _ExternalTransactionDetailsCardState
   }
 
   void _onToCurrencySelected(CurrencyModel currency) {
-    _calculateExchangeRate();
-    setState(() {
+     setState(() {
       toCurrencyController.text = currency.name ?? '';
       selectedToCurrencyId = currency.id;
     });
+    _calculateExchangeRate();
+   
     _updateFormData();
     _getFeeDetails();
+  setState(() {
+    
+  });
   }
 
   void _showCurrencyBottomSheet(
@@ -315,6 +336,7 @@ class _ExternalTransactionDetailsCardState
         onCurrencySelected: (currency) {
           if (isToCurrency) {
             _onToCurrencySelected(currency);
+            
           } else {
             _onCurrencySelected(currency);
           }
@@ -380,12 +402,12 @@ class _ExternalTransactionDetailsCardState
 
   void _calculateExchangeRate() {
     if (selectedCurrencyId == null ||
-        selectedToCurrencyId == null ||
-        amountController.text.isEmpty)
+        selectedToCurrencyId == null 
+        )
       return;
 
     final amount = num.tryParse(amountController.text.trim());
-    if (amount == null) return;
+   
 
     final cubit = context.read<HomeCubit>();
     cubit.transferCurrency(
@@ -395,9 +417,16 @@ class _ExternalTransactionDetailsCardState
         amount: amount,
       ),
     );
+     final homeState = context.read<HomeCubit>().state;
+    final num exchangeRate = homeState.transferCurrencyStatus.isSuccess
+        ? homeState.transferCurrency?.exchangePriceUsed ?? 0
+        : 0;
+    final result = (amount ?? 0 * exchangeRate).toStringAsFixed(2);
+    converterAmountController.text = result;
   }
 
   void _onAmountChanged(String value) {
+   
     final amountText = value.trim();
     if (amountText.isEmpty) {
       converterAmountController.text = "0.00";
@@ -415,8 +444,11 @@ class _ExternalTransactionDetailsCardState
     final result = (amount * exchangeRate).toStringAsFixed(2);
     converterAmountController.text = result;
 
-    final commissionType =
-        context.read<SendMoneyCubit>().state.formData?.commissionType;
+    final commissionType = context
+        .read<SendMoneyCubit>()
+        .state
+        .formData
+        ?.commissionType;
     if (commissionType == CommissionTypeEnum.none) {
       commissionController.text = "0.00";
     } else {
@@ -871,7 +903,6 @@ class _ExternalTransactionDetailsCardState
                                   prefixWidget: AppAssets.svgsDollarIcon,
                                   isRequired: true,
                                   isReadOnly: true,
-
                                   keyboardType: TextInputType.number,
                                   validator: (value) =>
                                       Validator.validateAnotherField(
