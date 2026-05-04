@@ -81,14 +81,20 @@ class CustomCurrencyDropdown extends StatelessWidget {
   }
 
   Widget _buildCurrencyName(BuildContext context, CurrencyModel? currency) {
+    final bool hasSelection = currency?.name != null && currency!.name!.isNotEmpty;
+
+    final TextStyle textStyle = hasSelection
+        ? context.textStyles.font14MediumPrimaryColor
+            .copyWith(color: color ?? context.colors.primaryColor)
+        : context.textStyles.font14MediumSecondaryColor
+            .copyWith(color: color ?? context.colors.secondaryColor);
+
     return Expanded(
       child: FittedBox(
         fit: BoxFit.scaleDown,
         child: Text(
-          currency?.name ?? context.dollar,
-          style: context.textStyles.font14MediumPrimaryColor.copyWith(
-            color: color ?? context.colors.primaryColor,
-          ),
+          hasSelection ? currency!.name! : context.currenyHint,
+          style: textStyle,
           overflow: TextOverflow.ellipsis,
         ),
       ),

@@ -51,10 +51,12 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   CurrencyModel? _fromCurrency;
   CurrencyModel? _toCurrency;
   bool _currenciesInitialized = false;
+  bool _missingCurrencyMessageShown = false;
  
 
   void _swapCurrencies() {
     if (widget.isFromCurrencyLocked) return;
+    if (_fromCurrency == null || _toCurrency == null) return;
 
     setState(() {
       final temp = _fromCurrency;
@@ -69,6 +71,26 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   }
 
   void _onAmountChanged(String value) {
+    if (value.isEmpty) {
+      _missingCurrencyMessageShown = false;
+      widget.resultController.text = '';
+      widget.onAmountChanged?.call(value);
+      return;
+    }
+
+    if (_fromCurrency == null || _toCurrency == null) {
+      if (!_missingCurrencyMessageShown) {
+        AppSnackBar.showSnackBar(
+          context: context,
+          message: context.currenyHint,
+          state: SnackBarStates.error,
+        );
+        _missingCurrencyMessageShown = true;
+      }
+      widget.onAmountChanged?.call(value);
+      return;
+    }
+
     final homeState = context.read<HomeCubit>().state;
     final double amount = double.tryParse(value) ?? 0;
     final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
@@ -78,21 +100,23 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   }
 
   void _onFromCurrencyChanged(CurrencyModel? currency) {
-    if (currency == null || _toCurrency == null) return;
-
     setState(() {
       _fromCurrency = currency;
-      _calculateExchangeRate();
+      _missingCurrencyMessageShown = false;
+      if (_fromCurrency != null && _toCurrency != null) {
+        _calculateExchangeRate();
+      }
     });
     widget.onFromCurrencyChanged?.call(currency);
   }
 
   void _onToCurrencyChanged(CurrencyModel? currency) {
-    if (currency == null || _fromCurrency == null) return;
-
     setState(() {
       _toCurrency = currency;
-      _calculateExchangeRate();
+      _missingCurrencyMessageShown = false;
+      if (_fromCurrency != null && _toCurrency != null) {
+        _calculateExchangeRate();
+      }
     });
     widget.onToCurrencyChanged?.call(currency);
   }
@@ -110,27 +134,27 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
   }
 
   void _initializeCurrencies(HomeState state) {
-    if (!_currenciesInitialized &&
-        _fromCurrency == null &&
-        _toCurrency == null &&
-        state.currenciesList.length >= 2) {
+    if (_currenciesInitialized || state.currenciesList.isEmpty) {
+      return;
+    }
+
+    if (widget.initialFromCurrency == null) {
+      _currenciesInitialized = true;
+      return;
+    }
+
+    if (_fromCurrency != null) {
+      _currenciesInitialized = true;
+      return;
+    }
+
+    if (!_currenciesInitialized) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {
-            // Use locked currency if provided, otherwise use first item
-            _fromCurrency =
-                widget.initialFromCurrency ?? state.currenciesList.first;
-
-            // Pick a "to" currency that differs from the "from" currency
-            _toCurrency = state.currenciesList.firstWhere(
-              (c) => c.id != _fromCurrency?.id,
-              orElse: () => state.currenciesList[1],
-            );
-
+            _fromCurrency = widget.initialFromCurrency;
             _currenciesInitialized = true;
             widget.onFromCurrencyChanged?.call(_fromCurrency);
-            widget.onToCurrencyChanged?.call(_toCurrency);
-            _calculateExchangeRate();
           });
         }
       });
@@ -165,6 +189,14 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
         _updateResultFromExchangeRate(state);
       },
       builder: (context, state) {
+        final List<CurrencyModel> fromCurrencies =
+            widget.fromCurrencies.isNotEmpty
+                ? widget.fromCurrencies
+                : state.currenciesList;
+        final List<CurrencyModel> toCurrencies =
+            widget.toCurrencies.isNotEmpty
+                ? widget.toCurrencies
+                : state.currenciesList;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             _initializeCurrencies(state);
@@ -203,7 +235,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
               16.verticalSizedBox,
               CurrencyInputRow(
                 enabled: true,
-                currencies: widget.fromCurrencies,
+                currencies: fromCurrencies,
                 selectedCurrency: _fromCurrency,
                 onCurrencyChanged: _onFromCurrencyChanged,
                 controller: widget.amountController,
@@ -223,7 +255,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
               16.verticalSizedBox,
               CurrencyInputRow(
                 enabled: false,
-                currencies: widget.toCurrencies,
+                currencies: toCurrencies,
                 selectedCurrency: _toCurrency,
                 onCurrencyChanged: _onToCurrencyChanged,
                 controller: widget.resultController,
