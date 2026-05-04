@@ -86,7 +86,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
     result.fold(
       (failure) =>
-          emit(state.copyWith(transferCurrencyStatus: RequestStatus.error)),
+          emit(state.copyWith(transferCurrencyStatus: RequestStatus.error, transferCurrency: null)),
       (transferCurrency) => emit(
         state.copyWith(
           transferCurrencyStatus: RequestStatus.success,

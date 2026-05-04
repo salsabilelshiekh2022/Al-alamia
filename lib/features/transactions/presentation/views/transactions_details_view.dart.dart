@@ -13,6 +13,7 @@ import 'package:alalamia/core/services/transaction_copy_service.dart';
 import 'package:alalamia/features/send_money/presentation/cubit/send_money_cubit.dart';
 import 'package:alalamia/features/home/data/models/currency_model.dart';
 import 'package:alalamia/features/home/presentation/cubit/home_cubit.dart';
+import 'package:alalamia/features/send_money/presentation/views/widgets/notes_card.dart';
 import 'package:alalamia/features/transactions/data/models/transaction_details_model.dart';
 import 'package:alalamia/features/transactions/data/models/update_transaction_request_params.dart';
 import 'package:alalamia/features/transactions/presentation/cubit/transactions_cubit.dart';
@@ -34,6 +35,7 @@ import '../../../transfer_money/data/models/transfer_money_request_params.dart';
 import '../../../transfer_money/presentation/views/widgets/all_denominations_bottom_sheet.dart';
 import '../cubit/transactions_state.dart';
 import 'widgets/transactions_details/beneficiary_info_card.dart';
+import 'widgets/transactions_details/notes_info_card.dart';
 import 'widgets/transactions_details/sender_info_card.dart';
 import 'widgets/transactions_details/status_box.dart';
 import 'widgets/transactions_details/transaction_info.dart';
@@ -543,6 +545,7 @@ class _TransactionsDetailsViewState extends State<TransactionsDetailsView> {
                                     20.verticalSizedBox,
                               context.read<TransactionsCubit>().state.transactionDetails?.sender != null ?    SenderInfoCard().onlyPadding(bottomPadding: 20) : SizedBox(),
                              context.read<TransactionsCubit>().state.transactionDetails?.receiver != null ?        BeneficiaryInfoCard().onlyPadding(bottomPadding: 20) : SizedBox(),
+                             context.read<TransactionsCubit>().state.transactionDetails?.notes != null ?        NotesInfoCard().onlyPadding(bottomPadding: 20) : SizedBox(),
                                     TransactionInfoCard(),
                                     32.verticalSizedBox,
                                     Column(

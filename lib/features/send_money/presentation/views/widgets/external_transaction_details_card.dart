@@ -41,6 +41,7 @@ class ExternalTransactionDetailsCard extends StatefulWidget {
 
   final TextEditingController commissionController;
   final TextEditingController commissionTypeController;
+  
 
   @override
   State<ExternalTransactionDetailsCard> createState() =>

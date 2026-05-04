@@ -133,6 +133,10 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       return;
     }
 
+     if(_resultController.text.trim().isEmpty || double.tryParse(_resultController.text.trim()) == 0.00 )  {
+      return AppSnackBar.showSnackBar(context: context, message:"يرجى اختيار عملتين بينهم سعر صرف", state: SnackBarStates.error);
+    }
+
     // Show message type selection bottom sheet
     final whatsappNumber = _whatsAppNumberController.text.trim();
     final hasValidWhatsapp = whatsappNumber.isNotEmpty &&
@@ -142,7 +146,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => MessageTypeSelectionBottomSheet(
+      builder: (context) => MessageTypeSelectionBottomSheet( 
         allowWhatsApp: hasValidWhatsapp,
       ),
     );
@@ -154,6 +158,7 @@ class _TransferMoneyViewState extends State<TransferMoneyView> {
     if (selectedMessageType == null) {
       return;
     }
+   
 
     // Create transfer data params with selected message type
     final transferData = TransferMoneyDataParams(

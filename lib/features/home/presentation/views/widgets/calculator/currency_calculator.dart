@@ -93,7 +93,7 @@ class _CurrencyCalculatorState extends State<CurrencyCalculator> {
 
     final homeState = context.read<HomeCubit>().state;
     final double amount = double.tryParse(value) ?? 0;
-    final num exchangeRate = homeState.transferCurrency?.exchangePriceUsed ?? 0;
+    final num exchangeRate =homeState.transferCurrencyStatus.isSuccess ? homeState.transferCurrency?.exchangePriceUsed ?? 0 : 0;
     final result = (amount * exchangeRate).toStringAsFixed(2);
     widget.resultController.text = result;
     widget.onAmountChanged?.call(value);

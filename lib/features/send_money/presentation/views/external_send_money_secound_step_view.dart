@@ -1,6 +1,7 @@
 import 'package:alalamia/core/components/widgets/message_type_selection_bottom_sheet.dart';
 import 'package:alalamia/core/enums/message_type_enum.dart';
 import 'package:alalamia/core/helper/widget_extentions.dart';
+import 'package:alalamia/features/home/presentation/cubit/home_state.dart';
 import 'package:alalamia/features/send_money/presentation/views/widgets/external_transaction_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -184,6 +185,15 @@ class _ExternalSendMoneySecoundStepViewState
       AppSnackBar.showSnackBar(
         context: context,
         message: "يرجى إدخال مبلغ صحيح",
+        state: SnackBarStates.error,
+      );
+      return;
+    }
+    
+    if (context.read<HomeCubit>().state.transferCurrencyStatus.isError) {
+       AppSnackBar.showSnackBar(
+        context: context,
+        message:"يرجى اختيار عملتين بينهم سعر صرف",
         state: SnackBarStates.error,
       );
       return;
